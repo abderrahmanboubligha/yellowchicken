@@ -1,0 +1,6 @@
+package com.yellowchicken.app
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

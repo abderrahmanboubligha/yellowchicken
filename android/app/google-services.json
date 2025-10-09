@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "188208307049",
+    "project_id": "yellowchicken-225c8",
+    "storage_bucket": "yellowchicken-225c8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188208307049:android:f6855ae0060db0f7e9fbf8",
+        "android_client_info": {
+          "package_name": "com.yellowchicken.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_Vj6N2GE3ZVQiWFqpNXTOLQkdq4Gdr9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
