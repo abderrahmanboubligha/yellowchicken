@@ -13,45 +13,60 @@ class CategoryHoverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).cardColor,
-      padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+      padding: const EdgeInsets.symmetric(
+          vertical: Dimensions.paddingSizeExtraSmall),
       child: Column(
-        children: categoryList!.map((category) => InkWell(
-          onTap: () async {
-            Future.delayed(const Duration(milliseconds: 100)).then((value) async{
-              if(context.mounted){
-                RouterHelper.getCategoryRoute(category);
-                context.pop();
-                RouterHelper.getCategoryRoute(category);
-              }
-            });
-          },
-          child: OnHoverWidget(
-            builder: (isHover) {
-              String? name = '';
-              category.name!.length > 25 ? name = '${category.name!.substring(0, 25)} ...' : name = category.name;
-              return Container(
-                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall, horizontal: Dimensions.paddingSizeDefault),
-                decoration: BoxDecoration(
-                  color: isHover ? Theme.of(context).primaryColor.withValues(alpha:0.1) : Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    FittedBox(
-                      child: Text(name!, overflow: TextOverflow.ellipsis),
+          children: categoryList!
+              .map((category) => InkWell(
+                    onTap: () async {
+                      Future.delayed(const Duration(milliseconds: 100))
+                          .then((value) async {
+                        if (context.mounted) {
+                          RouterHelper.getCategoryRoute(category);
+                          context.pop();
+                          RouterHelper.getCategoryRoute(category);
+                        }
+                      });
+                    },
+                    child: OnHoverWidget(
+                      builder: (isHover) {
+                        String? name = '';
+                        category.name!.length > 25
+                            ? name = '${category.name!.substring(0, 25)} ...'
+                            : name = category.name;
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Dimensions.paddingSizeExtraSmall,
+                              horizontal: Dimensions.paddingSizeDefault),
+                          decoration: BoxDecoration(
+                            color: isHover
+                                ? Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: 0.1)
+                                : Theme.of(context).cardColor,
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.radiusDefault),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FittedBox(
+                                child: Text(name ?? '',
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              const Icon(Icons.chevron_right,
+                                  size: Dimensions.paddingSizeDefault),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                    const Icon(Icons.chevron_right, size: Dimensions.paddingSizeDefault),
-                  ],
-                ),
-              );
-            },
+                  ))
+              .toList()
+          // [
+          //   Text(_categoryList[5].name),
+          // ],
           ),
-        )).toList()
-        // [
-        //   Text(_categoryList[5].name),
-        // ],
-      ),
     );
   }
 }

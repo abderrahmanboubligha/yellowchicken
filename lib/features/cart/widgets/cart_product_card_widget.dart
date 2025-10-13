@@ -83,7 +83,7 @@ class CartProductCardWidget extends StatelessWidget {
                     FittedBox(child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        priceDiscount! > 0 ? Padding(
+                        priceDiscount > 0 ? Padding(
                             padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
                             child: CustomDirectionalityWidget(child: Text(
                               PriceConverterHelper.convertPrice(startingPrice),

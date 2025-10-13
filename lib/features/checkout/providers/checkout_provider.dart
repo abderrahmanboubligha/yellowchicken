@@ -20,7 +20,6 @@ class CheckoutProvider extends ChangeNotifier {
   final OrderRepo? orderRepo;
   CheckoutProvider({required this.orderRepo});
 
-
   int? _paymentMethodIndex;
   double? _partialAmount;
   PaymentMethod? _paymentMethod;
@@ -43,12 +42,9 @@ class CheckoutProvider extends ChangeNotifier {
   double? _bringChangeAmount;
   bool _showBringChangeInputOption = false;
 
-
   bool paymentVisibility = true;
-  Map<String, TextEditingController> field  = {};
+  Map<String, TextEditingController> field = {};
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-
 
   int? get paymentMethodIndex => _paymentMethodIndex;
   AddressModel? get selectedAddress => _selectedAddress;
@@ -72,8 +68,7 @@ class CheckoutProvider extends ChangeNotifier {
   double? get bringChangeAmount => _bringChangeAmount;
   bool get showBringChangeInputOption => _showBringChangeInputOption;
 
-
-  set setPartialAmount(double? value)=> _partialAmount = value;
+  set setPartialAmount(double? value) => _partialAmount = value;
   set setCheckOutData(CheckOutModel value) {
     _checkOutData = value;
   }
@@ -81,48 +76,59 @@ class CheckoutProvider extends ChangeNotifier {
   void setPaymentIndex(int? index, {bool isUpdate = true}) {
     _paymentMethodIndex = index;
     _paymentMethod = null;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void changePaymentMethod({PaymentMethod? digitalMethod, bool isUpdate = true, OfflinePaymentModel? offlinePaymentModel, bool isClear = false}){
-    if(offlinePaymentModel != null){
+  void changePaymentMethod(
+      {PaymentMethod? digitalMethod,
+      bool isUpdate = true,
+      OfflinePaymentModel? offlinePaymentModel,
+      bool isClear = false}) {
+    if (offlinePaymentModel != null) {
       _selectedOfflineMethod = offlinePaymentModel;
-    }else if(digitalMethod != null){
+    } else if (digitalMethod != null) {
       _paymentMethod = digitalMethod;
       _paymentMethodIndex = null;
       _selectedOfflineMethod = null;
       _selectedOfflineValue = null;
     }
-    if(isClear){
+    if (isClear) {
       _paymentMethod = null;
       _selectedPaymentMethod = null;
       clearOfflinePayment();
-
     }
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void savePaymentMethod({int? index, PaymentMethod? method, bool isUpdate = true, double? partialAmount, OfflinePaymentModel? selectedOfflineMethod,  List<Map<String, String>>? selectedOfflineValue}){
-    if(method != null){
-      final isOfflinePayment = (method.type == 'offline' || (method.isOffline ?? false));
-      _selectedPaymentMethod = method.copyWith('online', isOffline: isOfflinePayment );
-    }else if(index != null && index == 1){
+  void savePaymentMethod(
+      {int? index,
+      PaymentMethod? method,
+      bool isUpdate = true,
+      double? partialAmount,
+      OfflinePaymentModel? selectedOfflineMethod,
+      List<Map<String, String>>? selectedOfflineValue}) {
+    if (method != null) {
+      final isOfflinePayment =
+          (method.type == 'offline' || (method.isOffline ?? false));
+      _selectedPaymentMethod =
+          method.copyWith('online', isOffline: isOfflinePayment);
+    } else if (index != null && index == 1) {
       _selectedPaymentMethod = PaymentMethod(
         getWayTitle: getTranslated('cash_on_delivery', Get.context!),
         getWay: 'cash_on_delivery',
         type: 'cash_on_delivery',
       );
-    }else if(index != null && index == 0){
+    } else if (index != null && index == 0) {
       _selectedPaymentMethod = PaymentMethod(
         getWayTitle: getTranslated('wallet_payment', Get.context!),
         getWay: 'wallet_payment',
         type: 'wallet_payment',
       );
-    }else{
+    } else {
       _selectedPaymentMethod = null;
     }
 
@@ -132,31 +138,25 @@ class CheckoutProvider extends ChangeNotifier {
     _selectedOfflineMethod = selectedOfflineMethod;
     _selectedOfflineValue = selectedOfflineValue;
 
-   if(isUpdate){
-     notifyListeners();
-   }
-
+    if (isUpdate) {
+      notifyListeners();
+    }
   }
 
-  void clearOfflinePayment(){
+  void clearOfflinePayment() {
     _selectedOfflineMethod = null;
     _selectedOfflineValue = null;
   }
-
-
-
-
 
   void stopLoader() {
     _isLoading = false;
     notifyListeners();
   }
 
-  void setSelectedAddress(AddressModel ? address, {bool isUpdate = true}) {
+  void setSelectedAddress(AddressModel? address, {bool isUpdate = true}) {
     _selectedAddress = address;
 
-
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
@@ -171,15 +171,14 @@ class CheckoutProvider extends ChangeNotifier {
     clearOfflinePayment();
     _partialAmount = null;
     _distance = -1;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
   void setOrderType(OrderType type, {bool notify = true}) {
     _orderType = type;
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
@@ -192,64 +191,89 @@ class CheckoutProvider extends ChangeNotifier {
   }
 
   Future<void> initializeTimeSlot(BuildContext context) async {
-   final scheduleTime =  Provider.of<SplashProvider>(context, listen: false).configModel!.restaurantScheduleTime!;
-   int? duration = Provider.of<SplashProvider>(context, listen: false).configModel!.scheduleOrderSlotDuration;
+    final scheduleTime = Provider.of<SplashProvider>(context, listen: false)
+        .configModel!
+        .restaurantScheduleTime!;
+    int? duration = Provider.of<SplashProvider>(context, listen: false)
+        .configModel!
+        .scheduleOrderSlotDuration;
     _timeSlots = [];
     _allTimeSlots = [];
     _selectDateSlot = 0;
     int minutes = 0;
     DateTime now = DateTime.now();
-    for(int index = 0; index < scheduleTime.length; index++) {
+    for (int index = 0; index < scheduleTime.length; index++) {
       DateTime openTime = DateTime(
         now.year,
         now.month,
         now.day,
-        DateConverterHelper.convertStringTimeToDate(scheduleTime[index].openingTime!).hour,
-        DateConverterHelper.convertStringTimeToDate(scheduleTime[index].openingTime!).minute,
+        DateConverterHelper.convertStringTimeToDate(
+                scheduleTime[index].openingTime!)
+            .hour,
+        DateConverterHelper.convertStringTimeToDate(
+                scheduleTime[index].openingTime!)
+            .minute,
       );
 
       DateTime closeTime = DateTime(
         now.year,
         now.month,
         now.day,
-        DateConverterHelper.convertStringTimeToDate(scheduleTime[index].closingTime!).hour,
-        DateConverterHelper.convertStringTimeToDate(scheduleTime[index].closingTime!).minute,
+        DateConverterHelper.convertStringTimeToDate(
+                scheduleTime[index].closingTime!)
+            .hour,
+        DateConverterHelper.convertStringTimeToDate(
+                scheduleTime[index].closingTime!)
+            .minute,
       );
 
-      if(closeTime.difference(openTime).isNegative) {
+      if (closeTime.difference(openTime).isNegative) {
         minutes = openTime.difference(closeTime).inMinutes;
-      }else {
+      } else {
         minutes = closeTime.difference(openTime).inMinutes;
       }
-      if(duration! > 0 && minutes > duration) {
+      if ((duration ?? 0) > 0 && minutes > (duration ?? 0)) {
         DateTime time = openTime;
-        for(;;) {
-          if(time.isBefore(closeTime)) {
+        for (;;) {
+          if (time.isBefore(closeTime)) {
             DateTime start = time;
-            DateTime end = start.add(Duration(minutes: duration));
-            if(end.isAfter(closeTime)) {
+            DateTime end = start.add(Duration(minutes: duration ?? 0));
+            if (end.isAfter(closeTime)) {
               end = closeTime;
             }
-            _timeSlots!.add(TimeSlotModel(day: int.tryParse(scheduleTime[index].day!), startTime: start, endTime: end));
-            _allTimeSlots!.add(TimeSlotModel(day: int.tryParse(scheduleTime[index].day!), startTime: start, endTime: end));
-            time = time.add(Duration(minutes: duration));
-          }else {
+            _timeSlots!.add(TimeSlotModel(
+                day: int.tryParse(scheduleTime[index].day!),
+                startTime: start,
+                endTime: end));
+            _allTimeSlots!.add(TimeSlotModel(
+                day: int.tryParse(scheduleTime[index].day!),
+                startTime: start,
+                endTime: end));
+            time = time.add(Duration(minutes: duration ?? 0));
+          } else {
             break;
           }
         }
-      }else {
-        _timeSlots!.add(TimeSlotModel(day: int.tryParse(scheduleTime[index].day!), startTime: openTime, endTime: closeTime));
-        _allTimeSlots!.add(TimeSlotModel(day: int.tryParse(scheduleTime[index].day!), startTime: openTime, endTime: closeTime));
+      } else {
+        _timeSlots!.add(TimeSlotModel(
+            day: int.tryParse(scheduleTime[index].day!),
+            startTime: openTime,
+            endTime: closeTime));
+        _allTimeSlots!.add(TimeSlotModel(
+            day: int.tryParse(scheduleTime[index].day!),
+            startTime: openTime,
+            endTime: closeTime));
       }
     }
     validateSlot(_allTimeSlots!, 0, notify: false);
   }
+
   void sortTime() {
-    _timeSlots!.sort((a, b){
+    _timeSlots!.sort((a, b) {
       return a.startTime!.compareTo(b.startTime!);
     });
 
-    _allTimeSlots!.sort((a, b){
+    _allTimeSlots!.sort((a, b) {
       return a.startTime!.compareTo(b.startTime!);
     });
   }
@@ -261,46 +285,50 @@ class CheckoutProvider extends ChangeNotifier {
 
   void updateDateSlot(int index) {
     _selectDateSlot = index;
-    if(_allTimeSlots != null) {
+    if (_allTimeSlots != null) {
       validateSlot(_allTimeSlots!, index);
     }
     notifyListeners();
   }
 
-
-
-  void validateSlot(List<TimeSlotModel> slots, int dateIndex, {bool notify = true}) {
+  void validateSlot(List<TimeSlotModel> slots, int dateIndex,
+      {bool notify = true}) {
     _timeSlots = [];
     int day = 0;
-    if(dateIndex == 0) {
+    if (dateIndex == 0) {
       day = DateTime.now().weekday;
-    }else {
+    } else {
       day = DateTime.now().add(const Duration(days: 1)).weekday;
     }
-    if(day == 7) {
+    if (day == 7) {
       day = 0;
     }
     for (var slot in slots) {
-      if (day == slot.day && (dateIndex == 0 ? slot.endTime!.isAfter(DateTime.now()) : true)) {
+      if (day == slot.day &&
+          (dateIndex == 0 ? slot.endTime!.isAfter(DateTime.now()) : true)) {
         _timeSlots!.add(slot);
       }
     }
 
-
-    if(notify) {
+    if (notify) {
       notifyListeners();
     }
   }
 
-
-  Future<bool> getDistanceInMeter(LatLng originLatLng, LatLng destinationLatLng) async {
+  Future<bool> getDistanceInMeter(
+      LatLng originLatLng, LatLng destinationLatLng) async {
     _distance = -1;
     bool isSuccess = false;
-    ApiResponseModel response = await orderRepo!.getDistanceInMeter(originLatLng, destinationLatLng);
+    ApiResponseModel response =
+        await orderRepo!.getDistanceInMeter(originLatLng, destinationLatLng);
     try {
-      if (response.response!.statusCode == 200 && response.response!.data[0]['distanceMeters'] != null) {
+      if (response.response!.statusCode == 200 &&
+          response.response!.data[0]['distanceMeters'] != null) {
         isSuccess = true;
-        _distance = (DistanceModel.fromJson(response.response!.data[0]).distanceMeters ?? 0) /  1000;
+        _distance = (DistanceModel.fromJson(response.response!.data[0])
+                    .distanceMeters ??
+                0) /
+            1000;
       } else {
         _distance = getDistanceBetween(originLatLng, destinationLatLng) / 1000;
       }
@@ -311,69 +339,74 @@ class CheckoutProvider extends ChangeNotifier {
     return isSuccess;
   }
 
-
-
-  double getDistanceBetween(LatLng startLatLng, LatLng endLatLng){
+  double getDistanceBetween(LatLng startLatLng, LatLng endLatLng) {
     return Geolocator.distanceBetween(
-      startLatLng.latitude, startLatLng.longitude, endLatLng.latitude, endLatLng.longitude,
+      startLatLng.latitude,
+      startLatLng.longitude,
+      endLatLng.latitude,
+      endLatLng.longitude,
     );
   }
 
-  void changePartialPayment({double? amount,  bool isUpdate = true}){
+  void changePartialPayment({double? amount, bool isUpdate = true}) {
     _partialAmount = amount;
-    if(isUpdate) {
+    if (isUpdate) {
       notifyListeners();
     }
   }
-  void setOfflineSelectedValue(List<Map<String, String>>? data, {bool isUpdate = true}){
+
+  void setOfflineSelectedValue(List<Map<String, String>>? data,
+      {bool isUpdate = true}) {
     _selectedOfflineValue = data;
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-
-  void updatePaymentVisibility(bool vale){
+  void updatePaymentVisibility(bool vale) {
     paymentVisibility = vale;
     // notifyListeners();
   }
 
-
-
-  void updateCutleryStatus(bool selected){
+  void updateCutleryStatus(bool selected) {
     _isCutlerySelected = selected;
     notifyListeners();
   }
 
-  void setDeliveryCharge({double? deliveryCharge, bool isUpdate = true, bool isReload = false}) {
-    if(isReload){
+  void setDeliveryCharge(
+      {double? deliveryCharge, bool isUpdate = true, bool isReload = false}) {
+    if (isReload) {
       _deliveryCharge = 0;
-    }else{
+    } else {
       _deliveryCharge = deliveryCharge ?? 0.0;
     }
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void setBringChangeAmount({TextEditingController? amountController, bool isUpdate = true, bool isReload = false}) {
-    if(amountController !=null && amountController.text.isNotEmpty && (double.tryParse(amountController.text) ?? 0) > 0 ) {
+  void setBringChangeAmount(
+      {TextEditingController? amountController,
+      bool isUpdate = true,
+      bool isReload = false}) {
+    if (amountController != null &&
+        amountController.text.isNotEmpty &&
+        (double.tryParse(amountController.text) ?? 0) > 0) {
       _bringChangeAmount = double.tryParse(amountController.text) ?? 0;
-    }else{
+    } else {
       _bringChangeAmount = null;
     }
 
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
 
-  void updateBringChangeInputOptionStatus(bool value, { bool isUpdate = true}){
+  void updateBringChangeInputOptionStatus(bool value, {bool isUpdate = true}) {
     _showBringChangeInputOption = value;
-    if(isUpdate){
+    if (isUpdate) {
       notifyListeners();
     }
   }
-
 }

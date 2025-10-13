@@ -28,10 +28,10 @@
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="eFood">
+  <meta name="apple-mobile-web-app-title" content="YellowChicken">
   <link rel="apple-touch-icon" href="favicon.png">
 
-  <title>eFood</title>
+  <title>YellowChicken - Food Delivery</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" type="text/css" href="style.css">
 
@@ -61,15 +61,16 @@
 
 <div class="preloader">
   <div class="preloader-container">
-    <!-- <img width="80" class="preloader-img" src="assets/img/preloader.png" alt=""> -->
-    <div id="animation-container">
-      <img width="80" src="assets/loader_image_1.png" class="animation-image" alt="" />
-      <img width="80" src="assets/loader_image_2.png" class="animation-image" alt="" />
-      <img width="80" src="assets/loader_image_3.png" class="animation-image" alt="" />
-      <img width="80" src="assets/loader_image_4.png" class="animation-image" alt="" />
-      <img width="80" src="assets/loader_image_5.png" class="animation-image" alt="" />
+    <img width="120" src="assets/main_logo.png" class="preloader-logo" alt="YellowChicken Logo" />
+    <div class="spinner-container">
+      <div class="beautiful-spinner"></div>
     </div>
-    <div class="loader"></div>
+    <p class="loading-text">Loading...</p>
+    <div class="permission-buttons" style="display: none;">
+      <button class="permission-btn" onclick="handleLocationClick()">📍 Allow Location</button>
+      <button class="permission-btn" onclick="handleNotificationClick()">🔔 Allow Notifications</button>
+      <button class="permission-btn skip-btn" onclick="skipPermissions()">Skip for now</button>
+    </div>
   </div>
 </div>
 
@@ -80,7 +81,7 @@
   <div class="header-top-line-next"></div>
   <div class="header-container d-flex align-items-center justify-content-between">
     <div class="header-start d-flex gap-5 align-items-center">
-      <img class="logo" src="assets/logo.png" loading="eager" alt="">
+      <img class="logo" src="assets/main_logo.png" loading="eager" alt="YellowChicken">
       <div class="placeholder placeholder-wide"></div>
       <div class="d-flex align-items-center gap-4">
         <div class="placeholder"></div>
@@ -100,23 +101,175 @@
   </div>
 </header>
 
-<!-- Script Goes Here -->
+<!-- Permission Management Script -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-  var images = document.querySelectorAll(".animation-image");
-  var currentIndex = 0;
-  function cycleImages() {
-      var currentImage = images[currentIndex];
-      var nextIndex = (currentIndex + 1) % images.length;
-      var nextImage = images[nextIndex];
-      currentImage.style.display = "none";
-      nextImage.style.display = "block";
-      currentIndex = nextIndex;
-  }
-  // Set an interval to call the cycleImages function every 3 seconds
-  setInterval(cycleImages, 250);
+  // Global variable to track if permissions are complete
+  let permissionsComplete = false;
+  let locationGranted = false;
+  let notificationGranted = false;
+  
+  // Start requesting permissions immediately when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    requestPermissionsImmediately();
   });
+
+  async function requestPermissionsImmediately() {
+    try {
+      const loadingText = document.querySelector('.loading-text');
+      
+      // Small delay to ensure UI is ready
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Try automatic location request first
+      loadingText.textContent = 'Allow location access for better experience';
+      locationGranted = await requestLocationPermission();
+      
+      // Try automatic notification request
+      loadingText.textContent = 'Allow notifications to stay updated';
+      notificationGranted = await requestNotificationPermission();
+      
+      // If both succeeded, we're done
+      if (locationGranted && notificationGranted) {
+        permissionsComplete = true;
+        loadingText.textContent = 'Setting up your app...';
+      } else {
+        // Show manual buttons if automatic requests didn't work
+        showPermissionButtons();
+      }
+      
+    } catch (error) {
+      console.log('Permission error:', error);
+      showPermissionButtons();
+    }
+  }
+
+  function showPermissionButtons() {
+    const loadingText = document.querySelector('.loading-text');
+    const spinner = document.querySelector('.spinner-container');
+    const buttons = document.querySelector('.permission-buttons');
+    
+    loadingText.textContent = 'Grant permissions for the best experience';
+    spinner.style.display = 'none';
+    buttons.style.display = 'flex';
+  }
+
+  function handleLocationClick() {
+    requestLocationPermission().then(() => {
+      locationGranted = true;
+      updateButtonStates();
+    });
+  }
+
+  function handleNotificationClick() {
+    requestNotificationPermission().then(() => {
+      notificationGranted = true;
+      updateButtonStates();
+    });
+  }
+
+  function skipPermissions() {
+    permissionsComplete = true;
+    const loadingText = document.querySelector('.loading-text');
+    const spinner = document.querySelector('.spinner-container');
+    const buttons = document.querySelector('.permission-buttons');
+    
+    loadingText.textContent = 'Loading your app...';
+    spinner.style.display = 'flex';
+    buttons.style.display = 'none';
+  }
+
+  function updateButtonStates() {
+    if (locationGranted && notificationGranted) {
+      permissionsComplete = true;
+      skipPermissions();
+    }
+  }
+
+  async function checkPermissionsAndHideLoader() {
+    // Wait for permissions to complete before hiding loader
+    const loadingText = document.querySelector('.loading-text');
+    
+    // Check if permissions are already complete
+    if (permissionsComplete) {
+      loadingText.textContent = 'Welcome!';
+      setTimeout(() => {
+        document.querySelector('.preloader').style.display = 'none';
+      }, 500);
+      return;
+    }
+    
+    // Wait for permissions to complete
+    const checkInterval = setInterval(() => {
+      if (permissionsComplete) {
+        clearInterval(checkInterval);
+        loadingText.textContent = 'Welcome!';
+        setTimeout(() => {
+          document.querySelector('.preloader').style.display = 'none';
+        }, 500);
+      }
+    }, 100);
+    
+    // Fallback: hide after 10 seconds regardless
+    setTimeout(() => {
+      clearInterval(checkInterval);
+      document.querySelector('.preloader').style.display = 'none';
+    }, 10000);
+  }
+
+  async function requestLocationPermission() {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        console.log('Geolocation not supported');
+        resolve(false);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log('Location permission granted');
+          resolve(true);
+        },
+        (error) => {
+          console.log('Location permission denied or error:', error);
+          resolve(false);
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 5000,
+          maximumAge: 300000
+        }
+      );
+    });
+  }
+
+  async function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+      console.log('Notifications not supported');
+      return false;
+    }
+
+    if (Notification.permission === 'granted') {
+      console.log('Notification permission already granted');
+      return true;
+    }
+
+    if (Notification.permission === 'denied') {
+      console.log('Notification permission denied');
+      return false;
+    }
+
+    try {
+      const permission = await Notification.requestPermission();
+      console.log('Notification permission:', permission);
+      return permission === 'granted';
+    } catch (error) {
+      console.log('Notification permission error:', error);
+      return false;
+    }
+  }
 </script>
+
+
 
 <script>
   // Check if localStorage is supported in the browser
@@ -159,8 +312,8 @@
         let config = { renderer: 'html' };
         engineInitializer.initializeEngine(config).then(function(appRunner) {
           appRunner.runApp();
-
-
+          // Don't hide preloader immediately - wait for permissions
+          checkPermissionsAndHideLoader();
         });
       }
     });

@@ -92,15 +92,26 @@ class _BranchListScreenState extends State<BranchListScreen> {
                         child: SingleChildScrollView(
                       child: Column(children: [
                         Container(
-                          width: Dimensions.webScreenWidth,
+                          width: isDesktop
+                              ? Dimensions.webScreenWidth
+                              : double.infinity,
+                          margin: isDesktop
+                              ? EdgeInsets.symmetric(
+                                  horizontal:
+                                      (MediaQuery.of(context).size.width -
+                                              Dimensions.webScreenWidth) /
+                                          2)
+                              : null,
                           constraints: BoxConstraints(
                               minHeight: !isDesktop && height < 600
                                   ? height
-                                  : height - 400),
+                                  : height - (isDesktop ? 400 : 200)),
                           child: Column(children: [
                             if (branchProvider.branchTabIndex == 1) ...[
-                              const SizedBox(
-                                  height: Dimensions.paddingSizeDefault)
+                              SizedBox(
+                                  height: ResponsiveHelper.isMobile()
+                                      ? Dimensions.paddingSizeSmall
+                                      : Dimensions.paddingSizeDefault)
                             ],
 
                             branchProvider.branchTabIndex == 1
@@ -109,16 +120,18 @@ class _BranchListScreenState extends State<BranchListScreen> {
                                         color: Theme.of(context)
                                             .hintColor
                                             .withValues(alpha: 0.02),
-                                        padding: const EdgeInsets.only(
-                                          left: Dimensions.paddingSizeLarge,
-                                          right: Dimensions.paddingSizeLarge,
-                                          top: Dimensions.paddingSizeLarge,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal:
+                                              Dimensions.paddingSizeLarge,
+                                          vertical: Dimensions.paddingSizeLarge,
                                         ),
-                                        //Theme.of(context).hintColor.withValues(alpha:0.02),
                                         height: height - 400,
                                         child: Row(children: [
                                           Expanded(
-                                              flex: 3,
+                                              flex: ResponsiveHelper
+                                                      .isLargeDesktop(context)
+                                                  ? 3
+                                                  : 4,
                                               child: ScrollConfiguration(
                                                 behavior:
                                                     ScrollConfiguration.of(
@@ -153,11 +166,17 @@ class _BranchListScreenState extends State<BranchListScreen> {
                                                   ),
                                                 ),
                                               )),
-                                          const SizedBox(
-                                              width: Dimensions
-                                                  .paddingSizeDefault),
+                                          SizedBox(
+                                              width: ResponsiveHelper
+                                                      .isLargeDesktop(context)
+                                                  ? Dimensions.paddingSizeLarge
+                                                  : Dimensions
+                                                      .paddingSizeDefault),
                                           Expanded(
-                                              flex: 7,
+                                              flex: ResponsiveHelper
+                                                      .isLargeDesktop(context)
+                                                  ? 7
+                                                  : 6,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
                                                     bottom: Dimensions
@@ -206,93 +225,188 @@ class _BranchListScreenState extends State<BranchListScreen> {
                                               )),
                                         ]),
                                       )
-                                    : SizedBox(
-                                        height: height - 170,
-                                        child: Stack(children: [
-                                          GoogleMap(
-                                            mapType: MapType.normal,
-                                            initialCameraPosition:
-                                                CameraPosition(
-                                              target: LatLng(
-                                                branchProvider
-                                                        .branchValueList?[0]
-                                                        .branches
-                                                        ?.latitude ??
-                                                    0,
-                                                branchProvider
-                                                        .branchValueList?[0]
-                                                        .branches
-                                                        ?.longitude ??
-                                                    0,
+                                    : ResponsiveHelper.isTab(context)
+                                        ? Container(
+                                            height: height - 200,
+                                            padding: const EdgeInsets.all(
+                                                Dimensions.paddingSizeDefault),
+                                            child: Column(children: [
+                                              Expanded(
+                                                flex: 6,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          Dimensions
+                                                              .radiusDefault),
+                                                  child: GoogleMap(
+                                                    mapType: MapType.normal,
+                                                    initialCameraPosition:
+                                                        CameraPosition(
+                                                      target: LatLng(
+                                                        branchProvider
+                                                                .branchValueList?[
+                                                                    0]
+                                                                .branches
+                                                                ?.latitude ??
+                                                            0,
+                                                        branchProvider
+                                                                .branchValueList?[
+                                                                    0]
+                                                                .branches
+                                                                ?.longitude ??
+                                                            0,
+                                                      ),
+                                                      zoom: 5,
+                                                    ),
+                                                    minMaxZoomPreference:
+                                                        const MinMaxZoomPreference(
+                                                            0, 16),
+                                                    zoomControlsEnabled: true,
+                                                    markers: _markers,
+                                                    onMapCreated:
+                                                        (GoogleMapController
+                                                            controller) async {
+                                                      _mapController =
+                                                          controller;
+                                                      _setMarkers(
+                                                          1, branchProvider);
+                                                    },
+                                                  ),
+                                                ),
                                               ),
-                                              zoom: 5,
-                                            ),
-                                            minMaxZoomPreference:
-                                                const MinMaxZoomPreference(
-                                                    0, 16),
-                                            zoomControlsEnabled: true,
-                                            markers: _markers,
-                                            onMapCreated: (GoogleMapController
-                                                controller) async {
-                                              await Geolocator
-                                                  .requestPermission();
-                                              _mapController = controller;
-                                              // _loading = false;
-                                              _setMarkers(1, branchProvider);
-                                            },
-                                          ),
-                                          Positioned.fill(
-                                              child: Align(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  child: SizedBox(
-                                                    height: 170,
-                                                    child: ListView.builder(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      itemCount: branchProvider
-                                                          .branchValueList
-                                                          ?.length,
-                                                      physics:
-                                                          const BouncingScrollPhysics(),
-                                                      itemBuilder:
-                                                          (context, index) =>
-                                                              Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                          left: Dimensions
-                                                              .paddingSizeLarge,
-                                                          bottom: Dimensions
-                                                              .paddingSizeLarge,
-                                                          right: index ==
-                                                                  (branchProvider
-                                                                              .branchValueList
-                                                                              ?.length ??
-                                                                          0) -
-                                                                      1
-                                                              ? Dimensions
-                                                                  .paddingSizeLarge
-                                                              : 0,
-                                                        ),
-                                                        child: BranchCardWidget(
-                                                          branchModel:
-                                                              branchProvider
-                                                                      .branchValueList?[
-                                                                  index],
-                                                          branchModelList:
-                                                              branchProvider
-                                                                  .branchValueList,
-                                                          onTap: () => _setMarkers(
-                                                              index,
-                                                              branchProvider,
-                                                              fromBranchSelect:
-                                                                  true),
-                                                        ),
+                                              const SizedBox(
+                                                  height: Dimensions
+                                                      .paddingSizeDefault),
+                                              Expanded(
+                                                flex: 4,
+                                                child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: branchProvider
+                                                      .branchValueList?.length,
+                                                  physics:
+                                                      const BouncingScrollPhysics(),
+                                                  itemBuilder:
+                                                      (context, index) =>
+                                                          Padding(
+                                                    padding: EdgeInsets.only(
+                                                      left: index == 0
+                                                          ? 0
+                                                          : Dimensions
+                                                              .paddingSizeSmall,
+                                                      right: Dimensions
+                                                          .paddingSizeSmall,
+                                                    ),
+                                                    child: SizedBox(
+                                                      width: 280,
+                                                      child: BranchCardWidget(
+                                                        branchModel: branchProvider
+                                                                .branchValueList?[
+                                                            index],
+                                                        branchModelList:
+                                                            branchProvider
+                                                                .branchValueList,
+                                                        onTap: () => _setMarkers(
+                                                            index,
+                                                            branchProvider,
+                                                            fromBranchSelect:
+                                                                true),
                                                       ),
                                                     ),
-                                                  ))),
-                                        ]),
-                                      )
+                                                  ),
+                                                ),
+                                              ),
+                                            ]),
+                                          )
+                                        : SizedBox(
+                                            height: height - 170,
+                                            child: Stack(children: [
+                                              GoogleMap(
+                                                mapType: MapType.normal,
+                                                initialCameraPosition:
+                                                    CameraPosition(
+                                                  target: LatLng(
+                                                    branchProvider
+                                                            .branchValueList?[0]
+                                                            .branches
+                                                            ?.latitude ??
+                                                        0,
+                                                    branchProvider
+                                                            .branchValueList?[0]
+                                                            .branches
+                                                            ?.longitude ??
+                                                        0,
+                                                  ),
+                                                  zoom: 5,
+                                                ),
+                                                minMaxZoomPreference:
+                                                    const MinMaxZoomPreference(
+                                                        0, 16),
+                                                zoomControlsEnabled: true,
+                                                markers: _markers,
+                                                onMapCreated:
+                                                    (GoogleMapController
+                                                        controller) async {
+                                                  await Geolocator
+                                                      .requestPermission();
+                                                  _mapController = controller;
+                                                  // _loading = false;
+                                                  _setMarkers(
+                                                      1, branchProvider);
+                                                },
+                                              ),
+                                              Positioned.fill(
+                                                  child: Align(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      child: SizedBox(
+                                                        height: 170,
+                                                        child: ListView.builder(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemCount:
+                                                              branchProvider
+                                                                  .branchValueList
+                                                                  ?.length,
+                                                          physics:
+                                                              const BouncingScrollPhysics(),
+                                                          itemBuilder: (context,
+                                                                  index) =>
+                                                              Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                              left: Dimensions
+                                                                  .paddingSizeLarge,
+                                                              bottom: Dimensions
+                                                                  .paddingSizeLarge,
+                                                              right: index ==
+                                                                      (branchProvider.branchValueList?.length ??
+                                                                              0) -
+                                                                          1
+                                                                  ? Dimensions
+                                                                      .paddingSizeLarge
+                                                                  : 0,
+                                                            ),
+                                                            child:
+                                                                BranchCardWidget(
+                                                              branchModel:
+                                                                  branchProvider
+                                                                          .branchValueList?[
+                                                                      index],
+                                                              branchModelList:
+                                                                  branchProvider
+                                                                      .branchValueList,
+                                                              onTap: () => _setMarkers(
+                                                                  index,
+                                                                  branchProvider,
+                                                                  fromBranchSelect:
+                                                                      true),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ))),
+                                            ]),
+                                          )
                                 : Container(
                                     padding: EdgeInsets.symmetric(
                                       vertical: ResponsiveHelper.isMobile()
@@ -420,103 +534,159 @@ class _BranchListScreenState extends State<BranchListScreen> {
                                       (branchProvider.branchValueList
                                                   ?.isNotEmpty ??
                                               false)
-                                          ? GridView.builder(
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisSpacing: ResponsiveHelper
-                                                        .isMobile()
-                                                    ? Dimensions
-                                                        .paddingSizeSmall
-                                                    : ResponsiveHelper.isTab(
-                                                            context)
+                                          ? LayoutBuilder(
+                                              builder: (context, constraints) {
+                                                int crossAxisCount;
+
+                                                if (ResponsiveHelper
+                                                    .isMobile()) {
+                                                  crossAxisCount = 1;
+                                                } else if (ResponsiveHelper
+                                                    .isTab(context)) {
+                                                  crossAxisCount =
+                                                      constraints.maxWidth > 600
+                                                          ? 2
+                                                          : 1;
+                                                } else {
+                                                  // Desktop
+                                                  if (constraints.maxWidth >
+                                                      1400) {
+                                                    crossAxisCount = 4;
+                                                  } else if (constraints
+                                                          .maxWidth >
+                                                      1000) {
+                                                    crossAxisCount = 3;
+                                                  } else {
+                                                    crossAxisCount = 2;
+                                                  }
+                                                }
+
+                                                return GridView.builder(
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisSpacing: ResponsiveHelper
+                                                            .isMobile()
+                                                        ? Dimensions
+                                                            .paddingSizeSmall
+                                                        : ResponsiveHelper
+                                                                .isTab(context)
+                                                            ? Dimensions
+                                                                .paddingSizeDefault
+                                                            : Dimensions
+                                                                .paddingSizeLarge,
+                                                    mainAxisSpacing: ResponsiveHelper
+                                                            .isMobile()
                                                         ? Dimensions
                                                             .paddingSizeDefault
-                                                        : Dimensions
-                                                            .paddingSizeLarge,
-                                                mainAxisSpacing: ResponsiveHelper
-                                                        .isMobile()
-                                                    ? Dimensions
-                                                        .paddingSizeDefault
-                                                    : ResponsiveHelper.isTab(
-                                                            context)
-                                                        ? Dimensions
-                                                            .paddingSizeLarge
-                                                        : Dimensions
-                                                            .paddingSizeExtraLarge,
-                                                mainAxisExtent:
-                                                    ResponsiveHelper.isMobile()
-                                                        ? 180
                                                         : ResponsiveHelper
                                                                 .isTab(context)
-                                                            ? 195
-                                                            : 210,
-                                                crossAxisCount:
-                                                    ResponsiveHelper.isMobile()
-                                                        ? 1
-                                                        : ResponsiveHelper
-                                                                .isTab(context)
-                                                            ? 2
-                                                            : 3,
-                                              ),
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemCount: branchProvider
-                                                  .branchValueList?.length,
-                                              itemBuilder: (context, index) =>
-                                                  BranchItemCardWidget(
-                                                branchesValue: branchProvider
-                                                    .branchValueList?[index],
-                                              ),
+                                                            ? Dimensions
+                                                                .paddingSizeLarge
+                                                            : Dimensions
+                                                                .paddingSizeExtraLarge,
+                                                    mainAxisExtent:
+                                                        ResponsiveHelper
+                                                                .isMobile()
+                                                            ? 170
+                                                            : ResponsiveHelper
+                                                                    .isTab(
+                                                                        context)
+                                                                ? 185
+                                                                : 200,
+                                                    crossAxisCount:
+                                                        crossAxisCount,
+                                                  ),
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemCount: branchProvider
+                                                      .branchValueList?.length,
+                                                  itemBuilder:
+                                                      (context, index) =>
+                                                          BranchItemCardWidget(
+                                                    branchesValue: branchProvider
+                                                            .branchValueList?[
+                                                        index],
+                                                  ),
+                                                );
+                                              },
                                             )
-                                          : GridView.builder(
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisSpacing: ResponsiveHelper
-                                                        .isMobile()
-                                                    ? Dimensions
-                                                        .paddingSizeSmall
-                                                    : ResponsiveHelper.isTab(
-                                                            context)
+                                          : LayoutBuilder(
+                                              builder: (context, constraints) {
+                                                int crossAxisCount;
+
+                                                if (ResponsiveHelper
+                                                    .isMobile()) {
+                                                  crossAxisCount = 1;
+                                                } else if (ResponsiveHelper
+                                                    .isTab(context)) {
+                                                  crossAxisCount =
+                                                      constraints.maxWidth > 600
+                                                          ? 2
+                                                          : 1;
+                                                } else {
+                                                  // Desktop
+                                                  if (constraints.maxWidth >
+                                                      1400) {
+                                                    crossAxisCount = 4;
+                                                  } else if (constraints
+                                                          .maxWidth >
+                                                      1000) {
+                                                    crossAxisCount = 3;
+                                                  } else {
+                                                    crossAxisCount = 2;
+                                                  }
+                                                }
+
+                                                return GridView.builder(
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisSpacing: ResponsiveHelper
+                                                            .isMobile()
+                                                        ? Dimensions
+                                                            .paddingSizeSmall
+                                                        : ResponsiveHelper
+                                                                .isTab(context)
+                                                            ? Dimensions
+                                                                .paddingSizeDefault
+                                                            : Dimensions
+                                                                .paddingSizeLarge,
+                                                    mainAxisSpacing: ResponsiveHelper
+                                                            .isMobile()
                                                         ? Dimensions
                                                             .paddingSizeDefault
-                                                        : Dimensions
-                                                            .paddingSizeLarge,
-                                                mainAxisSpacing: ResponsiveHelper
-                                                        .isMobile()
-                                                    ? Dimensions
-                                                        .paddingSizeDefault
-                                                    : ResponsiveHelper.isTab(
-                                                            context)
-                                                        ? Dimensions
-                                                            .paddingSizeLarge
-                                                        : Dimensions
-                                                            .paddingSizeExtraLarge,
-                                                mainAxisExtent:
-                                                    ResponsiveHelper.isMobile()
-                                                        ? 180
                                                         : ResponsiveHelper
                                                                 .isTab(context)
-                                                            ? 195
-                                                            : 210,
-                                                crossAxisCount:
-                                                    ResponsiveHelper.isMobile()
-                                                        ? 1
-                                                        : ResponsiveHelper
-                                                                .isTab(context)
-                                                            ? 2
-                                                            : 3,
-                                              ),
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemCount: 5,
-                                              itemBuilder: (context, index) =>
-                                                  BranchShimmerCardWidget(
-                                                      isEnabled: (branchProvider
-                                                              .branchValueList
-                                                              ?.isEmpty ??
-                                                          true)),
+                                                            ? Dimensions
+                                                                .paddingSizeLarge
+                                                            : Dimensions
+                                                                .paddingSizeExtraLarge,
+                                                    mainAxisExtent:
+                                                        ResponsiveHelper
+                                                                .isMobile()
+                                                            ? 170
+                                                            : ResponsiveHelper
+                                                                    .isTab(
+                                                                        context)
+                                                                ? 185
+                                                                : 200,
+                                                    crossAxisCount:
+                                                        crossAxisCount,
+                                                  ),
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  itemCount: 5,
+                                                  itemBuilder: (context,
+                                                          index) =>
+                                                      BranchShimmerCardWidget(
+                                                    isEnabled: (branchProvider
+                                                            .branchValueList
+                                                            ?.isEmpty ??
+                                                        true),
+                                                  ),
+                                                );
+                                              },
                                             ),
                                     ]),
                                   ),
@@ -662,9 +832,14 @@ class _BranchSelectButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDesktop = ResponsiveHelper.isDesktop(context);
+    final double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      width: isDesktop ? 400 : Dimensions.webScreenWidth,
+      width: isDesktop ? (screenWidth > 1400 ? 500 : 400) : double.infinity,
+      margin: isDesktop
+          ? EdgeInsets.symmetric(
+              horizontal: (screenWidth - (screenWidth > 1400 ? 500 : 400)) / 2)
+          : const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
       padding: EdgeInsets.all(
         ResponsiveHelper.isMobile()
             ? Dimensions.paddingSizeDefault

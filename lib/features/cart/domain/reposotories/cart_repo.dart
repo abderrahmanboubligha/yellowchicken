@@ -8,21 +8,21 @@ import 'package:flutter_restaurant/utill/app_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CartRepo{
+class CartRepo {
   final SharedPreferences? sharedPreferences;
   CartRepo({required this.sharedPreferences});
 
-  String  _getCartDataKey(BuildContext context){
-    return  '${AppConstants.cartList}_${Provider.of<BranchProvider>(context, listen: false).getBranchId()}';
+  String _getCartDataKey(BuildContext context) {
+    return '${AppConstants.cartList}_${Provider.of<BranchProvider>(context, listen: false).getBranchId()}';
   }
 
   List<CartModel> getCartList(BuildContext context) {
     List<String>? carts = [];
-    if(sharedPreferences!.containsKey(_getCartDataKey(context))) {
+    if (sharedPreferences!.containsKey(_getCartDataKey(context))) {
       carts = sharedPreferences!.getStringList(_getCartDataKey(context));
     }
     List<CartModel> cartList = [];
-    for (var cart in carts!) {
+    for (var cart in carts ?? []) {
       cartList.add(CartModel.fromJson(jsonDecode(cart)));
     }
 
@@ -36,5 +36,4 @@ class CartRepo{
     }
     sharedPreferences!.setStringList(_getCartDataKey(Get.context!), carts);
   }
-
 }

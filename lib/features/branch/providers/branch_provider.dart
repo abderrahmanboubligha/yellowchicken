@@ -32,7 +32,6 @@ class BranchProvider extends DataSyncProvider {
 
   List<BranchValue>? get branchValueList => _branchValueList;
 
-
   void updateSearchBox(bool status) {
     _showSearchBox = status;
     notifyListeners();
@@ -44,7 +43,6 @@ class BranchProvider extends DataSyncProvider {
       notifyListeners();
     }
   }
-
 
   void updateBranchId(int? value, {bool isUpdate = true}) {
     _selectedBranchId = value;
@@ -65,34 +63,41 @@ class BranchProvider extends DataSyncProvider {
   Branches? getBranch({int? id}) {
     int branchId = id ?? getBranchId();
     Branches? branch;
-    ConfigModel config = Provider
-        .of<SplashProvider>(Get.context!, listen: false)
-        .configModel!;
-    if (config.branches != null && config.branches!.isNotEmpty) {
-      branch = config.branches!.firstWhere((branch) => branch!.id == branchId,
-          orElse: () => null);
-      if (branch == null) {
-        splashRepo!.setBranchId(-1);
+    try {
+      ConfigModel config =
+          Provider.of<SplashProvider>(Get.context!, listen: false).configModel!;
+      if (config.branches != null && config.branches!.isNotEmpty) {
+        branch = config.branches!
+            .firstWhere((branch) => branch!.id == branchId, orElse: () => null);
+        if (branch == null && branchId != -1) {
+          splashRepo!.setBranchId(-1);
+        }
+      }
+    } catch (e) {
+      // Handle any errors gracefully
+      if (branchId != -1) {
+        splashRepo?.setBranchId(-1);
       }
     }
     return branch;
   }
 
-
   List<BranchValue> branchSort(LatLng? currentLatLng) {
     _isLoading = true;
     List<BranchValue> branchValueList = [];
 
-    for (var branch in Provider
-        .of<SplashProvider>(Get.context!, listen: false)
+    for (var branch in Provider.of<SplashProvider>(Get.context!, listen: false)
         .configModel!
         .branches!) {
       double distance = -1;
       if (currentLatLng != null) {
         distance = Geolocator.distanceBetween(
-          branch!.latitude!, branch.longitude!,
-          currentLatLng.latitude, currentLatLng.longitude,
-        ) / 1000;
+              branch!.latitude!,
+              branch.longitude!,
+              currentLatLng.latitude,
+              currentLatLng.longitude,
+            ) /
+            1000;
       }
 
       branchValueList.add(BranchValue(branch, distance));
@@ -106,12 +111,11 @@ class BranchProvider extends DataSyncProvider {
     return branchValueList;
   }
 
-
-
-
-
   Future<List<BranchValue>> getBranchValueList(BuildContext context) async {
-    final LocationProvider locationProvider = Provider.of<LocationProvider>(context, listen: false);
+    final LocationProvider locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+    final SplashProvider splashProvider =
+        Provider.of<SplashProvider>(context, listen: false);
     LatLng? currentLocationLatLng;
 
     await locationProvider.getCurrentLatLong().then((latLong) {
@@ -119,11 +123,23 @@ class BranchProvider extends DataSyncProvider {
         currentLocationLatLng = latLong;
       }
       _branchValueList = branchSort(currentLocationLatLng);
+
+      // Auto-select and set the first (nearest) branch as default if no branch is selected
+      if (_branchValueList != null &&
+          _branchValueList!.isNotEmpty &&
+          getBranchId() == -1) {
+        final firstBranch = _branchValueList!.first;
+        if (firstBranch.branches != null &&
+            firstBranch.branches!.status == true) {
+          _selectedBranchId = firstBranch.branches!.id;
+          // Automatically set the first branch as active
+          setBranch(firstBranch.branches!.id!, splashProvider);
+        }
+      }
     });
 
     notifyListeners();
 
     return _branchValueList ?? [];
   }
-
 }

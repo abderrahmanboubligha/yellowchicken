@@ -1,6 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_restaurant/theme/custom_theme_colors.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+
+// Helper function to get responsive font sizes based on platform
+double _getResponsiveFontSize(double webSize) {
+  if (kIsWeb) {
+    return webSize; // Keep original size for web
+  } else {
+    return webSize +
+        8.0; // Increase by 8px for mobile apps (Android/iOS) - increased from 6px for MAXIMUM readability
+  }
+}
+
+// Helper function to create responsive text theme
+TextTheme _createResponsiveTextTheme() {
+  return TextTheme(
+    displayLarge: TextStyle(
+        fontWeight: FontWeight.w300,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeExtraLarge)), // increased from fontSizeLarge
+    displayMedium: TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeExtraLarge)), // increased from fontSizeLarge
+    displaySmall: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeLarge)), // increased from fontSizeDefault
+    headlineMedium: TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeOverLarge)), // increased from fontSizeExtraLarge
+    headlineSmall: TextStyle(
+        fontWeight: FontWeight.w700,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeExtraLarge)), // increased from fontSizeLarge
+    titleLarge: TextStyle(
+        fontWeight: FontWeight.w800,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeOverLarge)), // increased from fontSizeExtraLarge
+    bodySmall: TextStyle(
+        fontWeight: FontWeight.w900,
+        fontSize: _getResponsiveFontSize(
+            Dimensions.fontSizeLarge)), // increased from fontSizeDefault
+    titleMedium: TextStyle(
+        fontSize: _getResponsiveFontSize(23.0),
+        fontWeight: FontWeight.w500), // increased from 21.0 to 23.0
+    bodyMedium: TextStyle(
+        fontSize: _getResponsiveFontSize(20.0)), // increased from 18.0 to 20.0
+    bodyLarge: TextStyle(
+        fontSize: _getResponsiveFontSize(22.0),
+        fontWeight: FontWeight.w600), // increased from 20.0 to 22.0
+  );
+}
 
 ThemeData light = ThemeData(
   fontFamily: 'Rubik',
@@ -40,34 +93,16 @@ ThemeData light = ThemeData(
     shadow: Colors.grey[300],
   ),
 
-  textTheme: const TextTheme(
-    displayLarge: TextStyle(
-        fontWeight: FontWeight.w300, fontSize: Dimensions.fontSizeLarge),
-    displayMedium: TextStyle(
-        fontWeight: FontWeight.w400, fontSize: Dimensions.fontSizeLarge),
-    displaySmall: TextStyle(
-        fontWeight: FontWeight.w500, fontSize: Dimensions.fontSizeDefault),
-    headlineMedium: TextStyle(
-        fontWeight: FontWeight.w600, fontSize: Dimensions.fontSizeExtraLarge),
-    headlineSmall: TextStyle(
-        fontWeight: FontWeight.w700, fontSize: Dimensions.fontSizeLarge),
-    titleLarge: TextStyle(
-        fontWeight: FontWeight.w800, fontSize: Dimensions.fontSizeExtraLarge),
-    bodySmall: TextStyle(
-        fontWeight: FontWeight.w900, fontSize: Dimensions.fontSizeDefault),
-    titleMedium: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500),
-    bodyMedium: TextStyle(fontSize: 14.0),
-    bodyLarge: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-  ),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFFa1143f),
+  textTheme: _createResponsiveTextTheme(),
+  appBarTheme: AppBarTheme(
+    backgroundColor: const Color(0xFFa1143f),
     foregroundColor: Colors.white,
     elevation: 0,
     centerTitle: false,
-    iconTheme: IconThemeData(color: Colors.white),
+    iconTheme: const IconThemeData(color: Colors.white),
     titleTextStyle: TextStyle(
       color: Colors.white,
-      fontSize: 20,
+      fontSize: _getResponsiveFontSize(26.0), // increased from 24.0 to 26.0
       fontWeight: FontWeight.w500,
     ),
   ),

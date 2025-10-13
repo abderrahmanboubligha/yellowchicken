@@ -73,8 +73,13 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
       builder: (context) => Stack(children: [
         Positioned(
           top: searchBarPosition.dy,
-          left: searchBarPosition.dx - 50,
-          width: renderBox.size.width + 100,
+          left: MediaQuery.of(context).size.width > 1200
+              ? searchBarPosition.dx - 50
+              : searchBarPosition.dx -
+                  (MediaQuery.of(context).size.width * 0.05),
+          width: MediaQuery.of(context).size.width > 1200
+              ? renderBox.size.width + 100
+              : MediaQuery.of(context).size.width * 0.4,
           child: Material(
             color: Provider.of<ThemeProvider>(context, listen: false).darkTheme
                 ? Theme.of(context).cardColor
@@ -86,7 +91,9 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SizedBox(
-                          width: 410,
+                          width: MediaQuery.of(context).size.width > 1200
+                              ? 410
+                              : MediaQuery.of(context).size.width * 0.35,
                           height: 50,
                           child: CustomTextFieldWidget(
                             radius: 50,
@@ -130,7 +137,9 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                         const SizedBox(
                             height: Dimensions.paddingSizeExtraSmall),
                         Container(
-                          width: 600,
+                          width: MediaQuery.of(context).size.width > 1200
+                              ? 600
+                              : MediaQuery.of(context).size.width * 0.5,
                           constraints: BoxConstraints(
                               maxHeight:
                                   MediaQuery.sizeOf(context).height * 0.7),
@@ -264,7 +273,9 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
       child: Column(children: [
         Center(
             child: SizedBox(
-                width: Dimensions.webScreenWidth,
+                width: MediaQuery.of(context).size.width > 1170
+                    ? Dimensions.webScreenWidth
+                    : MediaQuery.of(context).size.width * 0.95,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: Dimensions.paddingSizeExtraSmall),
@@ -373,211 +384,299 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
             height: 0.5,
             color: Theme.of(context).dividerColor.withValues(alpha: 0.2)),
         Expanded(
-            child: Center(
-                child: SizedBox(
-                    width: Dimensions.webScreenWidth,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              RouterHelper.getMainRoute(
-                                  action: RouteAction.pushReplacement);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Provider.of<SplashProvider>(context)
-                                          .baseUrls !=
-                                      null
-                                  ? Consumer<SplashProvider>(
-                                      builder: (context, splash, child) =>
-                                          CustomImageWidget(
-                                            image:
-                                                '${splash.baseUrls?.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
-                                            placeholder: Images.webAppBarLogo,
-                                            fit: BoxFit.contain,
-                                            width: 120,
-                                            height: 80,
-                                          ))
-                                  : const SizedBox(),
-                            ),
-                          ),
-                          OnHoverWidget(
-                              builder: (isHover) => InkWell(
-                                    onTap: () => RouterHelper.getHomeRoute(
-                                        fromAppBar: 'true'),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal:
-                                              Dimensions.paddingSizeDefault),
-                                      child: Text(
-                                        getTranslated('home', context)!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: rubikRegular.copyWith(
-                                          color: isHover
-                                              ? Colors.grey.shade300
-                                              : Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: Dimensions.paddingSizeSmall),
-                            child: MouseRegion(
-                              onHover: (details) {
-                                if (categoryProvider.categoryList != null) {
-                                  _showPopupMenu(
-                                      details.position, context, true);
-                                }
-                              },
-                              child: OnHoverWidget(
-                                  builder: (isHover) => Text(
-                                        getTranslated('categories', context)!,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: rubikRegular.copyWith(
-                                          color: isHover
-                                              ? Colors.grey.shade300
-                                              : Colors.white,
-                                        ),
-                                      )),
-                            ),
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: SizedBox(
-                              key: _searchBarKey,
-                              width: 410,
-                              height: 50,
-                              child: Consumer<SearchProvider>(
-                                  builder: (context, search, _) =>
-                                      CustomTextFieldWidget(
-                                        onTap: _showSearchDialog,
-                                        isEnabled: Provider.of<BranchProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .getBranchId() !=
-                                            -1,
-                                        focusNode: _appbarSearchFocusNode,
-                                        radius: 50,
-                                        hintText: getTranslated(
-                                            'are_you_hungry', context),
-                                        isShowBorder: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                        isShowPrefixIcon:
-                                            search.searchLength == 0,
-                                        prefixIconUrl: Images.search,
-                                        prefixIconColor:
-                                            Theme.of(context).hintColor,
-                                        suffixIconColor:
-                                            Theme.of(context).hintColor,
-                                        onChanged: (str) {
-                                          search.getSearchText(str);
-                                        },
-                                        controller: search.searchController,
-                                        inputAction: TextInputAction.search,
-                                        isIcon: true,
-                                        isShowSuffixIcon:
-                                            search.searchLength > 0,
-                                        suffixIconUrl: Images.cancelSvg,
-                                        onSuffixTap: () {
-                                          search.searchController.clear();
-                                          search.getSearchText('');
-                                        },
-                                        onSubmit: (text) {
-                                          if (search.searchController.text
-                                              .isNotEmpty) {
-                                            RouterHelper.getSearchResultRoute(
-                                                search.searchController.text);
-                                            search.searchDone();
-                                          }
-                                        },
-                                      )),
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.paddingSizeExtraLarge),
-                            child: BranchButtonWidget(isPopup: true),
-                          ),
-                          InkWell(
-                            onTap: () =>
-                                RouterHelper.getDashboardRoute('favourite'),
-                            child: OnHoverWidget(builder: (isHover) {
-                              return Consumer<WishListProvider>(
-                                  builder: (context, wishlistProvider, _) {
-                                return CountIconView(
-                                    count:
-                                        '${wishlistProvider.wishList?.length ?? 0}',
-                                    image: Images.navFavoriteSvg);
-                              });
-                            }),
-                          ),
-                          InkWell(
-                            onTap: () => RouterHelper.getDashboardRoute('cart'),
-                            child: OnHoverWidget(
-                                builder: (isHover) => CountIconView(
-                                      count: Provider.of<CartProvider>(context)
-                                          .cartList
-                                          .length
-                                          .toString(),
-                                      image: Images.navOrderSvg,
-                                    )),
-                          ),
-                          OnHoverWidget(
-                              builder: (isHover) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal:
-                                            Dimensions.paddingSizeExtraLarge),
-                                    child: InkWell(
-                                      onTap: () =>
-                                          RouterHelper.getProfileRoute(),
-                                      child: profileProvider
-                                                  .userInfoModel?.image !=
-                                              null
-                                          ? ClipOval(
-                                              child: CustomImageWidget(
+          child: Container(
+              // Use full width with controlled padding instead of center constraint
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width > 1200 ? 40 : 20,
+              ),
+              child: Consumer<LocalizationProvider>(
+                builder: (context, localizationProvider, _) {
+                  return Directionality(
+                      textDirection: localizationProvider.isLtr
+                          ? TextDirection.ltr
+                          : TextDirection.rtl,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .spaceBetween, // Better distribution
+                          crossAxisAlignment: CrossAxisAlignment
+                              .center, // Proper vertical alignment
+                          children: [
+                            // Left Section: Logo + Navigation
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              InkWell(
+                                onTap: () {
+                                  RouterHelper.getMainRoute(
+                                      action: RouteAction.pushReplacement);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 8.0),
+                                  child: Provider.of<SplashProvider>(context)
+                                              .baseUrls !=
+                                          null
+                                      ? Consumer<SplashProvider>(
+                                          builder: (context, splash, child) =>
+                                              CustomImageWidget(
                                                 image:
-                                                    "${splashProvider.baseUrls!.customerImageUrl}/${profileProvider.userInfoModel?.image}",
-                                                fit: BoxFit.cover,
-                                                height: Dimensions
-                                                    .paddingSizeExtraLarge,
-                                                width: Dimensions
-                                                    .paddingSizeExtraLarge,
-                                              ),
-                                            )
-                                          : CustomAssetImageWidget(
-                                              fit: BoxFit.cover,
-                                              Images.navUserSvg,
-                                              width:
-                                                  Dimensions.paddingSizeLarge,
+                                                    '${splash.baseUrls?.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
+                                                placeholder:
+                                                    Images.webAppBarLogo,
+                                                fit: BoxFit.contain,
+                                                width: MediaQuery.of(context)
+                                                            .size
+                                                            .width >
+                                                        1200
+                                                    ? 100 // Reduced from 120
+                                                    : MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.08, // Reduced from 0.1
+                                                height: MediaQuery.of(context)
+                                                            .size
+                                                            .width >
+                                                        1200
+                                                    ? 60 // Reduced from 80
+                                                    : MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.05, // Reduced from 0.06
+                                              ))
+                                      : const SizedBox(),
+                                ),
+                              ),
+                              OnHoverWidget(
+                                  builder: (isHover) => InkWell(
+                                        onTap: () => RouterHelper.getHomeRoute(
+                                            fromAppBar: 'true'),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: Dimensions
+                                                  .paddingSizeDefault),
+                                          child: Text(
+                                            getTranslated('home', context)!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: rubikRegular.copyWith(
                                               color: isHover
+                                                  ? Colors.grey.shade300
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeSmall),
+                                child: MouseRegion(
+                                  onHover: (details) {
+                                    if (categoryProvider.categoryList != null) {
+                                      _showPopupMenu(
+                                          details.position, context, true);
+                                    }
+                                  },
+                                  child: OnHoverWidget(
+                                      builder: (isHover) => Text(
+                                            getTranslated(
+                                                'categories', context)!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: rubikRegular.copyWith(
+                                              color: isHover
+                                                  ? Colors.grey.shade300
+                                                  : Colors.white,
+                                            ),
+                                          )),
+                                ),
+                              ),
+                            ]), // Close left section Row
+
+                            // Center Section: Search + Branch
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: SizedBox(
+                                  key: _searchBarKey,
+                                  width:
+                                      MediaQuery.of(context).size.width > 1200
+                                          ? 350 // Reduced from 410 to 350
+                                          : MediaQuery.of(context).size.width *
+                                              0.30, // Reduced from 0.35 to 0.30
+                                  height: 50,
+                                  child: Consumer<SearchProvider>(
+                                      builder: (context, search, _) =>
+                                          CustomTextFieldWidget(
+                                            onTap: _showSearchDialog,
+                                            isEnabled:
+                                                Provider.of<BranchProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .getBranchId() !=
+                                                    -1,
+                                            focusNode: _appbarSearchFocusNode,
+                                            radius: 50,
+                                            hintText: getTranslated(
+                                                'are_you_hungry', context),
+                                            isShowBorder: true,
+                                            fillColor:
+                                                Theme.of(context).cardColor,
+                                            isShowPrefixIcon:
+                                                search.searchLength == 0,
+                                            prefixIconUrl: Images.search,
+                                            prefixIconColor:
+                                                Theme.of(context).hintColor,
+                                            suffixIconColor:
+                                                Theme.of(context).hintColor,
+                                            onChanged: (str) {
+                                              search.getSearchText(str);
+                                            },
+                                            controller: search.searchController,
+                                            inputAction: TextInputAction.search,
+                                            isIcon: true,
+                                            isShowSuffixIcon:
+                                                search.searchLength > 0,
+                                            suffixIconUrl: Images.cancelSvg,
+                                            onSuffixTap: () {
+                                              search.searchController.clear();
+                                              search.getSearchText('');
+                                            },
+                                            onSubmit: (text) {
+                                              if (search.searchController.text
+                                                  .isNotEmpty) {
+                                                RouterHelper
+                                                    .getSearchResultRoute(search
+                                                        .searchController.text);
+                                                search.searchDone();
+                                              }
+                                            },
+                                          )),
+                                ),
+                              ),
+                              // Add spacing after search bar
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width > 1200
+                                          ? 20
+                                          : 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions
+                                        .paddingSizeSmall), // Reduced from ExtraLarge to Small
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: MediaQuery.of(context)
+                                                .size
+                                                .width >
+                                            1200
+                                        ? 300 // Increased to allow for branch name
+                                        : MediaQuery.of(context).size.width *
+                                            0.25,
+                                  ),
+                                  child:
+                                      const BranchButtonWidget(isPopup: true),
+                                ),
+                              ),
+                            ]), // Close center section Row
+
+                            // Right Section: Navigation Icons
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              if (MediaQuery.of(context).size.width > 1000) ...[
+                                InkWell(
+                                  onTap: () => RouterHelper.getDashboardRoute(
+                                      'favourite'),
+                                  child: OnHoverWidget(builder: (isHover) {
+                                    return Consumer<WishListProvider>(builder:
+                                        (context, wishlistProvider, _) {
+                                      return CountIconView(
+                                          count:
+                                              '${wishlistProvider.wishList?.length ?? 0}',
+                                          image: Images.navFavoriteSvg);
+                                    });
+                                  }),
+                                ),
+                                InkWell(
+                                  onTap: () =>
+                                      RouterHelper.getDashboardRoute('cart'),
+                                  child: OnHoverWidget(
+                                      builder: (isHover) => CountIconView(
+                                            count: Provider.of<CartProvider>(
+                                                    context)
+                                                .cartList
+                                                .length
+                                                .toString(),
+                                            image: Images.navOrderSvg,
+                                          )),
+                                ),
+                                OnHoverWidget(
+                                    builder: (isHover) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: Dimensions
+                                                  .paddingSizeExtraLarge),
+                                          child: InkWell(
+                                            onTap: () =>
+                                                RouterHelper.getProfileRoute(),
+                                            child: profileProvider
+                                                        .userInfoModel?.image !=
+                                                    null
+                                                ? ClipOval(
+                                                    child: CustomImageWidget(
+                                                      image:
+                                                          "${splashProvider.baseUrls!.customerImageUrl}/${profileProvider.userInfoModel?.image}",
+                                                      fit: BoxFit.cover,
+                                                      height: Dimensions
+                                                          .paddingSizeExtraLarge,
+                                                      width: Dimensions
+                                                          .paddingSizeExtraLarge,
+                                                    ),
+                                                  )
+                                                : CustomAssetImageWidget(
+                                                    fit: BoxFit.cover,
+                                                    Images.navUserSvg,
+                                                    width: Dimensions
+                                                        .paddingSizeLarge,
+                                                    color: isHover
+                                                        ? Theme.of(context)
+                                                            .primaryColor
+                                                        : Provider.of<ThemeProvider>(
+                                                                    context)
+                                                                .darkTheme
+                                                            ? Theme.of(context)
+                                                                .textTheme
+                                                                .bodyLarge
+                                                                ?.color
+                                                                ?.withValues(
+                                                                    alpha: 0.5)
+                                                            : Colors.black87,
+                                                  ),
+                                          ),
+                                        )),
+                              ],
+                              OnHoverWidget(
+                                  builder: (isHover) => InkWell(
+                                        onTap: () =>
+                                            RouterHelper.getDashboardRoute(
+                                                'menu'),
+                                        child: Icon(
+                                          Icons.menu,
+                                          size:
+                                              Dimensions.paddingSizeExtraLarge,
+                                          color: isHover
+                                              ? Theme.of(context).primaryColor
+                                              : Provider.of<ThemeProvider>(
+                                                          context)
+                                                      .darkTheme
                                                   ? Theme.of(context)
                                                       .primaryColor
-                                                  : Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.color
-                                                      ?.withValues(alpha: 0.5),
-                                            ),
-                                    ),
-                                  )),
-                          OnHoverWidget(
-                              builder: (isHover) => InkWell(
-                                    onTap: () =>
-                                        RouterHelper.getDashboardRoute('menu'),
-                                    child: Icon(
-                                      Icons.menu,
-                                      size: Dimensions.paddingSizeExtraLarge,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  )),
-                        ])))),
-      ]),
-    );
+                                                  : Colors.black87,
+                                        ),
+                                      )),
+                            ]), // Close right section Row
+                          ]) // Close main Row children
+                      ); // Close Directionality
+                }, // Close Consumer builder
+              )), // Close Consumer and Container
+        ), // Close Expanded
+      ]), // Close Column children
+    ); // Close Container
   }
 
   @override
@@ -611,11 +710,13 @@ class CountIconView extends StatelessWidget {
                         width: Dimensions.paddingSizeLarge,
                         color: isHover
                             ? Theme.of(context).primaryColor
-                            : Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.color
-                                ?.withValues(alpha: 0.5),
+                            : Provider.of<ThemeProvider>(context).darkTheme
+                                ? Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color
+                                    ?.withValues(alpha: 0.5)
+                                : Colors.black87,
                       )
                     : Icon(
                         icon,
@@ -623,11 +724,13 @@ class CountIconView extends StatelessWidget {
                         color: color ??
                             (isHover
                                 ? Theme.of(context).primaryColor
-                                : Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.color
-                                    ?.withValues(alpha: 0.5)),
+                                : Provider.of<ThemeProvider>(context).darkTheme
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.color
+                                        ?.withValues(alpha: 0.5)
+                                    : Colors.black87),
                       ),
                 Positioned(
                     top: -7,

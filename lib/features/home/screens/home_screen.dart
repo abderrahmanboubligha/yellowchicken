@@ -238,8 +238,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     Expanded(
                                                       flex: ResponsiveHelper
                                                               .isTab(context)
-                                                          ? 3
-                                                          : 2,
+                                                          ? 4
+                                                          : ResponsiveHelper
+                                                                  .isMobile()
+                                                              ? 5 // Increased from 3 to 5 for more space
+                                                              : 3,
                                                       child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
@@ -278,11 +281,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               child: Container(
                                                                 constraints:
                                                                     BoxConstraints(
-                                                                  maxWidth: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      0.6, // Max 60% of screen width
+                                                                  maxWidth: ResponsiveHelper
+                                                                          .isMobile()
+                                                                      ? MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.7
+                                                                      : MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.6, // More space on mobile
                                                                 ),
                                                                 child: Row(
                                                                     mainAxisSize:
@@ -290,19 +298,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             .min,
                                                                     children: [
                                                                       Flexible(
-                                                                        child: Consumer<
-                                                                                LocationProvider>(
+                                                                        child: Consumer<LocationProvider>(
                                                                             builder: (context, locationProvider, _) =>
-                                                                                Text(
-                                                                                  _getDisplayLocationText(locationProvider.currentAddress?.address, context),
-                                                                                  style: rubikRegular.copyWith(
-                                                                                    color: Colors.white,
-                                                                                    fontSize: ResponsiveHelper.isMobile() ? Dimensions.fontSizeExtraSmall : Dimensions.fontSizeSmall,
-                                                                                  ),
-                                                                                  maxLines: 1,
-                                                                                  overflow: TextOverflow.ellipsis,
-                                                                                  textAlign: TextAlign.start,
-                                                                                )),
+                                                                                _buildLocationText(locationProvider.currentAddress?.address, context)),
                                                                       ),
                                                                       const SizedBox(
                                                                           width:
@@ -323,64 +321,85 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                   if (scrollingRate < 0.01)
                                                     Flexible(
+                                                      flex: 1,
+                                                      fit: FlexFit.loose,
                                                       child: Row(
                                                           mainAxisSize:
                                                               MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
                                                           children: [
-                                                            const Padding(
-                                                              padding: EdgeInsets.only(
-                                                                  right: Dimensions
-                                                                      .paddingSizeSmall),
-                                                              child: BranchButtonWidget(
-                                                                  isRow: false,
-                                                                  color: Colors
-                                                                      .white),
+                                                            Flexible(
+                                                              child: Padding(
+                                                                padding: EdgeInsets.only(
+                                                                    right: ResponsiveHelper.isTab(
+                                                                            context)
+                                                                        ? Dimensions
+                                                                            .paddingSizeExtraSmall
+                                                                        : Dimensions
+                                                                            .paddingSizeSmall),
+                                                                child: const BranchButtonWidget(
+                                                                    isRow:
+                                                                        false,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
                                                             ),
                                                             if (ResponsiveHelper
-                                                                .isTab(context))
-                                                              InkWell(
-                                                                onTap: () =>
-                                                                    RouterHelper
-                                                                        .getDashboardRoute(
-                                                                            'cart'),
-                                                                child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      const SizedBox(
-                                                                          height:
-                                                                              Dimensions.paddingSizeSmall),
-                                                                      CountIconView(
-                                                                        count: Provider.of<CartProvider>(context)
-                                                                            .cartList
-                                                                            .length
-                                                                            .toString(),
-                                                                        icon: Icons
-                                                                            .shopping_cart_outlined,
-                                                                        color: ColorResources
-                                                                            .white,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                          height:
-                                                                              3),
-                                                                      Text(
-                                                                        getTranslated(
-                                                                            'cart',
-                                                                            context)!,
-                                                                        style: rubikRegular.copyWith(
+                                                                    .isTab(
+                                                                        context) &&
+                                                                MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width >
+                                                                    500)
+                                                              Flexible(
+                                                                child: InkWell(
+                                                                  onTap: () =>
+                                                                      RouterHelper
+                                                                          .getDashboardRoute(
+                                                                              'cart'),
+                                                                  child:
+                                                                      Container(
+                                                                    constraints:
+                                                                        const BoxConstraints(
+                                                                      minWidth:
+                                                                          40,
+                                                                      maxWidth:
+                                                                          60,
+                                                                    ),
+                                                                    child: Column(
+                                                                        mainAxisSize:
+                                                                            MainAxisSize
+                                                                                .min,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          const SizedBox(
+                                                                              height: Dimensions.paddingSizeSmall),
+                                                                          CountIconView(
+                                                                            count:
+                                                                                Provider.of<CartProvider>(context).cartList.length.toString(),
+                                                                            icon:
+                                                                                Icons.shopping_cart_outlined,
                                                                             color:
-                                                                                Colors.white,
-                                                                            fontSize: Dimensions.fontSizeSmall),
-                                                                        maxLines:
-                                                                            1,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ]),
+                                                                                ColorResources.white,
+                                                                          ),
+                                                                          const SizedBox(
+                                                                              height: 2),
+                                                                          Flexible(
+                                                                            child:
+                                                                                Text(
+                                                                              getTranslated('cart', context)!,
+                                                                              style: rubikRegular.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeExtraSmall),
+                                                                              maxLines: 1,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                        ]),
+                                                                  ),
+                                                                ),
                                                               ),
                                                           ]),
                                                     ),
@@ -401,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       transform:
                                           Matrix4.translationValues(0, -2, 0),
                                       height: 60,
-                                      width: Dimensions.webScreenWidth,
+                                      width: MediaQuery.of(context).size.width,
                                       color: Colors.transparent,
                                       child: Column(children: [
                                         Expanded(
@@ -426,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               horizontal:
                                                   Dimensions.paddingSizeLarge),
                                           height: 50,
-                                          width: Dimensions.webScreenWidth,
+                                          width: double.infinity,
                                           decoration: BoxDecoration(
                                             color: Theme.of(context).cardColor,
                                             borderRadius: BorderRadius.circular(
@@ -477,8 +496,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     horizontal: Dimensions.paddingSizeSmall,
                                     vertical: Dimensions.paddingSizeDefault),
                                 child: SizedBox(
-                                    /*height: 300,*/ width:
-                                        Dimensions.webScreenWidth,
+                                    /*height: 300,*/
+                                    width: MediaQuery.of(context).size.width >
+                                            1170
+                                        ? Dimensions.webScreenWidth
+                                        : MediaQuery.of(context).size.width *
+                                            0.95,
                                     child: IntrinsicHeight(
                                       child: Consumer<BannerProvider>(builder:
                                           (context, bannerProvider, _) {
@@ -598,10 +621,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           /// for Branch list
                           SliverToBoxAdapter(child: Consumer<BranchProvider>(
                               builder: (context, branchProvider, _) {
-                            return (branchProvider.branchValueList?.isEmpty ??
+                            return (branchProvider
+                                        .branchValueList?.isNotEmpty ??
                                     false)
-                                ? const SizedBox()
-                                : Center(
+                                ? Center(
                                     child: SizedBox(
                                     width: Dimensions.webScreenWidth,
                                     child: Padding(
@@ -613,7 +636,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           controller:
                                               _branchListScrollController),
                                     ),
-                                  ));
+                                  ))
+                                : const SizedBox();
                           })),
 
                           /// for app Chefs recommendation banner
@@ -662,26 +686,84 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _getDisplayLocationText(String? address, BuildContext context) {
-    // Calculate dynamic max length based on screen width
-    final screenWidth = MediaQuery.of(context).size.width;
-    final int maxLength;
-
-    if (ResponsiveHelper.isDesktop(context)) {
-      maxLength = 60; // More space on desktop
-    } else if (ResponsiveHelper.isTab(context)) {
-      maxLength = 45; // Medium space on tablet
-    } else {
-      // Mobile: Calculate based on screen width
-      maxLength =
-          (screenWidth * 0.1).floor(); // ~10% of screen width in characters
+  Widget _buildLocationText(String? address, BuildContext context) {
+    if (address?.isEmpty ?? true) {
+      return Text(
+        getTranslated('no_location_selected', context)!,
+        style: rubikRegular.copyWith(
+          color: Colors.white,
+          fontSize: ResponsiveHelper.isMobile()
+              ? Dimensions.fontSizeExtraSmall
+              : Dimensions.fontSizeSmall,
+        ),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+      );
     }
 
+    // Split the address at dash and show on multiple lines
+    final String displayAddress = address!;
+
+    // If address contains dash, split it
+    if (displayAddress.contains(' - ') ||
+        displayAddress.contains(' -') ||
+        displayAddress.contains('- ')) {
+      final parts = displayAddress.split(RegExp(r'\s*-\s*'));
+      if (parts.length >= 2) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              parts[0].trim(),
+              style: rubikRegular.copyWith(
+                color: Colors.white,
+                fontSize: ResponsiveHelper.isMobile()
+                    ? Dimensions.fontSizeExtraSmall
+                    : Dimensions.fontSizeSmall,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+            ),
+            if (parts.length > 1 && parts[1].trim().isNotEmpty)
+              Text(
+                parts[1].trim(),
+                style: rubikRegular.copyWith(
+                  color: Colors.white.withValues(alpha: 0.8),
+                  fontSize: ResponsiveHelper.isMobile()
+                      ? Dimensions.fontSizeExtraSmall
+                      : Dimensions.fontSizeSmall,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+              ),
+          ],
+        );
+      }
+    }
+
+    // If no dash or split failed, use original logic with truncation
+    return Text(
+      _getDisplayLocationText(displayAddress, context),
+      style: rubikRegular.copyWith(
+        color: Colors.white,
+        fontSize: ResponsiveHelper.isMobile()
+            ? Dimensions.fontSizeExtraSmall
+            : Dimensions.fontSizeSmall,
+      ),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.start,
+    );
+  }
+
+  String _getDisplayLocationText(String? address, BuildContext context) {
     if (address?.isNotEmpty ?? false) {
-      // If the address is not empty, truncate it if necessary
-      return address!.length > maxLength
-          ? '${address.substring(0, maxLength)}...'
-          : address;
+      // Don't truncate - let the ellipsis in the Text widget handle overflow
+      return address!;
     } else {
       // If the address is empty, return a fallback text
       return getTranslated('no_location_selected', context)!;

@@ -56,7 +56,7 @@ class BranchItemCardWidget extends StatelessWidget {
             child: Column(children: [
               /// for Branch banner
               Expanded(
-                  flex: 3,
+                  flex: ResponsiveHelper.isMobile() ? 65 : 60,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(Dimensions.radiusLarge),
@@ -67,7 +67,9 @@ class BranchItemCardWidget extends StatelessWidget {
                         placeholder: Images.branchBanner,
                         image:
                             '${splashProvider.baseUrls!.branchImageUrl}/${branchesValue!.branches!.coverImage}',
-                        width: Dimensions.webScreenWidth,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
                       ),
                       if (!branchesValue!.branches!.status!)
                         Container(
@@ -117,15 +119,23 @@ class BranchItemCardWidget extends StatelessWidget {
 
               /// for Branch info
               Expanded(
-                  flex: 2,
+                  flex: ResponsiveHelper.isMobile() ? 35 : 40,
                   child: Padding(
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                    padding: EdgeInsets.all(ResponsiveHelper.isMobile()
+                        ? Dimensions.paddingSizeExtraSmall
+                        : Dimensions.paddingSizeSmall),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const SizedBox(width: 90),
+                          SizedBox(
+                              width: ResponsiveHelper.isMobile()
+                                  ? 70
+                                  : ResponsiveHelper.isTab(context)
+                                      ? 80
+                                      : 90),
                           Expanded(
                               child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                 Row(
@@ -134,106 +144,24 @@ class BranchItemCardWidget extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
-                                          flex: 2,
+                                        flex: 2,
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxHeight:
+                                                ResponsiveHelper.isMobile()
+                                                    ? 55
+                                                    : 60,
+                                          ),
                                           child: Column(
                                               mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Flexible(
-                                                  child: Text(
-                                                    branchesValue!
-                                                        .branches!.name!,
-                                                    style:
-                                                        rubikSemiBold.copyWith(
-                                                      fontSize: ResponsiveHelper
-                                                              .isMobile()
-                                                          ? Dimensions
-                                                              .fontSizeDefault
-                                                          : ResponsiveHelper
-                                                                  .isTab(
-                                                                      context)
-                                                              ? Dimensions
-                                                                  .fontSizeLarge
-                                                              : Dimensions
-                                                                  .fontSizeExtraLarge,
-                                                    ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 2),
-                                                Flexible(
-                                                  child: Row(children: [
-                                                    Icon(
-                                                        Icons
-                                                            .location_on_rounded,
-                                                        size: ResponsiveHelper
-                                                                .isMobile()
-                                                            ? Dimensions
-                                                                .fontSizeSmall
-                                                            : Dimensions
-                                                                .fontSizeDefault,
-                                                        color: Theme.of(context)
-                                                            .primaryColor),
-                                                    const SizedBox(
-                                                        width: Dimensions
-                                                            .paddingSizeExtraSmall),
-                                                    Expanded(
-                                                        child: Text(
-                                                      branchesValue?.branches
-                                                              ?.address ??
-                                                          '',
-                                                      style: rubikSemiBold
-                                                          .copyWith(
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        fontSize: ResponsiveHelper
-                                                                .isMobile()
-                                                            ? Dimensions
-                                                                .fontSizeExtraSmall
-                                                            : ResponsiveHelper
-                                                                    .isTab(
-                                                                        context)
-                                                                ? Dimensions
-                                                                    .fontSizeSmall
-                                                                : Dimensions
-                                                                    .fontSizeDefault,
-                                                      ),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    )),
-                                                  ]),
-                                                ),
-                                              ])),
-                                      if (branchesValue!.distance != -1 &&
-                                          splashProvider.configModel
-                                                  ?.googleMapStatus ==
-                                              1)
-                                        Expanded(
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                              Text(
-                                                '${branchesValue!.distance.toStringAsFixed(3)} ${getTranslated('km', context)}',
-                                                style: rubikBold.copyWith(
-                                                  fontSize: ResponsiveHelper
-                                                          .isMobile()
-                                                      ? Dimensions.fontSizeSmall
-                                                      : ResponsiveHelper.isTab(
-                                                              context)
-                                                          ? Dimensions
-                                                              .fontSizeDefault
-                                                          : Dimensions
-                                                              .fontSizeLarge,
-                                                ),
-                                              ),
-                                              Text(
-                                                  getTranslated(
-                                                      'away', context)!,
+                                                Text(
+                                                  branchesValue!
+                                                      .branches!.name!,
                                                   style: rubikSemiBold.copyWith(
                                                     fontSize: ResponsiveHelper
                                                             .isMobile()
@@ -244,9 +172,144 @@ class BranchItemCardWidget extends StatelessWidget {
                                                             ? Dimensions
                                                                 .fontSizeSmall
                                                             : Dimensions
-                                                                .fontSizeDefault,
+                                                                .fontSizeLarge,
                                                     color: Theme.of(context)
-                                                        .hintColor,
+                                                        .textTheme
+                                                        .titleLarge
+                                                        ?.color,
+                                                    fontWeight: FontWeight.w600,
+                                                    shadows: [
+                                                      Shadow(
+                                                        offset: const Offset(
+                                                            0.5, 0.5),
+                                                        blurRadius: 1,
+                                                        color: Colors.black
+                                                            .withValues(
+                                                                alpha: 0.1),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Row(children: [
+                                                  Icon(
+                                                      Icons.location_on_rounded,
+                                                      size: ResponsiveHelper
+                                                              .isMobile()
+                                                          ? Dimensions
+                                                              .fontSizeExtraSmall
+                                                          : Dimensions
+                                                              .fontSizeSmall,
+                                                      color: Theme.of(context)
+                                                          .primaryColor),
+                                                  SizedBox(
+                                                      width: ResponsiveHelper
+                                                              .isMobile()
+                                                          ? 2
+                                                          : Dimensions
+                                                                  .paddingSizeExtraSmall /
+                                                              2),
+                                                  Expanded(
+                                                      child: Text(
+                                                    branchesValue?.branches
+                                                            ?.address ??
+                                                        '',
+                                                    style:
+                                                        rubikSemiBold.copyWith(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontSize: ResponsiveHelper
+                                                              .isMobile()
+                                                          ? 8
+                                                          : ResponsiveHelper
+                                                                  .isTab(
+                                                                      context)
+                                                              ? 10
+                                                              : Dimensions
+                                                                  .fontSizeExtraSmall,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      shadows: [
+                                                        Shadow(
+                                                          offset: const Offset(
+                                                              0.5, 0.5),
+                                                          blurRadius: 1,
+                                                          color: Colors.black
+                                                              .withValues(
+                                                                  alpha: 0.08),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  )),
+                                                ]),
+                                              ]),
+                                        ),
+                                      ),
+                                      if (branchesValue!.distance != -1 &&
+                                          splashProvider.configModel
+                                                  ?.googleMapStatus ==
+                                              1)
+                                        Expanded(
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                              Text(
+                                                '${branchesValue!.distance.toStringAsFixed(3)} ${getTranslated('km', context)}',
+                                                style: rubikBold.copyWith(
+                                                  fontSize: ResponsiveHelper
+                                                          .isMobile()
+                                                      ? 8
+                                                      : ResponsiveHelper.isTab(
+                                                              context)
+                                                          ? 10
+                                                          : Dimensions
+                                                              .fontSizeExtraSmall,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  shadows: [
+                                                    Shadow(
+                                                      offset: const Offset(
+                                                          0.5, 0.5),
+                                                      blurRadius: 1,
+                                                      color: Colors.black
+                                                          .withValues(
+                                                              alpha: 0.1),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Text(
+                                                  getTranslated(
+                                                      'away', context)!,
+                                                  style: rubikSemiBold.copyWith(
+                                                    fontSize: ResponsiveHelper
+                                                            .isMobile()
+                                                        ? 7
+                                                        : ResponsiveHelper
+                                                                .isTab(context)
+                                                            ? 8
+                                                            : 9,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontWeight: FontWeight.w500,
+                                                    shadows: [
+                                                      Shadow(
+                                                        offset: const Offset(
+                                                            0.5, 0.5),
+                                                        blurRadius: 1,
+                                                        color: Colors.black
+                                                            .withValues(
+                                                                alpha: 0.08),
+                                                      ),
+                                                    ],
                                                   )),
                                             ])),
                                     ]),
@@ -258,24 +321,39 @@ class BranchItemCardWidget extends StatelessWidget {
 
           /// for Branch image
           Positioned(
-            bottom: 20,
-            left: 15,
+            bottom: ResponsiveHelper.isMobile() ? 15 : 20,
+            left: ResponsiveHelper.isMobile() ? 10 : 15,
             child: Container(
-              height: 70,
-              width: 70,
+              height: ResponsiveHelper.isMobile()
+                  ? 60
+                  : ResponsiveHelper.isTab(context)
+                      ? 65
+                      : 70,
+              width: ResponsiveHelper.isMobile()
+                  ? 60
+                  : ResponsiveHelper.isTab(context)
+                      ? 65
+                      : 70,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-              margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
+              margin: EdgeInsets.only(
+                  right: ResponsiveHelper.isMobile()
+                      ? Dimensions.paddingSizeExtraSmall
+                      : Dimensions.paddingSizeSmall),
               padding: const EdgeInsets.all(3),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                  border: Border.all(
-                      color: Theme.of(context)
-                          .primaryColor
-                          .withValues(alpha: 0.2)),
+                  border: Border.all(color: Colors.white, width: 1),
                   color: Theme.of(context).cardColor,
                 ),
                 child: ClipRRect(
@@ -284,8 +362,17 @@ class BranchItemCardWidget extends StatelessWidget {
                       placeholder: Images.placeholderImage,
                       image:
                           '${splashProvider.baseUrls!.branchImageUrl}/${branchesValue!.branches!.image}',
-                      height: 70,
-                      width: 70,
+                      height: ResponsiveHelper.isMobile()
+                          ? 60
+                          : ResponsiveHelper.isTab(context)
+                              ? 65
+                              : 70,
+                      width: ResponsiveHelper.isMobile()
+                          ? 60
+                          : ResponsiveHelper.isTab(context)
+                              ? 65
+                              : 70,
+                      fit: BoxFit.cover,
                     )),
               ),
             ),
