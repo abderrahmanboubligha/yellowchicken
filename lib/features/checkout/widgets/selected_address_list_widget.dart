@@ -81,280 +81,307 @@ class _SelectedAddressListWidgetState extends State<SelectedAddressListWidget> {
 
     return Consumer<LocationProvider>(builder: (context, locationProvider, _) {
       return CustomDialogShapeWidget(
-        padding: const EdgeInsets.symmetric(
-            horizontal: Dimensions.paddingSizeExtraLarge,
-            vertical: Dimensions.paddingSizeLarge),
-        maxHeight: size.height * 0.6,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          if (!ResponsiveHelper.isDesktop(context))
-            Center(
-                child: Container(
-              width: 35,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Theme.of(context).hintColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-              ),
-              padding: const EdgeInsets.symmetric(
-                  vertical: Dimensions.paddingSizeSmall),
-            )),
-          const SizedBox(height: Dimensions.paddingSizeDefault),
-          Text(getTranslated("select_address", context)!,
-              style: rubikSemiBold.copyWith(
-                fontSize: Dimensions.fontSizeDefault,
+        padding: EdgeInsets.symmetric(
+            horizontal: ResponsiveHelper.isDesktop(context)
+                ? Dimensions.paddingSizeExtraLarge
+                : Dimensions.paddingSizeLarge,
+            vertical: ResponsiveHelper.isDesktop(context)
+                ? Dimensions.paddingSizeExtraLarge
+                : Dimensions.paddingSizeLarge),
+        maxHeight: ResponsiveHelper.isDesktop(context)
+            ? size.height * 0.8
+            : size.height * 0.9,
+        maxWidth: ResponsiveHelper.isDesktop(context) ? 600 : size.width * 0.95,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 0,
+            maxHeight: ResponsiveHelper.isDesktop(context)
+                ? size.height * 0.8
+                : size.height * 0.9,
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            if (!ResponsiveHelper.isDesktop(context))
+              Center(
+                  child: Container(
+                width: 35,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).hintColor.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingSizeSmall),
               )),
-          locationProvider.addressList == null
-              ? const _AddressShimmerWidget(
-                  enabled: true,
-                )
-              : (locationProvider.addressList?.isNotEmpty ?? false)
-                  ? Expanded(
-                      child: Column(children: [
-                      TextButton.icon(
-                        onPressed: locationProvider.loading
-                            ? null
-                            : () async {
-                                await _onActionCurrentLocation(
-                                    context, isLoggedIn, userInfo);
-                              },
-                        icon: locationProvider.loading
-                            ? const SizedBox(
-                                height: 15,
-                                width: 15,
-                                child: CircularProgressIndicator())
-                            : Icon(Icons.gps_fixed_outlined,
-                                color: Theme.of(context).primaryColor),
-                        label: Text(
-                            getTranslated(
-                                locationProvider.loading
-                                    ? 'loading'
-                                    : 'use_my_current_location',
-                                context)!,
-                            style: rubikSemiBold.copyWith(
-                              color: Theme.of(context).primaryColor,
-                            )),
-                      ),
-                      const SizedBox(height: Dimensions.paddingSizeLarge),
-                      Expanded(
-                          child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: locationProvider.addressList?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          final bool isAvailable = splashProvider
-                                      .deliveryInfoModel
-                                      ?.deliveryChargeSetup
-                                      ?.deliveryChargeType ==
-                                  'distance'
-                              ? CheckOutHelper.isAddressInCoverage(
-                                  widget.currentBranch,
-                                  locationProvider.addressList![index])
-                              : true;
+            const SizedBox(height: Dimensions.paddingSizeDefault),
+            Text(getTranslated("select_address", context)!,
+                style: rubikSemiBold.copyWith(
+                  fontSize: Dimensions.fontSizeDefault,
+                )),
+            locationProvider.addressList == null
+                ? const _AddressShimmerWidget(
+                    enabled: true,
+                  )
+                : (locationProvider.addressList?.isNotEmpty ?? false)
+                    ? Flexible(
+                        child: Column(children: [
+                        TextButton.icon(
+                          onPressed: locationProvider.loading
+                              ? null
+                              : () async {
+                                  await _onActionCurrentLocation(
+                                      context, isLoggedIn, userInfo);
+                                },
+                          icon: locationProvider.loading
+                              ? const SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: CircularProgressIndicator())
+                              : Icon(Icons.gps_fixed_outlined,
+                                  color: Theme.of(context).primaryColor),
+                          label: Text(
+                              getTranslated(
+                                  locationProvider.loading
+                                      ? 'loading'
+                                      : 'use_my_current_location',
+                                  context)!,
+                              style: rubikSemiBold.copyWith(
+                                color: Theme.of(context).primaryColor,
+                              )),
+                        ),
+                        const SizedBox(height: Dimensions.paddingSizeLarge),
+                        Flexible(
+                            child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: locationProvider.addressList?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            final bool isAvailable = splashProvider
+                                        .deliveryInfoModel
+                                        ?.deliveryChargeSetup
+                                        ?.deliveryChargeType ==
+                                    'distance'
+                                ? CheckOutHelper.isAddressInCoverage(
+                                    widget.currentBranch,
+                                    locationProvider.addressList![index])
+                                : true;
 
-                          final bool isActive = widget.isFromAppbar
-                              ? (locationProvider.addressList?[index].id !=
-                                  locationProvider.currentAddress?.id)
-                              : (locationProvider.addressList?[index].id !=
-                                  checkoutProvider.selectedAddress?.id);
+                            final bool isActive = widget.isFromAppbar
+                                ? (locationProvider.addressList?[index].id !=
+                                    locationProvider.currentAddress?.id)
+                                : (locationProvider.addressList?[index].id !=
+                                    checkoutProvider.selectedAddress?.id);
 
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: Dimensions.paddingSizeSmall),
-                            child: _AddressDismissibleWidget(
-                              isActive: isActive,
-                              addressId:
-                                  locationProvider.addressList?[index].id,
-                              addressIndex: index,
-                              child: Material(
-                                color:
-                                    locationProvider.addressList?[index].id ==
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: Dimensions.paddingSizeSmall),
+                              child: _AddressDismissibleWidget(
+                                isActive: isActive,
+                                addressId:
+                                    locationProvider.addressList?[index].id,
+                                addressIndex: index,
+                                child: Material(
+                                  color:
+                                      locationProvider.addressList?[index].id ==
+                                              selectedAddress?.id
+                                          ? Theme.of(context)
+                                              .primaryColor
+                                              .withValues(alpha: 0.07)
+                                          : Theme.of(context).cardColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        Dimensions.radiusDefault),
+                                    side: locationProvider
+                                                .addressList?[index].id ==
                                             selectedAddress?.id
-                                        ? Theme.of(context)
-                                            .primaryColor
-                                            .withValues(alpha: 0.07)
-                                        : Theme.of(context).cardColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.radiusDefault),
-                                  side: locationProvider
-                                              .addressList?[index].id ==
-                                          selectedAddress?.id
-                                      ? BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 1)
-                                      : BorderSide.none,
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                                child: InkWell(
-                                  onTap: isAvailable
-                                      ? () {
-                                          updateSelectedAddress(
-                                              addressModel: locationProvider
-                                                  .addressList?[index]);
-                                        }
-                                      : null,
-                                  child: Stack(children: [
-                                    Padding(
-                                        padding: const EdgeInsets.all(
-                                            Dimensions.paddingSizeDefault),
-                                        child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.transparent,
-                                                    border: Border.all(
-                                                        color: locationProvider
-                                                                    .addressList?[
-                                                                        index]
-                                                                    .id ==
-                                                                selectedAddress
-                                                                    ?.id
-                                                            ? Theme.of(context)
-                                                                .primaryColor
-                                                            : Theme.of(context)
-                                                                .disabledColor,
-                                                        width: 2)),
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                margin: const EdgeInsets.only(
-                                                    top: 3),
-                                                child: Icon(Icons.circle,
-                                                    color: locationProvider
-                                                                .addressList?[
+                                        ? BorderSide(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 1)
+                                        : BorderSide.none,
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: InkWell(
+                                    onTap: isAvailable
+                                        ? () {
+                                            updateSelectedAddress(
+                                                addressModel: locationProvider
+                                                    .addressList?[index]);
+                                          }
+                                        : null,
+                                    child: Stack(children: [
+                                      Padding(
+                                          padding: const EdgeInsets.all(
+                                              Dimensions.paddingSizeDefault),
+                                          child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.transparent,
+                                                      border: Border.all(
+                                                          color: locationProvider
+                                                                      .addressList?[
+                                                                          index]
+                                                                      .id ==
+                                                                  selectedAddress
+                                                                      ?.id
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .primaryColor
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .disabledColor,
+                                                          width: 2)),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
+                                                  margin: const EdgeInsets.only(
+                                                      top: 3),
+                                                  child: Icon(Icons.circle,
+                                                      color: locationProvider
+                                                                  .addressList?[
+                                                                      index]
+                                                                  .id ==
+                                                              selectedAddress
+                                                                  ?.id
+                                                          ? Theme.of(context)
+                                                              .primaryColor
+                                                          : Colors.transparent,
+                                                      size: 10),
+                                                ),
+                                                const SizedBox(
+                                                    width: Dimensions
+                                                        .paddingSizeSmall),
+                                                Expanded(
+                                                  child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                            locationProvider
+                                                                .addressList![
                                                                     index]
-                                                                .id ==
-                                                            selectedAddress?.id
-                                                        ? Theme.of(context)
-                                                            .primaryColor
-                                                        : Colors.transparent,
-                                                    size: 10),
+                                                                .addressType!,
+                                                            style: rubikSemiBold
+                                                                .copyWith(
+                                                              fontSize: Dimensions
+                                                                  .fontSizeSmall,
+                                                            )),
+                                                        const SizedBox(
+                                                            height: 3),
+                                                        Text(
+                                                            locationProvider
+                                                                .addressList![
+                                                                    index]
+                                                                .address!,
+                                                            style: rubikRegular,
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis),
+                                                      ]),
+                                                ),
+                                              ])),
+                                      !isAvailable
+                                          ? Positioned(
+                                              top: 0,
+                                              left: 0,
+                                              bottom: 0,
+                                              right: 0,
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: Colors.black
+                                                        .withValues(
+                                                            alpha: 0.6)),
+                                                child: Text(
+                                                  getTranslated(
+                                                      'out_of_coverage_for_this_branch',
+                                                      context)!,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: rubikRegular.copyWith(
+                                                      color: Colors.white,
+                                                      fontSize: 10),
+                                                ),
                                               ),
-                                              const SizedBox(
-                                                  width: Dimensions
-                                                      .paddingSizeSmall),
-                                              Expanded(
-                                                child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                          locationProvider
-                                                              .addressList![
-                                                                  index]
-                                                              .addressType!,
-                                                          style: rubikSemiBold
-                                                              .copyWith(
-                                                            fontSize: Dimensions
-                                                                .fontSizeSmall,
-                                                          )),
-                                                      const SizedBox(height: 3),
-                                                      Text(
-                                                          locationProvider
-                                                              .addressList![
-                                                                  index]
-                                                              .address!,
-                                                          style: rubikRegular,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis),
-                                                    ]),
-                                              ),
-                                            ])),
-                                    !isAvailable
-                                        ? Positioned(
-                                            top: 0,
-                                            left: 0,
-                                            bottom: 0,
-                                            right: 0,
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: Colors.black
-                                                      .withValues(alpha: 0.6)),
-                                              child: Text(
-                                                getTranslated(
-                                                    'out_of_coverage_for_this_branch',
-                                                    context)!,
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: rubikRegular.copyWith(
-                                                    color: Colors.white,
-                                                    fontSize: 10),
-                                              ),
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ]),
+                                            )
+                                          : const SizedBox(),
+                                    ]),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      )),
-                      if ((locationProvider.addressList?.isNotEmpty ?? false) &&
-                          isLoggedIn)
-                        TextButton.icon(
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            RouterHelper.getAddAddressRoute(
-                              page: 'checkout',
-                              action: 'add',
-                              addressModel: AddressModel(),
-                              routeType: widget.isFromAppbar
-                                  ? RouteTypeEnum.appbar
-                                  : RouteTypeEnum.checkout,
                             );
                           },
-                          icon: Icon(Icons.add_circle_outline_sharp,
-                              color: Theme.of(context).primaryColor),
-                          label: Text(
-                              getTranslated('add_new_address', context)!,
-                              style: rubikSemiBold.copyWith()),
-                        )
-                    ]))
-                  : _AddressListEmptyWidget(
-                      size: size,
-                      isLoggedIn: isLoggedIn,
-                      isFromAppbar: widget.isFromAppbar),
-          const SizedBox(height: Dimensions.paddingSizeDefault),
-          if ((locationProvider.addressList?.isNotEmpty ?? false))
-            CustomButtonWidget(
-              btnTxt: getTranslated("select", context),
-              backgroundColor: Theme.of(context).primaryColor,
-              onTap: selectedAddress?.id != null
-                  ? () async {
-                      if (widget.isFromAppbar) {
-                        locationProvider.onChangeCurrentAddress(selectedAddress,
-                            isUpdate: true);
-                      }
+                        )),
+                        if ((locationProvider.addressList?.isNotEmpty ??
+                                false) &&
+                            isLoggedIn)
+                          TextButton.icon(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              RouterHelper.getAddAddressRoute(
+                                page: 'checkout',
+                                action: 'add',
+                                addressModel: AddressModel(),
+                                routeType: widget.isFromAppbar
+                                    ? RouteTypeEnum.appbar
+                                    : RouteTypeEnum.checkout,
+                              );
+                            },
+                            icon: Icon(Icons.add_circle_outline_sharp,
+                                color: Theme.of(context).primaryColor),
+                            label: Text(
+                                getTranslated('add_new_address', context)!,
+                                style: rubikSemiBold.copyWith()),
+                          )
+                      ]))
+                    : _AddressListEmptyWidget(
+                        size: size,
+                        isLoggedIn: isLoggedIn,
+                        isFromAppbar: widget.isFromAppbar),
+            const SizedBox(height: Dimensions.paddingSizeDefault),
+            if ((locationProvider.addressList?.isNotEmpty ?? false))
+              CustomButtonWidget(
+                btnTxt: getTranslated("select", context),
+                backgroundColor: Theme.of(context).primaryColor,
+                onTap: selectedAddress?.id != null
+                    ? () async {
+                        if (widget.isFromAppbar) {
+                          locationProvider.onChangeCurrentAddress(
+                              selectedAddress,
+                              isUpdate: true);
+                        }
 
-                      CheckOutHelper.selectDeliveryAddress(
-                          splashProvider: splashProvider,
-                          isAvailable: true,
-                          address: selectedAddress,
-                          configModel: splashProvider.configModel!,
-                          locationProvider: locationProvider,
-                          checkoutProvider: checkoutProvider,
-                          shouldResetPaymentAndShowDeliveryDialog: true,
-                          enableChargeCalculation: !widget.isFromAppbar,
-                          isFreeDelivery: widget.isFreeDelivery);
+                        CheckOutHelper.selectDeliveryAddress(
+                            splashProvider: splashProvider,
+                            isAvailable: true,
+                            address: selectedAddress,
+                            configModel: splashProvider.configModel!,
+                            locationProvider: locationProvider,
+                            checkoutProvider: checkoutProvider,
+                            shouldResetPaymentAndShowDeliveryDialog: true,
+                            enableChargeCalculation: !widget.isFromAppbar,
+                            isFreeDelivery: widget.isFreeDelivery);
 
-                      if (context.mounted) {
-                        context.pop();
+                        if (context.mounted) {
+                          context.pop();
+                        }
                       }
-                    }
-                  : null,
-            ),
-        ]),
+                    : null,
+              ),
+          ]),
+        ),
       );
     });
   }

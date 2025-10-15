@@ -6,6 +6,7 @@ import 'package:flutter_restaurant/common/enums/data_source_enum.dart';
 import 'package:flutter_restaurant/common/providers/product_provider.dart';
 import 'package:flutter_restaurant/common/widgets/branch_button_widget.dart';
 import 'package:flutter_restaurant/common/widgets/branch_list_widget.dart';
+import 'package:flutter_restaurant/common/widgets/count_icon_view_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/customizable_space_bar_widget.dart';
 import 'package:flutter_restaurant/common/widgets/footer_widget.dart';
@@ -22,6 +23,7 @@ import 'package:flutter_restaurant/features/category/providers/category_provider
 import 'package:flutter_restaurant/features/checkout/widgets/selected_address_list_widget.dart';
 import 'package:flutter_restaurant/features/home/providers/banner_provider.dart';
 import 'package:flutter_restaurant/features/home/widgets/banner_widget.dart';
+import 'package:flutter_restaurant/features/home/widgets/bottom_banner_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/category_web_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/chefs_recommendation_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/home_local_eats_widget.dart';
@@ -176,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   totalSize: productProvider.latestProductModel?.totalSize,
                   offset: productProvider.latestProductModel?.offset,
                   limit: productProvider.latestProductModel?.limit,
+                  enabledPagination: false, // Disable auto-pagination on scroll
                   isDisableWebLoader: !ResponsiveHelper.isDesktop(context),
                   builder: (loaderWidget) {
                     return Expanded(
@@ -488,7 +491,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )),
 
                           /// for Web banner and category
-                          if (isDesktop)
+                          if (isDesktop) ...[
+                            // Full-width banner section
+                            SliverToBoxAdapter(
+                              child: Consumer<BannerProvider>(
+                                  builder: (context, bannerProvider, _) {
+                                return (bannerProvider.bannerList?.isEmpty ??
+                                        false)
+                                    ? const SizedBox()
+                                    : const SizedBox(
+                                        width: double.infinity,
+                                        child: BannerWidget());
+                              }),
+                            ),
+
+                            // Categories section with normal width constraint
                             SliverToBoxAdapter(
                                 child: Center(
                               child: Padding(
@@ -496,59 +513,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                     horizontal: Dimensions.paddingSizeSmall,
                                     vertical: Dimensions.paddingSizeDefault),
                                 child: SizedBox(
-                                    /*height: 300,*/
                                     width: MediaQuery.of(context).size.width >
                                             1170
                                         ? Dimensions.webScreenWidth
                                         : MediaQuery.of(context).size.width *
                                             0.95,
-                                    child: IntrinsicHeight(
-                                      child: Consumer<BannerProvider>(builder:
-                                          (context, bannerProvider, _) {
-                                        return Consumer<CategoryProvider>(
-                                            builder:
-                                                (context, categoryProvider, _) {
-                                          return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                (bannerProvider.bannerList
-                                                            ?.isEmpty ??
-                                                        false)
-                                                    ? const SizedBox()
-                                                    : (categoryProvider
-                                                                .categoryList
-                                                                ?.isNotEmpty ??
-                                                            false)
-                                                        ? const Expanded(
-                                                            flex: 6,
-                                                            child: SizedBox(
-                                                                child:
-                                                                    BannerWidget()))
-                                                        : const SizedBox(
-                                                            width: Dimensions
-                                                                    .webScreenWidth /
-                                                                1.5,
-                                                            child:
-                                                                BannerWidget()),
-                                                const SizedBox(
-                                                    width: Dimensions
-                                                        .paddingSizeDefault),
-                                                (categoryProvider.categoryList
-                                                            ?.isNotEmpty ??
-                                                        true)
-                                                    ? const Expanded(
-                                                        flex: 4,
-                                                        child: Center(
-                                                            child:
-                                                                CategoryWebWidget()))
-                                                    : const SizedBox(),
-                                              ]);
-                                        });
-                                      }),
-                                    )),
+                                    child: Consumer<CategoryProvider>(builder:
+                                        (context, categoryProvider, _) {
+                                      return (categoryProvider
+                                                  .categoryList?.isNotEmpty ??
+                                              true)
+                                          ? const Center(
+                                              child: CategoryWebWidget())
+                                          : const SizedBox();
+                                    })),
                               ),
                             )),
+                          ],
 
                           /// for App banner and category
                           if (!isDesktop)
@@ -673,6 +654,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             )),
 
                           const ProductViewWidget(),
+
+                          // Bottom banner section - first 4 banners before footer
+                          SliverToBoxAdapter(child: Consumer<BannerProvider>(
+                              builder: (context, bannerProvider, _) {
+                            return (bannerProvider.bannerList?.isEmpty ?? true)
+                                ? const SizedBox()
+                                : const BottomBannerWidget();
+                          })),
 
                           if (ResponsiveHelper.isDesktop(context))
                             SliverToBoxAdapter(child: loaderWidget),

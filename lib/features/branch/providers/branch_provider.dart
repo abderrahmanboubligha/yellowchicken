@@ -114,8 +114,6 @@ class BranchProvider extends DataSyncProvider {
   Future<List<BranchValue>> getBranchValueList(BuildContext context) async {
     final LocationProvider locationProvider =
         Provider.of<LocationProvider>(context, listen: false);
-    final SplashProvider splashProvider =
-        Provider.of<SplashProvider>(context, listen: false);
     LatLng? currentLocationLatLng;
 
     await locationProvider.getCurrentLatLong().then((latLong) {
@@ -123,19 +121,6 @@ class BranchProvider extends DataSyncProvider {
         currentLocationLatLng = latLong;
       }
       _branchValueList = branchSort(currentLocationLatLng);
-
-      // Auto-select and set the first (nearest) branch as default if no branch is selected
-      if (_branchValueList != null &&
-          _branchValueList!.isNotEmpty &&
-          getBranchId() == -1) {
-        final firstBranch = _branchValueList!.first;
-        if (firstBranch.branches != null &&
-            firstBranch.branches!.status == true) {
-          _selectedBranchId = firstBranch.branches!.id;
-          // Automatically set the first branch as active
-          setBranch(firstBranch.branches!.id!, splashProvider);
-        }
-      }
     });
 
     notifyListeners();

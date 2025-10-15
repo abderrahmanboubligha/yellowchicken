@@ -1,34 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/language_model.dart';
-import 'package:flutter_restaurant/common/providers/theme_provider.dart';
-import 'package:flutter_restaurant/common/widgets/branch_button_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
 import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
-import 'package:flutter_restaurant/common/widgets/on_hover_widget.dart';
 import 'package:flutter_restaurant/common/widgets/theme_switch_button_widget.dart';
-import 'package:flutter_restaurant/features/address/providers/location_provider.dart';
 import 'package:flutter_restaurant/features/branch/providers/branch_provider.dart';
 import 'package:flutter_restaurant/features/cart/providers/cart_provider.dart';
 import 'package:flutter_restaurant/features/category/domain/category_model.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
-import 'package:flutter_restaurant/features/checkout/widgets/selected_address_list_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/cetegory_hover_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/language_hover_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
-import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
 import 'package:flutter_restaurant/features/search/providers/search_provider.dart';
-import 'package:flutter_restaurant/features/search/widget/search_recommended_widget.dart';
-import 'package:flutter_restaurant/features/search/widget/search_suggestion_widget.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/features/wishlist/providers/wishlist_provider.dart';
-import 'package:flutter_restaurant/helper/debounce_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
-import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:go_router/go_router.dart';
@@ -41,161 +29,69 @@ class WebAppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   State<WebAppBarWidget> createState() => _WebAppBarWidgetState();
 
   @override
-  Size get preferredSize => throw UnimplementedError();
+  Size get preferredSize => const Size(double.maxFinite, 100);
 }
 
 class _WebAppBarWidgetState extends State<WebAppBarWidget> {
   final GlobalKey _searchBarKey = GlobalKey();
-  final FocusNode _searchFocusNode = FocusNode();
   final FocusNode _appbarSearchFocusNode = FocusNode();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> _showSearchDialog() async {
-    final SearchProvider searchProvider = Provider.of(context, listen: false);
-    RenderBox renderBox =
-        _searchBarKey.currentContext!.findRenderObject() as RenderBox;
-    final searchBarPosition = renderBox.localToGlobal(Offset.zero);
-    final DebounceHelper debounce = DebounceHelper(milliseconds: 500);
-    searchProvider.initHistoryList();
-    searchProvider.onClearSearchSuggestion();
+    // Navigate to the search screen instead of showing overlay
+    RouterHelper.getSearchRoute();
+    _appbarSearchFocusNode.unfocus();
+  }
 
-    if (searchProvider.searchController.text.isNotEmpty) {
-      searchProvider.onChangeAutoCompleteTag(
-          searchText: searchProvider.searchController.text);
-    }
+  @override
+  void dispose() {
+    _appbarSearchFocusNode.dispose();
+    super.dispose();
+  }
 
-    Future.delayed(const Duration(milliseconds: 200)).then((_) {
-      _searchFocusNode.requestFocus();
-    });
+  _showPopupMenu(Offset offset, BuildContext context, bool isCategory) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
-    await showDialog(
+    await showMenu(
       context: context,
-      barrierColor: Colors.transparent,
-      builder: (context) => Stack(children: [
-        Positioned(
-          top: searchBarPosition.dy,
-          left: MediaQuery.of(context).size.width > 1200
-              ? searchBarPosition.dx - 50
-              : searchBarPosition.dx -
-                  (MediaQuery.of(context).size.width * 0.05),
-          width: MediaQuery.of(context).size.width > 1200
-              ? renderBox.size.width + 100
-              : MediaQuery.of(context).size.width * 0.4,
-          child: Material(
-            color: Provider.of<ThemeProvider>(context, listen: false).darkTheme
-                ? Theme.of(context).cardColor
-                : null,
-            elevation: 0,
-            borderRadius: BorderRadius.circular(30),
-            child: Consumer<SearchProvider>(
-                builder: (context, searchProvider, _) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width > 1200
-                              ? 410
-                              : MediaQuery.of(context).size.width * 0.35,
-                          height: 50,
-                          child: CustomTextFieldWidget(
-                            radius: 50,
-                            hintText: getTranslated('are_you_hungry', context),
-                            isShowBorder: true,
-                            fillColor: Theme.of(context).cardColor,
-                            isShowPrefixIcon: searchProvider.searchLength == 0,
-                            prefixIconUrl: Images.search,
-                            prefixIconColor: Theme.of(context).hintColor,
-                            suffixIconColor: Theme.of(context).hintColor,
-                            onChanged: (str) {
-                              searchProvider.getSearchText(str);
-                              debounce.run(() {
-                                if (str.isNotEmpty) {
-                                  searchProvider.onChangeAutoCompleteTag(
-                                      searchText: str);
-                                }
-                              });
-                            },
-                            focusNode: _searchFocusNode,
-                            controller: searchProvider.searchController,
-                            inputAction: TextInputAction.search,
-                            isIcon: true,
-                            isShowSuffixIcon: searchProvider.searchLength > 0,
-                            suffixIconUrl: Images.cancelSvg,
-                            onSuffixTap: () {
-                              searchProvider.searchController.clear();
-                              searchProvider.getSearchText('');
-                            },
-                            onSubmit: (text) {
-                              if (searchProvider
-                                  .searchController.text.isNotEmpty) {
-                                RouterHelper.getSearchResultRoute(
-                                    searchProvider.searchController.text);
-                                searchProvider.searchDone();
-                              }
-                            },
-                          ),
-                        ),
-                        // Recent Searches and Recommendations
-                        const SizedBox(
-                            height: Dimensions.paddingSizeExtraSmall),
-                        Container(
-                          width: MediaQuery.of(context).size.width > 1200
-                              ? 600
-                              : MediaQuery.of(context).size.width * 0.5,
-                          constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.sizeOf(context).height * 0.7),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color!
-                                      .withValues(alpha: 0.05),
-                                  offset: const Offset(0, 5),
-                                  spreadRadius: 0,
-                                  blurRadius: 15,
-                                )
-                              ]),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: Dimensions.paddingSizeLarge,
-                              horizontal: 30),
-                          child: searchProvider.searchLength > 0
-                              ? SearchSuggestionWidget(
-                                  searchedText:
-                                      searchProvider.searchController.text)
-                              : const SearchRecommendedWidget(),
-                        ),
-                      ],
-                    )),
-          ),
-        ),
-      ]),
+      position: RelativeRect.fromLTRB(
+        offset.dx,
+        offset.dy,
+        overlay.size.width - offset.dx,
+        overlay.size.height - offset.dy,
+      ),
+      items: isCategory ? popUpMenuList(context) : popUpLanguageList(context),
+      elevation: 8.0,
+      color: Theme.of(context).cardColor,
     );
   }
 
-  List<PopupMenuEntry<Object>> popUpMenuList(BuildContext context) {
-    List<PopupMenuEntry<Object>> list = <PopupMenuEntry<Object>>[];
+  List<PopupMenuEntry> popUpMenuList(BuildContext context) {
+    List<PopupMenuEntry> categoryPopupMenuEntryList = [];
     List<CategoryModel>? categoryList =
         Provider.of<CategoryProvider>(context, listen: false).categoryList;
-    list.add(PopupMenuItem(
-      padding: EdgeInsets.zero,
-      value: categoryList,
-      child: MouseRegion(
-        onExit: (_) => context.pop(),
-        child: CategoryHoverWidget(categoryList: categoryList),
-      ),
-    ));
-    return list;
+
+    if (categoryList != null) {
+      categoryPopupMenuEntryList.add(PopupMenuItem(
+        child: MouseRegion(
+          onExit: (_) => context.pop(),
+          child: CategoryHoverWidget(categoryList: categoryList),
+        ),
+      ));
+    }
+    return categoryPopupMenuEntryList;
   }
 
-  List<PopupMenuEntry<Object>> popUpLanguageList(BuildContext context) {
-    List<PopupMenuEntry<Object>> languagePopupMenuEntryList =
-        <PopupMenuEntry<Object>>[];
+  List<PopupMenuEntry> popUpLanguageList(BuildContext context) {
+    List<PopupMenuEntry> languagePopupMenuEntryList = [];
     List<LanguageModel> languageList = AppConstants.languages;
+
     languagePopupMenuEntryList.add(PopupMenuItem(
-      padding: EdgeInsets.zero,
-      value: languageList,
       child: MouseRegion(
         onExit: (_) => context.pop(),
         child: LanguageHoverWidget(languageList: languageList),
@@ -204,47 +100,10 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
     return languagePopupMenuEntryList;
   }
 
-  _showPopupMenu(Offset offset, BuildContext context, bool isCategory) async {
-    double left = offset.dx;
-    double top = offset.dy;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    List<CategoryModel>? categoryList =
-        Provider.of<CategoryProvider>(context, listen: false).categoryList;
-    if (isCategory && (categoryList?.isNotEmpty ?? false) || !isCategory) {
-      await showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(
-            left, top, overlay.size.width, overlay.size.height),
-        items: isCategory ? popUpMenuList(context) : popUpLanguageList(context),
-        elevation: 8.0,
-        constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(Dimensions.radiusDefault),
-          ),
-        ),
-      );
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final SplashProvider splashProvider =
-        Provider.of<SplashProvider>(context, listen: false);
     final CategoryProvider categoryProvider =
         Provider.of<CategoryProvider>(context, listen: false);
-    final ProfileProvider profileProvider =
-        Provider.of<ProfileProvider>(context, listen: false);
-    final BranchProvider branchProvider =
-        Provider.of<BranchProvider>(context, listen: false);
 
     Provider.of<LanguageProvider>(context, listen: false)
         .initializeAllLanguages(context);
@@ -255,500 +114,386 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                 .locale
                 .languageCode);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFa1143f),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-            color: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .color!
-                .withValues(alpha: 0.05),
-          )
-        ],
-      ),
-      child: Column(children: [
-        Center(
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width > 1170
-                    ? Dimensions.webScreenWidth
-                    : MediaQuery.of(context).size.width * 0.95,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: Dimensions.paddingSizeExtraSmall),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GestureDetector(
+      onTap: () {
+        _appbarSearchFocusNode.unfocus();
+      },
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: const Color(0xFFa1143f),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            )
+          ],
+        ),
+        child: Column(
+          children: [
+            // Top bar with restaurant status and language
+            Container(
+              height: 35,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Left side - Restaurant status
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.white, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        getTranslated('restaurant_is_close_now', context) ??
+                            'Restaurant is close now',
+                        style: rubikRegular.copyWith(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Right side - Theme only
+                  Row(
+                    children: [
+                      const ThemeSwitchButtonWidget(),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Main navigation bar
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    // Logo
+                    InkWell(
+                      onTap: () => RouterHelper.getMainRoute(
+                          action: RouteAction.pushReplacement),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Provider.of<SplashProvider>(context).baseUrls !=
+                                null
+                            ? Consumer<SplashProvider>(
+                                builder: (context, splash, child) =>
+                                    CustomImageWidget(
+                                  image:
+                                      '${splash.baseUrls?.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
+                                  placeholder: Images.webAppBarLogo,
+                                  fit: BoxFit.contain,
+                                  width: 120,
+                                  height: 40,
+                                ),
+                              )
+                            : Image.asset(
+                                Images.webAppBarLogo,
+                                width: 120,
+                                height: 40,
+                                fit: BoxFit.contain,
+                              ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 40),
+
+                    // Navigation items
+                    InkWell(
+                      onTap: () =>
+                          RouterHelper.getHomeRoute(fromAppBar: 'true'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        child: Text(
+                          getTranslated('home', context) ?? 'Home',
+                          style: rubikMedium.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    MouseRegion(
+                      onHover: (details) {
+                        if (categoryProvider.categoryList != null) {
+                          _showPopupMenu(
+                              Offset(details.position.dx, details.position.dy),
+                              context,
+                              true);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        child: Row(
+                          children: [
+                            Text(
+                              getTranslated('categories', context) ??
+                                  'Categories',
+                              style: rubikMedium.copyWith(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(Icons.keyboard_arrow_down,
+                                color: Colors.white, size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    // Search bar
+                    Container(
+                      key: _searchBarKey,
+                      width: 400,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Consumer<SearchProvider>(
+                        builder: (context, search, _) => CustomTextFieldWidget(
+                          onTap: _showSearchDialog,
+                          isEnabled: Provider.of<BranchProvider>(context,
+                                      listen: false)
+                                  .getBranchId() !=
+                              -1,
+                          focusNode: _appbarSearchFocusNode,
+                          radius: 20,
+                          hintText: getTranslated('are_you_hungry', context) ??
+                              'Are you hungry?',
+                          isShowBorder: false,
+                          fillColor: Colors.white,
+                          isShowPrefixIcon: search.searchLength == 0,
+                          prefixIconUrl: Images.search,
+                          prefixIconColor: Colors.grey,
+                          suffixIconColor: Colors.grey,
+                          onChanged: (str) => search.getSearchText(str),
+                          controller: search.searchController,
+                          inputAction: TextInputAction.search,
+                          isIcon: true,
+                          isShowSuffixIcon: search.searchLength > 0,
+                          suffixIconUrl: Images.cancelSvg,
+                          onSuffixTap: () {
+                            search.searchController.clear();
+                            search.getSearchText('');
+                          },
+                          onSubmit: (text) {
+                            if (search.searchController.text.isNotEmpty) {
+                              RouterHelper.getSearchResultRoute(
+                                  search.searchController.text);
+                              search.searchDone();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    // Branch selector
+                    Consumer<BranchProvider>(
+                      builder: (context, branchProvider, _) => InkWell(
+                        onTap: () {
+                          RouterHelper.getBranchListScreen();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: Colors.white.withOpacity(0.3)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.location_on,
+                                  color: Colors.white, size: 16),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Branch',
+                                style: rubikMedium.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.keyboard_arrow_down,
+                                  color: Colors.white, size: 16),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    // Right icons
+                    Row(
                       children: [
-                        if (!splashProvider.isRestaurantOpenNow(context))
-                          Text(
-                              '${getTranslated('restaurant_is_close_now', context)}',
-                              style: rubikRegular.copyWith(
-                                  fontSize: Dimensions.fontSizeLarge,
-                                  color: Colors.white)),
-                        if (splashProvider.isRestaurantOpenNow(context))
-                          GestureDetector(
-                            onTap: () {
-                              if (ModalRoute.of(context)?.settings.name !=
-                                  RouterHelper.checkoutScreen) {
-                                ResponsiveHelper.showDialogOrBottomSheet(
-                                    context,
-                                    SelectedAddressListWidget(
-                                      currentBranch: branchProvider.getBranch(),
-                                      isFromAppbar: true,
-                                    ));
-                              }
-                            },
-                            child: Consumer<LocationProvider>(
-                              builder: (context, locationProvider, _) {
-                                return locationProvider.isLoading
-                                    ? const SizedBox()
-                                    : Row(children: [
-                                        const CustomAssetImageWidget(
-                                          Images.locationPlacemarkSvg,
-                                          color: Colors.white,
-                                          width: Dimensions.paddingSizeDefault,
-                                          height: Dimensions.paddingSizeDefault,
+                        // Wishlist
+                        InkWell(
+                          onTap: () =>
+                              RouterHelper.getDashboardRoute('favourite'),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Stack(
+                              children: [
+                                Icon(Icons.favorite_outline,
+                                    color: Colors.white, size: 24),
+                                Consumer<WishListProvider>(
+                                  builder: (context, wishlistProvider, _) {
+                                    final count =
+                                        wishlistProvider.wishList?.length ?? 0;
+                                    if (count > 0) {
+                                      return Positioned(
+                                        right: -2,
+                                        top: -2,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(2),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.orange,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          constraints: const BoxConstraints(
+                                              minWidth: 16, minHeight: 16),
+                                          child: Text(
+                                            '$count',
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
-                                        const SizedBox(
-                                            width: Dimensions
-                                                .paddingSizeExtraSmall),
-                                        Text(
-                                          locationProvider
-                                                  .currentAddress?.address ??
-                                              getTranslated(
-                                                  'no_location_selected',
-                                                  context)!,
-                                          style: rubikRegular.copyWith(
-                                              fontSize:
-                                                  Dimensions.fontSizeLarge,
-                                              color: Colors.white),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(
-                                            width:
-                                                Dimensions.fontSizeExtraSmall),
-                                        const Icon(Icons.expand_more,
-                                            color: Colors.white),
-                                      ]);
-                              },
+                                      );
+                                    }
+                                    return const SizedBox();
+                                  },
+                                ),
+                              ],
                             ),
                           ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const ThemeSwitchButtonWidget(),
-                              const SizedBox(
-                                  width: Dimensions.paddingSizeExtraLarge),
-                              if (AppConstants.languages.length > 1)
-                                SizedBox(
-                                  height: Dimensions.paddingSizeLarge,
-                                  child: OnHoverWidget(
-                                    builder: (isHovered) {
-                                      final color = isHovered
-                                          ? Colors.grey.shade300
-                                          : Colors.white;
+                        ),
 
-                                      return MouseRegion(
-                                        onHover: (details) {
-                                          _showPopupMenu(
-                                              details.position, context, false);
-                                        },
-                                        child: Row(children: [
-                                          Text(
-                                              '${currentLanguage.languageCode?.toUpperCase()}',
-                                              style: rubikSemiBold.copyWith(
-                                                color: color,
-                                                fontSize: Dimensions
-                                                    .fontSizeExtraSmall,
-                                              )),
-                                          const SizedBox(
-                                              width: Dimensions
-                                                  .paddingSizeExtraSmall),
-                                          Icon(Icons.expand_more,
-                                              color: color,
-                                              size: Dimensions.paddingSizeLarge)
-                                        ]),
-                                      );
-                                    },
-                                  ),
-                                ),
-                            ]),
-                      ]),
-                ))),
-        Container(
-            height: 0.5,
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.2)),
-        Expanded(
-          child: Container(
-              // Use full width with controlled padding instead of center constraint
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width > 1200 ? 40 : 20,
-              ),
-              child: Consumer<LocalizationProvider>(
-                builder: (context, localizationProvider, _) {
-                  return Directionality(
-                      textDirection: localizationProvider.isLtr
-                          ? TextDirection.ltr
-                          : TextDirection.rtl,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .spaceBetween, // Better distribution
-                          crossAxisAlignment: CrossAxisAlignment
-                              .center, // Proper vertical alignment
-                          children: [
-                            // Left Section: Logo + Navigation
-                            Row(mainAxisSize: MainAxisSize.min, children: [
-                              InkWell(
-                                onTap: () {
-                                  RouterHelper.getMainRoute(
-                                      action: RouteAction.pushReplacement);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 8.0),
-                                  child: Provider.of<SplashProvider>(context)
-                                              .baseUrls !=
-                                          null
-                                      ? Consumer<SplashProvider>(
-                                          builder: (context, splash, child) =>
-                                              CustomImageWidget(
-                                                image:
-                                                    '${splash.baseUrls?.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
-                                                placeholder:
-                                                    Images.webAppBarLogo,
-                                                fit: BoxFit.contain,
-                                                width: MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        1200
-                                                    ? 100 // Reduced from 120
-                                                    : MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.08, // Reduced from 0.1
-                                                height: MediaQuery.of(context)
-                                                            .size
-                                                            .width >
-                                                        1200
-                                                    ? 60 // Reduced from 80
-                                                    : MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.05, // Reduced from 0.06
-                                              ))
-                                      : const SizedBox(),
-                                ),
-                              ),
-                              OnHoverWidget(
-                                  builder: (isHover) => InkWell(
-                                        onTap: () => RouterHelper.getHomeRoute(
-                                            fromAppBar: 'true'),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: Dimensions
-                                                  .paddingSizeDefault),
+                        // Cart
+                        InkWell(
+                          onTap: () => RouterHelper.getDashboardRoute('cart'),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Stack(
+                              children: [
+                                Icon(Icons.shopping_cart_outlined,
+                                    color: Colors.white, size: 24),
+                                Consumer<CartProvider>(
+                                  builder: (context, cartProvider, _) {
+                                    final count = cartProvider.cartList.length;
+                                    if (count > 0) {
+                                      return Positioned(
+                                        right: -2,
+                                        top: -2,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(2),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.orange,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          constraints: const BoxConstraints(
+                                              minWidth: 16, minHeight: 16),
                                           child: Text(
-                                            getTranslated('home', context)!,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: rubikRegular.copyWith(
-                                              color: isHover
-                                                  ? Colors.grey.shade300
-                                                  : Colors.white,
-                                            ),
+                                            '$count',
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10),
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
-                                      )),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimensions.paddingSizeSmall),
-                                child: MouseRegion(
-                                  onHover: (details) {
-                                    if (categoryProvider.categoryList != null) {
-                                      _showPopupMenu(
-                                          details.position, context, true);
+                                      );
                                     }
+                                    return const SizedBox();
                                   },
-                                  child: OnHoverWidget(
-                                      builder: (isHover) => Text(
-                                            getTranslated(
-                                                'categories', context)!,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: rubikRegular.copyWith(
-                                              color: isHover
-                                                  ? Colors.grey.shade300
-                                                  : Colors.white,
-                                            ),
-                                          )),
                                 ),
-                              ),
-                            ]), // Close left section Row
-
-                            // Center Section: Search + Branch
-                            Row(mainAxisSize: MainAxisSize.min, children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: SizedBox(
-                                  key: _searchBarKey,
-                                  width:
-                                      MediaQuery.of(context).size.width > 1200
-                                          ? 350 // Reduced from 410 to 350
-                                          : MediaQuery.of(context).size.width *
-                                              0.30, // Reduced from 0.35 to 0.30
-                                  height: 50,
-                                  child: Consumer<SearchProvider>(
-                                      builder: (context, search, _) =>
-                                          CustomTextFieldWidget(
-                                            onTap: _showSearchDialog,
-                                            isEnabled:
-                                                Provider.of<BranchProvider>(
-                                                            context,
-                                                            listen: false)
-                                                        .getBranchId() !=
-                                                    -1,
-                                            focusNode: _appbarSearchFocusNode,
-                                            radius: 50,
-                                            hintText: getTranslated(
-                                                'are_you_hungry', context),
-                                            isShowBorder: true,
-                                            fillColor:
-                                                Theme.of(context).cardColor,
-                                            isShowPrefixIcon:
-                                                search.searchLength == 0,
-                                            prefixIconUrl: Images.search,
-                                            prefixIconColor:
-                                                Theme.of(context).hintColor,
-                                            suffixIconColor:
-                                                Theme.of(context).hintColor,
-                                            onChanged: (str) {
-                                              search.getSearchText(str);
-                                            },
-                                            controller: search.searchController,
-                                            inputAction: TextInputAction.search,
-                                            isIcon: true,
-                                            isShowSuffixIcon:
-                                                search.searchLength > 0,
-                                            suffixIconUrl: Images.cancelSvg,
-                                            onSuffixTap: () {
-                                              search.searchController.clear();
-                                              search.getSearchText('');
-                                            },
-                                            onSubmit: (text) {
-                                              if (search.searchController.text
-                                                  .isNotEmpty) {
-                                                RouterHelper
-                                                    .getSearchResultRoute(search
-                                                        .searchController.text);
-                                                search.searchDone();
-                                              }
-                                            },
-                                          )),
-                                ),
-                              ),
-                              // Add spacing after search bar
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width > 1200
-                                          ? 20
-                                          : 10),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimensions
-                                        .paddingSizeSmall), // Reduced from ExtraLarge to Small
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: MediaQuery.of(context)
-                                                .size
-                                                .width >
-                                            1200
-                                        ? 300 // Increased to allow for branch name
-                                        : MediaQuery.of(context).size.width *
-                                            0.25,
-                                  ),
-                                  child:
-                                      const BranchButtonWidget(isPopup: true),
-                                ),
-                              ),
-                            ]), // Close center section Row
-
-                            // Right Section: Navigation Icons
-                            Row(mainAxisSize: MainAxisSize.min, children: [
-                              if (MediaQuery.of(context).size.width > 1000) ...[
-                                InkWell(
-                                  onTap: () => RouterHelper.getDashboardRoute(
-                                      'favourite'),
-                                  child: OnHoverWidget(builder: (isHover) {
-                                    return Consumer<WishListProvider>(builder:
-                                        (context, wishlistProvider, _) {
-                                      return CountIconView(
-                                          count:
-                                              '${wishlistProvider.wishList?.length ?? 0}',
-                                          image: Images.navFavoriteSvg);
-                                    });
-                                  }),
-                                ),
-                                InkWell(
-                                  onTap: () =>
-                                      RouterHelper.getDashboardRoute('cart'),
-                                  child: OnHoverWidget(
-                                      builder: (isHover) => CountIconView(
-                                            count: Provider.of<CartProvider>(
-                                                    context)
-                                                .cartList
-                                                .length
-                                                .toString(),
-                                            image: Images.navOrderSvg,
-                                          )),
-                                ),
-                                OnHoverWidget(
-                                    builder: (isHover) => Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: Dimensions
-                                                  .paddingSizeExtraLarge),
-                                          child: InkWell(
-                                            onTap: () =>
-                                                RouterHelper.getProfileRoute(),
-                                            child: profileProvider
-                                                        .userInfoModel?.image !=
-                                                    null
-                                                ? ClipOval(
-                                                    child: CustomImageWidget(
-                                                      image:
-                                                          "${splashProvider.baseUrls!.customerImageUrl}/${profileProvider.userInfoModel?.image}",
-                                                      fit: BoxFit.cover,
-                                                      height: Dimensions
-                                                          .paddingSizeExtraLarge,
-                                                      width: Dimensions
-                                                          .paddingSizeExtraLarge,
-                                                    ),
-                                                  )
-                                                : CustomAssetImageWidget(
-                                                    fit: BoxFit.cover,
-                                                    Images.navUserSvg,
-                                                    width: Dimensions
-                                                        .paddingSizeLarge,
-                                                    color: isHover
-                                                        ? Theme.of(context)
-                                                            .primaryColor
-                                                        : Provider.of<ThemeProvider>(
-                                                                    context)
-                                                                .darkTheme
-                                                            ? Theme.of(context)
-                                                                .textTheme
-                                                                .bodyLarge
-                                                                ?.color
-                                                                ?.withValues(
-                                                                    alpha: 0.5)
-                                                            : Colors.black87,
-                                                  ),
-                                          ),
-                                        )),
                               ],
-                              OnHoverWidget(
-                                  builder: (isHover) => InkWell(
-                                        onTap: () =>
-                                            RouterHelper.getDashboardRoute(
-                                                'menu'),
-                                        child: Icon(
-                                          Icons.menu,
-                                          size:
-                                              Dimensions.paddingSizeExtraLarge,
-                                          color: isHover
-                                              ? Theme.of(context).primaryColor
-                                              : Provider.of<ThemeProvider>(
-                                                          context)
-                                                      .darkTheme
-                                                  ? Theme.of(context)
-                                                      .primaryColor
-                                                  : Colors.black87,
-                                        ),
-                                      )),
-                            ]), // Close right section Row
-                          ]) // Close main Row children
-                      ); // Close Directionality
-                }, // Close Consumer builder
-              )), // Close Consumer and Container
-        ), // Close Expanded
-      ]), // Close Column children
-    ); // Close Container
-  }
+                            ),
+                          ),
+                        ),
 
-  @override
-  // ignore: override_on_non_overriding_member
-  Size get preferredSize => const Size(double.maxFinite, 50);
-}
+                        // Profile
+                        InkWell(
+                          onTap: () => RouterHelper.getProfileRoute(),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            child: Icon(Icons.person_outline,
+                                color: Colors.white, size: 24),
+                          ),
+                        ),
 
-class CountIconView extends StatelessWidget {
-  final String? count;
-  final IconData? icon;
-  final String? image;
-  final Color? color;
-  const CountIconView({
-    super.key,
-    this.count,
-    this.icon,
-    this.image,
-    this.color,
-  });
+                        // Menu
+                        InkWell(
+                          onTap: () => RouterHelper.getDashboardRoute('menu'),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            child:
+                                Icon(Icons.menu, color: Colors.white, size: 24),
+                          ),
+                        ),
 
-  @override
-  Widget build(BuildContext context) {
-    return OnHoverWidget(
-        builder: (isHover) => Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimensions.paddingSizeExtraLarge),
-              child: Stack(clipBehavior: Clip.none, children: [
-                image != null
-                    ? CustomAssetImageWidget(
-                        image!,
-                        width: Dimensions.paddingSizeLarge,
-                        color: isHover
-                            ? Theme.of(context).primaryColor
-                            : Provider.of<ThemeProvider>(context).darkTheme
-                                ? Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.color
-                                    ?.withValues(alpha: 0.5)
-                                : Colors.black87,
-                      )
-                    : Icon(
-                        icon,
-                        size: Dimensions.paddingSizeLarge,
-                        color: color ??
-                            (isHover
-                                ? Theme.of(context).primaryColor
-                                : Provider.of<ThemeProvider>(context).darkTheme
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.color
-                                        ?.withValues(alpha: 0.5)
-                                    : Colors.black87),
-                      ),
-                Positioned(
-                    top: -7,
-                    right: -7,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).primaryColor,
-                        border: Border.all(color: Colors.white, width: 0.5),
-                      ),
-                      child: Center(
-                          child: Text('${count ?? 0}',
-                              style: rubikSemiBold.copyWith(
-                                  color: Colors.white, fontSize: 8))),
-                    ))
-              ]),
-            ));
-  }
-}
+                        const SizedBox(width: 20),
+
+                        // Language selector
+                        if (AppConstants.languages.length > 1)
+                          MouseRegion(
+                            onHover: (details) {
+                              _showPopupMenu(
+                                  Offset(
+                                      details.position.dx, details.position.dy),
+                                  context,
+                                  false);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.white.withOpacity(0.3)),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    currentLanguage.languageCode
+                                            ?.toUpperCase() ??
+                                        'EN',
+                                    style: rubikMedium.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(Icons.keyboard_arrow_down,
+                                      color: Colors.white, size: 16),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ), // Close Column child
+      ), // Close Container
+    ); // Close GestureDetector
+  } // Close build method
+} // Close class

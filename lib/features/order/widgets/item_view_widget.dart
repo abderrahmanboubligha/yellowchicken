@@ -19,11 +19,11 @@ class ItemViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(title, style: style ?? rubikRegular),
-
-      CustomDirectionalityWidget(child: Text(
+      Text(title, style: style ?? ResponsiveStyles.responsiveRegular(context)),
+      CustomDirectionalityWidget(
+          child: Text(
         subTitle,
-        style: subtitleStyle ?? rubikSemiBold,
+        style: subtitleStyle ?? ResponsiveStyles.responsiveSemiBold(context),
       )),
     ]);
   }

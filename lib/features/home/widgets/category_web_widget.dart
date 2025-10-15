@@ -15,25 +15,25 @@ class CategoryWebWidget extends StatefulWidget {
 }
 
 class _CategoryWebWidgetState extends State<CategoryWebWidget> {
-
-
   @override
   Widget build(BuildContext context) {
-    final isDesktop = ResponsiveHelper.isDesktop(context);
-
     return Consumer<CategoryProvider>(builder: (context, category, _) {
-      return category.categoryList == null ? const _CategoryShimmer() :
-      category.categoryList!.isNotEmpty ?  Container(
-        decoration: BoxDecoration(
-          color: ColorResources.getTertiaryColor(context),
-          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-        ),
-        height: isDesktop ? 300 : null,
-        child: CategoryPageWidget(
-          categoryProvider: category,
-        ),
-      ) :
-      const SizedBox();
+      return category.categoryList == null
+          ? const _CategoryShimmer()
+          : category.categoryList!.isNotEmpty
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: ColorResources.getTertiaryColor(context),
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: Dimensions.paddingSizeDefault,
+                  ),
+                  child: CategoryPageWidget(
+                    categoryProvider: category,
+                  ),
+                )
+              : const SizedBox();
     });
   }
 }
@@ -43,60 +43,137 @@ class _CategoryShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
+    final categoryProvider =
+        Provider.of<CategoryProvider>(context, listen: false);
+    final isDesktop = ResponsiveHelper.isDesktop(context);
+    final isTablet = ResponsiveHelper.isTab(context);
 
-    return SizedBox(height: 260, width: Dimensions.webScreenWidth, child: Center(child: Column(children: [
+    final double cardWidth = isDesktop
+        ? 140
+        : isTablet
+            ? 120
+            : 100;
+    final double cardHeight = isDesktop
+        ? 160
+        : isTablet
+            ? 140
+            : 120;
 
-      Container(
-        margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: Dimensions.paddingSizeSmall),
-        alignment: Alignment.center,
-        child: Shimmer(
-          duration: const Duration(seconds: 2),
-          enabled: categoryProvider.categoryList == null,
-          child: Container(
-            height: Dimensions.paddingSizeLarge,
-            width: 150,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: Theme.of(context).shadowColor.withValues(alpha:0.2),
-              borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: Dimensions.paddingSizeDefault),
+
+        // Title shimmer
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimensions.paddingSizeDefault,
+          ),
+          child: Shimmer(
+            duration: const Duration(seconds: 2),
+            enabled: categoryProvider.categoryList == null,
+            child: Container(
+              height: isDesktop
+                  ? 28
+                  : isTablet
+                      ? 24
+                      : 20,
+              width: 180,
+              decoration: BoxDecoration(
+                color: Theme.of(context).shadowColor.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
         ),
-      ),
-      SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeLarge : Dimensions.paddingSizeSmall),
 
-      Expanded(child: GridView.builder(
-        padding: EdgeInsets.zero,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: ResponsiveHelper.isDesktop(context) ? 5 : ResponsiveHelper.isTab(context) ? 8 : 4,
-          mainAxisExtent: ResponsiveHelper.isDesktop(context) ? 110 : 100,
+        SizedBox(
+          height: isDesktop
+              ? Dimensions.paddingSizeLarge
+              : Dimensions.paddingSizeDefault,
         ),
-        itemCount: 7,
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Container(margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault), child: Shimmer(
-            duration: const Duration(seconds: 2),
-            enabled: categoryProvider.categoryList == null,
-            child: Column(children: [
-              Container(
-                height: 50, width: 50,
-                padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  color: Theme.of(context).shadowColor.withValues(alpha:0.3),
+
+        // Horizontal list shimmer
+        SizedBox(
+          height: cardHeight + 20,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimensions.paddingSizeDefault,
+            ),
+            itemCount: 7,
+            itemBuilder: (context, index) {
+              return Container(
+                width: cardWidth,
+                margin: const EdgeInsets.only(
+                  right: Dimensions.paddingSizeDefault,
                 ),
-              ),
-              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                child: Shimmer(
+                  duration: const Duration(seconds: 2),
+                  enabled: categoryProvider.categoryList == null,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Image shimmer
+                          Container(
+                            height: isDesktop
+                                ? 80
+                                : isTablet
+                                    ? 70
+                                    : 60,
+                            width: isDesktop
+                                ? 80
+                                : isTablet
+                                    ? 70
+                                    : 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Theme.of(context)
+                                  .shadowColor
+                                  .withValues(alpha: 0.3),
+                            ),
+                          ),
 
-              Container(height: 10, width: 50, color: Theme.of(context).shadowColor.withValues(alpha:0.5)),
-            ]),
-          ));
-        },
-      )),
+                          const SizedBox(height: Dimensions.paddingSizeSmall),
 
-    ])));
+                          // Text shimmer
+                          Container(
+                            height: 12,
+                            width: cardWidth * 0.7,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: Theme.of(context)
+                                  .shadowColor
+                                  .withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        const SizedBox(height: Dimensions.paddingSizeDefault),
+      ],
+    );
   }
 }
-

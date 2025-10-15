@@ -39,32 +39,38 @@ class _BannerWidgetState extends State<BannerWidget> {
         builder: (context, bannerProvider, child) {
           return bannerProvider.bannerList == null
               ? const _BannerShimmer()
-              : (bannerProvider.bannerList?.isNotEmpty ?? false)
+              : (bannerProvider.bannerList?.isNotEmpty ?? false) &&
+                      bannerProvider.bannerList!.length > 4
                   ? Container(
-                      decoration: ResponsiveHelper.isDesktop(context)
-                          ? BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(
-                                  Dimensions.radiusDefault),
-                            )
-                          : const BoxDecoration(),
+                      width: double.infinity,
+                      decoration: const BoxDecoration(),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Title
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeLarge,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: ResponsiveHelper.isDesktop(
+                                          context)
+                                      ? (MediaQuery.of(context).size.width >
+                                              1170
+                                          ? (MediaQuery.of(context).size.width -
+                                                      Dimensions
+                                                          .webScreenWidth) /
+                                                  2 +
+                                              Dimensions.paddingSizeLarge
+                                          : MediaQuery.of(context).size.width *
+                                                  0.025 +
+                                              Dimensions.paddingSizeLarge)
+                                      : Dimensions.paddingSizeLarge,
                                   vertical: Dimensions.paddingSizeSmall),
                               child: Text(
                                   getTranslated('today_specials', context)!,
                                   style: rubikBold.copyWith(
-                                    color: ResponsiveHelper.isDesktop(context)
-                                        ? Colors.white
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.color,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color,
                                     fontSize:
                                         ResponsiveHelper.isDesktop(context)
                                             ? Dimensions.fontSizeExtraLarge
@@ -75,21 +81,25 @@ class _BannerWidgetState extends State<BannerWidget> {
                             // Full Width Banner Carousel
                             Container(
                               height: ResponsiveHelper.isDesktop(context)
-                                  ? 240
+                                  ? 350
                                   : 170,
                               width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimensions.paddingSizeLarge),
+                              padding: ResponsiveHelper.isDesktop(context)
+                                  ? EdgeInsets.zero
+                                  : const EdgeInsets.symmetric(
+                                      horizontal: Dimensions.paddingSizeLarge),
                               child: CarouselSlider.builder(
                                 disableGesture: false,
-                                itemCount:
-                                    bannerProvider.bannerList!.length <= 10
-                                        ? bannerProvider.bannerList!.length
-                                        : 10,
+                                itemCount: bannerProvider.bannerList!.length > 4
+                                    ? (bannerProvider.bannerList!.length - 4 <=
+                                            10
+                                        ? bannerProvider.bannerList!.length - 4
+                                        : 10)
+                                    : 0,
                                 carouselController: _mainBannerController,
                                 options: CarouselOptions(
                                   height: ResponsiveHelper.isDesktop(context)
-                                      ? 220
+                                      ? 330
                                       : 150,
                                   viewportFraction: 1.0,
                                   initialPage: _currentIndex,
@@ -109,18 +119,26 @@ class _BannerWidgetState extends State<BannerWidget> {
                                   scrollDirection: Axis.horizontal,
                                 ),
                                 itemBuilder: (context, index, realIndex) {
+                                  // Skip the first 4 banners - start from index 4
+                                  final bannerIndex = index + 4;
                                   return Container(
                                     width: double.infinity,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 5),
+                                    margin: ResponsiveHelper.isDesktop(context)
+                                        ? EdgeInsets.zero
+                                        : const EdgeInsets.symmetric(
+                                            horizontal: 5),
                                     child: Material(
-                                      borderRadius: BorderRadius.circular(
-                                          Dimensions.radiusDefault),
+                                      borderRadius:
+                                          ResponsiveHelper.isDesktop(context)
+                                              ? BorderRadius.zero
+                                              : BorderRadius.circular(
+                                                  Dimensions.radiusDefault),
                                       clipBehavior: Clip.hardEdge,
                                       color: Colors.transparent,
                                       child: InkWell(
                                         onTap: () {
-                                          if (bannerProvider.bannerList![index]
+                                          if (bannerProvider
+                                                  .bannerList![bannerIndex]
                                                   .productId !=
                                               null) {
                                             Product? product;
@@ -128,7 +146,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                                                 in bannerProvider.productList) {
                                               if (prod.id ==
                                                   bannerProvider
-                                                      .bannerList![index]
+                                                      .bannerList![bannerIndex]
                                                       .productId) {
                                                 product = prod;
                                                 break;
@@ -155,7 +173,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                                                       ));
                                             }
                                           } else if (bannerProvider
-                                                  .bannerList![index]
+                                                  .bannerList![bannerIndex]
                                                   .categoryId !=
                                               null) {
                                             CategoryModel? category;
@@ -167,7 +185,7 @@ class _BannerWidgetState extends State<BannerWidget> {
                                                     .categoryList!) {
                                               if (categoryModel.id ==
                                                   bannerProvider
-                                                      .bannerList![index]
+                                                      .bannerList![bannerIndex]
                                                       .categoryId) {
                                                 category = categoryModel;
                                                 break;
@@ -180,22 +198,29 @@ class _BannerWidgetState extends State<BannerWidget> {
                                             }
                                           }
                                         },
-                                        borderRadius: BorderRadius.circular(
-                                            Dimensions.radiusDefault),
+                                        borderRadius:
+                                            ResponsiveHelper.isDesktop(context)
+                                                ? BorderRadius.zero
+                                                : BorderRadius.circular(
+                                                    Dimensions.radiusDefault),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                              Dimensions.radiusDefault),
+                                          borderRadius:
+                                              ResponsiveHelper.isDesktop(
+                                                      context)
+                                                  ? BorderRadius.zero
+                                                  : BorderRadius.circular(
+                                                      Dimensions.radiusDefault),
                                           child: CustomImageWidget(
                                             placeholder:
                                                 Images.placeholderBanner,
                                             width: double.infinity,
                                             height: ResponsiveHelper.isDesktop(
                                                     context)
-                                                ? 220
+                                                ? 330
                                                 : 150,
                                             fit: BoxFit.cover,
                                             image:
-                                                '${splashProvider.baseUrls!.bannerImageUrl}/${bannerProvider.bannerList![index].image}',
+                                                '${splashProvider.baseUrls!.bannerImageUrl}/${bannerProvider.bannerList![bannerIndex].image}',
                                           ),
                                         ),
                                       ),
@@ -212,10 +237,15 @@ class _BannerWidgetState extends State<BannerWidget> {
                               child: SizedBox(
                                 height: 8,
                                 child: ListView.builder(
-                                  itemCount:
-                                      bannerProvider.bannerList!.length <= 10
-                                          ? bannerProvider.bannerList!.length
-                                          : 10,
+                                  itemCount: bannerProvider.bannerList!.length >
+                                          4
+                                      ? (bannerProvider.bannerList!.length -
+                                                  4 <=
+                                              10
+                                          ? bannerProvider.bannerList!.length -
+                                              4
+                                          : 10)
+                                      : 0,
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
@@ -285,7 +315,7 @@ class _BannerShimmer extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: ResponsiveHelper.isDesktop(context) ? 260 : 190,
+          height: ResponsiveHelper.isDesktop(context) ? 370 : 190,
           child: Column(children: [
             // Banner shimmer
             Expanded(

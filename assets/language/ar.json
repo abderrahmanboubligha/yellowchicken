@@ -288,6 +288,7 @@
   "on": "على",
   "dark_mode": "الوضع المظلم",
   "see_more": "شاهد المزيد",
+  "see_more_banners": "عرض جميع اللافتات",
   "quick_view": "عرض سريع",
   "subscribe_to_our": "اشترك في النشرة الإخبارية لدينا وافتح عالمًا حصريًا",
   "your_email_address": "عنوان بريدك  الإلكتروني",
@@ -823,7 +824,8 @@
   "add_contact_info": "أضف معلومات الاتصال",
   "was_placed_successfully": "تم تقديم الطلب بنجاح",
   "added_to_your_favorites": "تمت الإضافة إلى المفضلات لديك!",
-  "removed_from_your_favorites": "تم الإزالة من المفضلات لديك!"
+  "removed_from_your_favorites": "تم الإزالة من المفضلات لديك!",
+  "featured_offers": "العروض المميزة"
 
 
 }

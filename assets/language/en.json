@@ -288,6 +288,7 @@
   "on" : "ON",
   "dark_mode" : "Dark Mode",
   "see_more" : "See More",
+  "see_more_banners" : "View all banners",
   "quick_view" : "Quick View",
   "subscribe_to_our" : "Subscribe to our newsletter and unlock a world of exclusive",
   "your_email_address" : "Your Email Address",
@@ -823,5 +824,6 @@
   "add_contact_info": "Add Contact Info",
   "was_placed_successfully": "was placed successfully.",
   "added_to_your_favorites": "Added to your favorites!",
-  "removed_from_your_favorites": "Removed from your favorites!"
+  "removed_from_your_favorites": "Removed from your favorites!",
+  "featured_offers": "Featured Offers"
 }

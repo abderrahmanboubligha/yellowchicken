@@ -10,6 +10,7 @@ import 'package:flutter_restaurant/features/coupon/providers/coupon_provider.dar
 import 'package:flutter_restaurant/common/providers/product_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
+import 'package:flutter_restaurant/utill/responsive_dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
@@ -463,7 +464,7 @@ class _PriceTagWidget extends StatelessWidget {
                   PriceConverterHelper.convertPrice((cart!.product!.price!)),
                   style: rubikRegular.copyWith(
                     color: Theme.of(context).hintColor.withValues(alpha: 0.7),
-                    fontSize: Dimensions.fontSizeSmall,
+                    fontSize: ResponsiveDimensions.getFontSizeSmall(context),
                     decoration: TextDecoration.lineThrough,
                   )),
             )),
@@ -475,8 +476,8 @@ class _PriceTagWidget extends StatelessWidget {
             PriceConverterHelper.convertPrice(cart!.discountedPrice),
             style: rubikBold.copyWith(
                 fontSize: isDesktop
-                    ? Dimensions.fontSizeLarge
-                    : Dimensions.fontSizeSmall),
+                    ? ResponsiveDimensions.getFontSizeLarge(context)
+                    : ResponsiveDimensions.getPriceFontSize()),
           ))),
         ]);
   }
