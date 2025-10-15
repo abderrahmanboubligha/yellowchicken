@@ -27,8 +27,8 @@ class CategoryPopUpWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 20, 0, 10),
-                  child:
-                      TitleWidget(title: getTranslated('all_categories', context)),
+                  child: TitleWidget(
+                      title: getTranslated('all_categories', context)),
                 ),
                 Expanded(
                   child: SizedBox(
@@ -37,42 +37,67 @@ class CategoryPopUpWidget extends StatelessWidget {
                         ? category.categoryList!.isNotEmpty
                             ? GridView.builder(
                                 itemCount: category.categoryList!.length,
-                                  padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
-                                  physics: const BouncingScrollPhysics(),
-                                  gridDelegate:
+                                padding: const EdgeInsets.only(
+                                    left: Dimensions.paddingSizeSmall),
+                                physics: const BouncingScrollPhysics(),
+                                gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                      childAspectRatio: 1.2,
-                                        crossAxisCount: ResponsiveHelper.isDesktop(context)?5:4,
-                                    ),
+                                  childAspectRatio: 1.2,
+                                  crossAxisCount:
+                                      ResponsiveHelper.isDesktop(context)
+                                          ? 5
+                                          : 4,
+                                ),
                                 itemBuilder: (context, index) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
+                                    padding: const EdgeInsets.only(
+                                        right: Dimensions.paddingSizeSmall),
                                     child: InkWell(
-                                      onTap: () => RouterHelper.getCategoryRoute(category.categoryList![index]),
+                                      onTap: () =>
+                                          RouterHelper.getCategoryRoute(
+                                              category.categoryList![index]),
                                       child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
-                                        ClipOval(
-                                          child: CustomImageWidget(
-                                            placeholder: Images.placeholderImage, width: 65, height: 65, fit: BoxFit.cover,
-                                            image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}'
-                                                '/${category.categoryList![index].image}',
-                                            // width: 100, height: 100, fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Text(
-                                          category.categoryList![index].name!,
-                                          style: rubikSemiBold.copyWith(
-                                              fontSize: Dimensions.fontSizeSmall),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ]),
+                                            ClipOval(
+                                              child: CustomImageWidget(
+                                                placeholder:
+                                                    Images.placeholderImage,
+                                                width: 65,
+                                                height: 65,
+                                                fit: BoxFit.cover,
+                                                image:
+                                                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}'
+                                                    '/${category.categoryList![index].image}',
+                                                // width: 100, height: 100, fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            Text(
+                                              category
+                                                  .categoryList![index].name!,
+                                              style: rubikSemiBold.copyWith(
+                                                fontSize:
+                                                    Dimensions.fontSizeSmall,
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ]),
                                     ),
                                   );
                                 },
-                              ) : Center(child: Text(getTranslated('no_category_available', context)!)) : const CategoryShimmer(),
+                              )
+                            : Center(
+                                child: Text(getTranslated(
+                                    'no_category_available', context)!))
+                        : const CategoryShimmer(),
                   ),
                 ),
               ],
@@ -102,7 +127,8 @@ class CategoryShimmer extends StatelessWidget {
             padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
             child: Shimmer(
               duration: const Duration(seconds: 2),
-              enabled: Provider.of<CategoryProvider>(context).categoryList == null,
+              enabled:
+                  Provider.of<CategoryProvider>(context).categoryList == null,
               child: Column(children: [
                 Container(
                   height: 65,
@@ -114,7 +140,9 @@ class CategoryShimmer extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Container(
-                    height: 10, width: 50, color: Theme.of(context).shadowColor),
+                    height: 10,
+                    width: 50,
+                    color: Theme.of(context).shadowColor),
               ]),
             ),
           );

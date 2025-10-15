@@ -289,64 +289,74 @@ class _MyAppState extends State<MyApp> {
       builder: (context, splashProvider, child) {
         return (kIsWeb && splashProvider.configModel == null)
             ? const SizedBox()
-            : MaterialApp.router(
-                routerConfig: RouterHelper.goRoutes,
-                title: splashProvider.configModel != null
-                    ? splashProvider.configModel!.restaurantName ?? ''
-                    : AppConstants.appName,
-                debugShowCheckedModeBanner: false,
-                theme: Provider.of<ThemeProvider>(context).darkTheme
-                    ? dark
-                    : light,
-                locale: Provider.of<LocalizationProvider>(context).locale,
-                localizationsDelegates: const [
-                  AppLocalization.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: locals,
-                scrollBehavior:
-                    const MaterialScrollBehavior().copyWith(dragDevices: {
-                  PointerDeviceKind.mouse,
-                  PointerDeviceKind.touch,
-                  PointerDeviceKind.stylus,
-                  PointerDeviceKind.unknown
-                }),
-                builder: (context, child) => MediaQuery(
-                  data: MediaQuery.of(context).copyWith(
-                      textScaler: TextScaler.linear(
-                          MediaQuery.sizeOf(context).width < 380 ? 0.9 : 1)),
-                  child: Scaffold(
-                    body: SafeArea(
-                      top: false,
-                      bottom: !kIsWeb && Platform.isAndroid,
-                      child: Stack(
-                        children: [
-                          child!,
-                          if (ResponsiveHelper.isDesktop(context))
-                            const Positioned.fill(
-                              child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 50, horizontal: 20),
-                                    child: ThirdPartyChatWidget(),
-                                  )),
-                            ),
-                          if (kIsWeb &&
-                              (splashProvider
-                                      .configModel?.cookiesManagement?.status ??
-                                  false) &&
-                              !splashProvider.getAcceptCookiesStatus(
-                                  splashProvider.configModel?.cookiesManagement
-                                      ?.content) &&
-                              splashProvider.cookiesShow)
-                            const Positioned.fill(
-                                child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: CookiesWidget())),
-                        ],
+            : Consumer<LocalizationProvider>(
+                builder: (context, localizationProvider, child) =>
+                    MaterialApp.router(
+                  routerConfig: RouterHelper.goRoutes,
+                  title: splashProvider.configModel != null
+                      ? splashProvider.configModel!.restaurantName ?? ''
+                      : AppConstants.appName,
+                  debugShowCheckedModeBanner: false,
+                  theme: Provider.of<ThemeProvider>(context).darkTheme
+                      ? dark
+                      : light,
+                  locale: localizationProvider.locale,
+                  localizationsDelegates: const [
+                    AppLocalization.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: locals,
+                  scrollBehavior:
+                      const MaterialScrollBehavior().copyWith(dragDevices: {
+                    PointerDeviceKind.mouse,
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.stylus,
+                    PointerDeviceKind.unknown
+                  }),
+                  builder: (context, child) => Directionality(
+                    textDirection: localizationProvider.isLtr
+                        ? TextDirection.ltr
+                        : TextDirection.rtl,
+                    child: MediaQuery(
+                      data: MediaQuery.of(context).copyWith(
+                          textScaler: TextScaler.linear(
+                              MediaQuery.sizeOf(context).width < 380
+                                  ? 0.9
+                                  : 1)),
+                      child: Scaffold(
+                        body: SafeArea(
+                          top: false,
+                          bottom: !kIsWeb && Platform.isAndroid,
+                          child: Stack(
+                            children: [
+                              child!,
+                              if (ResponsiveHelper.isDesktop(context))
+                                const Positioned.fill(
+                                  child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 50, horizontal: 20),
+                                        child: ThirdPartyChatWidget(),
+                                      )),
+                                ),
+                              if (kIsWeb &&
+                                  (splashProvider.configModel?.cookiesManagement
+                                          ?.status ??
+                                      false) &&
+                                  !splashProvider.getAcceptCookiesStatus(
+                                      splashProvider.configModel
+                                          ?.cookiesManagement?.content) &&
+                                  splashProvider.cookiesShow)
+                                const Positioned.fill(
+                                    child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: CookiesWidget())),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),

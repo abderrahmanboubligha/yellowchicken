@@ -8,6 +8,8 @@
     "description": "Food delivery app with YellowChicken.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "dir": "rtl",
+    "lang": "ar",
     "icons": [
         {
             "src": "favicon.png",

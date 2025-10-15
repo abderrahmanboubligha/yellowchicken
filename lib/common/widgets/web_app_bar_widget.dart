@@ -76,15 +76,13 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
     List<CategoryModel>? categoryList =
         Provider.of<CategoryProvider>(context, listen: false).categoryList;
 
-    if (categoryList != null) {
-      categoryPopupMenuEntryList.add(PopupMenuItem(
-        child: MouseRegion(
-          onExit: (_) => context.pop(),
-          child: CategoryHoverWidget(categoryList: categoryList),
-        ),
-      ));
-    }
-    return categoryPopupMenuEntryList;
+    categoryPopupMenuEntryList.add(PopupMenuItem(
+      child: MouseRegion(
+        onExit: (_) => context.pop(),
+        child: CategoryHoverWidget(categoryList: categoryList),
+      ),
+    ));
+      return categoryPopupMenuEntryList;
   }
 
   List<PopupMenuEntry> popUpLanguageList(BuildContext context) {

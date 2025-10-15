@@ -141,15 +141,15 @@ class AppConstants {
 
   static List<LanguageModel> languages = [
     LanguageModel(
-        imageUrl: Images.unitedKingdom,
-        languageName: 'English',
-        countryCode: 'US',
-        languageCode: 'en'),
-    LanguageModel(
         imageUrl: Images.saudiArabia,
         languageName: 'Arabic',
         countryCode: 'SA',
         languageCode: 'ar'),
+    LanguageModel(
+        imageUrl: Images.unitedKingdom,
+        languageName: 'English',
+        countryCode: 'US',
+        languageCode: 'en'),
   ];
 
   static const int balanceInputLen = 10;

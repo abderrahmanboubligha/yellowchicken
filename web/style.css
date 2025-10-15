@@ -8,6 +8,12 @@
 
 body {
   color: #111;
+  direction: rtl; /* Default to RTL for Arabic */
+}
+
+/* LTR support for English */
+body[dir="ltr"] {
+  direction: ltr;
 }
 
 /* Loader */

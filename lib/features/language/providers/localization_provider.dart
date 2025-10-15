@@ -8,42 +8,49 @@ class LocalizationProvider extends ChangeNotifier {
   DioClient? dioClient;
   final SharedPreferences? sharedPreferences;
 
-  LocalizationProvider({required this.sharedPreferences, required this.dioClient}) {
+  LocalizationProvider(
+      {required this.sharedPreferences, required this.dioClient}) {
     _loadCurrentLanguage();
   }
 
-  Locale _locale = const Locale('en', 'US');
-  bool _isLtr = true;
+  Locale _locale = const Locale('ar', 'SA');
+  bool _isLtr = false;
   Locale get locale => _locale;
   bool get isLtr => _isLtr;
 
   Future<void> setLanguage(Locale locale, {bool isDataUpdate = true}) async {
     _locale = locale;
-    if(_locale.languageCode == 'ar') {
+    if (_locale.languageCode == 'ar') {
       _isLtr = false;
-    }else {
+    } else {
       _isLtr = true;
     }
     _saveLanguage(_locale);
 
-   await dioClient!.updateHeader(getToken: sharedPreferences!.getString(AppConstants.token)).then((value){
-     if(isDataUpdate) {
-       HomeScreen.loadData(true, isFcmUpdate: true);
-     }
-
+    await dioClient!
+        .updateHeader(
+            getToken: sharedPreferences!.getString(AppConstants.token))
+        .then((value) {
+      if (isDataUpdate) {
+        HomeScreen.loadData(true, isFcmUpdate: true);
+      }
     });
     notifyListeners();
   }
 
   _loadCurrentLanguage() async {
-    _locale = Locale(sharedPreferences!.getString(AppConstants.languageCode) ?? AppConstants.languages[0].languageCode!,
-        sharedPreferences!.getString(AppConstants.countryCode) ?? AppConstants.languages[0].countryCode);
-    _isLtr = _locale.languageCode == 'en';
+    _locale = Locale(
+        sharedPreferences!.getString(AppConstants.languageCode) ??
+            AppConstants.languages[0].languageCode!,
+        sharedPreferences!.getString(AppConstants.countryCode) ??
+            AppConstants.languages[0].countryCode);
+    _isLtr = _locale.languageCode != 'ar';
     notifyListeners();
   }
 
   _saveLanguage(Locale locale) async {
-    sharedPreferences!.setString(AppConstants.languageCode, locale.languageCode);
+    sharedPreferences!
+        .setString(AppConstants.languageCode, locale.languageCode);
     sharedPreferences!.setString(AppConstants.countryCode, locale.countryCode!);
   }
 }

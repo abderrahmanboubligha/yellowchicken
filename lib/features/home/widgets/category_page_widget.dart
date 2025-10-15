@@ -157,7 +157,7 @@ class _CategoryPageWidgetState extends State<CategoryPageWidget> {
         height: cardHeight,
         width: cardWidth,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
