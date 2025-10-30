@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/language_model.dart';
 import 'package:flutter_restaurant/common/widgets/custom_image_widget.dart';
-import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
-import 'package:flutter_restaurant/common/widgets/theme_switch_button_widget.dart';
 import 'package:flutter_restaurant/features/branch/providers/branch_provider.dart';
-import 'package:flutter_restaurant/features/cart/providers/cart_provider.dart';
 import 'package:flutter_restaurant/features/category/domain/category_model.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/home/widgets/cetegory_hover_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/language_hover_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';
-import 'package:flutter_restaurant/features/search/providers/search_provider.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
-import 'package:flutter_restaurant/features/wishlist/providers/wishlist_provider.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/app_constants.dart';
@@ -29,28 +24,13 @@ class WebAppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   State<WebAppBarWidget> createState() => _WebAppBarWidgetState();
 
   @override
-  Size get preferredSize => const Size(double.maxFinite, 100);
+  Size get preferredSize => const Size(double.maxFinite, 70);
 }
 
 class _WebAppBarWidgetState extends State<WebAppBarWidget> {
-  final GlobalKey _searchBarKey = GlobalKey();
-  final FocusNode _appbarSearchFocusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<void> _showSearchDialog() async {
-    // Navigate to the search screen instead of showing overlay
-    RouterHelper.getSearchRoute();
-    _appbarSearchFocusNode.unfocus();
-  }
-
-  @override
-  void dispose() {
-    _appbarSearchFocusNode.dispose();
-    super.dispose();
   }
 
   _showPopupMenu(Offset offset, BuildContext context, bool isCategory) async {
@@ -82,7 +62,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
         child: CategoryHoverWidget(categoryList: categoryList),
       ),
     ));
-      return categoryPopupMenuEntryList;
+    return categoryPopupMenuEntryList;
   }
 
   List<PopupMenuEntry> popUpLanguageList(BuildContext context) {
@@ -100,9 +80,6 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final CategoryProvider categoryProvider =
-        Provider.of<CategoryProvider>(context, listen: false);
-
     Provider.of<LanguageProvider>(context, listen: false)
         .initializeAllLanguages(context);
     final LanguageModel currentLanguage = AppConstants.languages.firstWhere(
@@ -112,386 +89,220 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                 .locale
                 .languageCode);
 
-    return GestureDetector(
-      onTap: () {
-        _appbarSearchFocusNode.unfocus();
-      },
-      child: Container(
-        height: 100,
-        decoration: BoxDecoration(
-          color: const Color(0xFFa1143f),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            )
-          ],
+    return Container(
+      height: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: const Color(0xFFE5E5E5),
+            width: 1,
+          ),
         ),
-        child: Column(
-          children: [
-            // Top bar with restaurant status and language
-            Container(
-              height: 35,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Left side - Restaurant status
-                  Row(
-                    children: [
-                      Icon(Icons.access_time, color: Colors.white, size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        getTranslated('restaurant_is_close_now', context) ??
-                            'Restaurant is close now',
-                        style: rubikRegular.copyWith(
-                          color: Colors.white,
-                          fontSize: 14,
+      ),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1400),
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Row(
+            children: [
+              // Logo
+              InkWell(
+                onTap: () => RouterHelper.getMainRoute(
+                    action: RouteAction.pushReplacement),
+                child: Provider.of<SplashProvider>(context).baseUrls != null
+                    ? Consumer<SplashProvider>(
+                        builder: (context, splash, child) => CustomImageWidget(
+                          image:
+                              '${splash.baseUrls?.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
+                          placeholder: Images.webAppBarLogo,
+                          fit: BoxFit.contain,
+                          width: 120,
+                          height: 45,
                         ),
+                      )
+                    : Image.asset(
+                        Images.webAppBarLogo,
+                        width: 120,
+                        height: 45,
+                        fit: BoxFit.contain,
                       ),
-                    ],
-                  ),
-                  // Right side - Theme only
-                  Row(
-                    children: [
-                      const ThemeSwitchButtonWidget(),
-                    ],
-                  ),
-                ],
               ),
-            ),
 
-            // Main navigation bar
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+              const SizedBox(width: 80),
+
+              // Navigation items - centered
+              Expanded(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Logo
-                    InkWell(
-                      onTap: () => RouterHelper.getMainRoute(
-                          action: RouteAction.pushReplacement),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Provider.of<SplashProvider>(context).baseUrls !=
-                                null
-                            ? Consumer<SplashProvider>(
-                                builder: (context, splash, child) =>
-                                    CustomImageWidget(
-                                  image:
-                                      '${splash.baseUrls?.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
-                                  placeholder: Images.webAppBarLogo,
-                                  fit: BoxFit.contain,
-                                  width: 120,
-                                  height: 40,
-                                ),
-                              )
-                            : Image.asset(
-                                Images.webAppBarLogo,
-                                width: 120,
-                                height: 40,
-                                fit: BoxFit.contain,
-                              ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 40),
-
-                    // Navigation items
-                    InkWell(
+                    _NavItem(
+                      title: getTranslated('home', context) ?? 'Home',
                       onTap: () =>
                           RouterHelper.getHomeRoute(fromAppBar: 'true'),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        child: Text(
-                          getTranslated('home', context) ?? 'Home',
-                          style: rubikMedium.copyWith(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
                     ),
+                    const SizedBox(width: 32),
+                    _NavItem(
+                      title:
+                          getTranslated('Favourites', context) ?? 'Favourites',
+                      onTap: () => RouterHelper.getDashboardRoute('favourite'),
+                    ),
+                    const SizedBox(width: 32),
+                    _NavItem(
+                      title: getTranslated('my_order', context) ?? 'My Orders',
+                      onTap: () => RouterHelper.getDashboardRoute('order'),
+                    ),
+                    const SizedBox(width: 32),
+                    _NavItem(
+                      title: getTranslated('profile', context) ?? 'Profile',
+                      onTap: () => RouterHelper.getProfileRoute(),
+                    ),
+                  ],
+                ),
+              ),
 
-                    MouseRegion(
-                      onHover: (details) {
-                        if (categoryProvider.categoryList != null) {
-                          _showPopupMenu(
-                              Offset(details.position.dx, details.position.dy),
-                              context,
-                              true);
-                        }
+              const SizedBox(width: 40),
+
+              // Right section - Branch, Language, Sign in
+              Row(
+                children: [
+                  // Branch selector
+                  Consumer<BranchProvider>(
+                    builder: (context, branchProvider, _) => InkWell(
+                      onTap: () {
+                        RouterHelper.getBranchListScreen();
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFFE0E0E0)),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              getTranslated('categories', context) ??
-                                  'Categories',
-                              style: rubikMedium.copyWith(
-                                color: Colors.white,
-                                fontSize: 16,
+                              'Branch',
+                              style: rubikRegular.copyWith(
+                                color: const Color(0xFF333333),
+                                fontSize: 14,
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            Icon(Icons.keyboard_arrow_down,
-                                color: Colors.white, size: 16),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.keyboard_arrow_down,
+                                color: Color(0xFF666666), size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 16),
+
+                  // Language selector
+                  if (AppConstants.languages.length > 1)
+                    MouseRegion(
+                      onHover: (details) {
+                        _showPopupMenu(
+                            Offset(details.position.dx, details.position.dy),
+                            context,
+                            false);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFFE0E0E0)),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              currentLanguage.languageCode?.toUpperCase() ??
+                                  'EN',
+                              style: rubikRegular.copyWith(
+                                color: const Color(0xFF333333),
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.keyboard_arrow_down,
+                                color: Color(0xFF666666), size: 16),
                           ],
                         ),
                       ),
                     ),
 
-                    const Spacer(),
+                  const SizedBox(width: 16),
 
-                    // Search bar
-                    Container(
-                      key: _searchBarKey,
-                      width: 400,
-                      height: 40,
+                  // Sign in button (orange)
+                  InkWell(
+                    onTap: () => RouterHelper.getProfileRoute(),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFFFF8C42),
+                        borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Consumer<SearchProvider>(
-                        builder: (context, search, _) => CustomTextFieldWidget(
-                          onTap: _showSearchDialog,
-                          isEnabled: Provider.of<BranchProvider>(context,
-                                      listen: false)
-                                  .getBranchId() !=
-                              -1,
-                          focusNode: _appbarSearchFocusNode,
-                          radius: 20,
-                          hintText: getTranslated('are_you_hungry', context) ??
-                              'Are you hungry?',
-                          isShowBorder: false,
-                          fillColor: Colors.white,
-                          isShowPrefixIcon: search.searchLength == 0,
-                          prefixIconUrl: Images.search,
-                          prefixIconColor: Colors.grey,
-                          suffixIconColor: Colors.grey,
-                          onChanged: (str) => search.getSearchText(str),
-                          controller: search.searchController,
-                          inputAction: TextInputAction.search,
-                          isIcon: true,
-                          isShowSuffixIcon: search.searchLength > 0,
-                          suffixIconUrl: Images.cancelSvg,
-                          onSuffixTap: () {
-                            search.searchController.clear();
-                            search.getSearchText('');
-                          },
-                          onSubmit: (text) {
-                            if (search.searchController.text.isNotEmpty) {
-                              RouterHelper.getSearchResultRoute(
-                                  search.searchController.text);
-                              search.searchDone();
-                            }
-                          },
+                      child: Text(
+                        getTranslated('sign_in', context) ?? 'Sign in',
+                        style: rubikMedium.copyWith(
+                          color: Colors.white,
+                          fontSize: 14,
                         ),
                       ),
                     ),
-
-                    const SizedBox(width: 20),
-
-                    // Branch selector
-                    Consumer<BranchProvider>(
-                      builder: (context, branchProvider, _) => InkWell(
-                        onTap: () {
-                          RouterHelper.getBranchListScreen();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: Colors.white.withOpacity(0.3)),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.location_on,
-                                  color: Colors.white, size: 16),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Branch',
-                                style: rubikMedium.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Icon(Icons.keyboard_arrow_down,
-                                  color: Colors.white, size: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    // Right icons
-                    Row(
-                      children: [
-                        // Wishlist
-                        InkWell(
-                          onTap: () =>
-                              RouterHelper.getDashboardRoute('favourite'),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Stack(
-                              children: [
-                                Icon(Icons.favorite_outline,
-                                    color: Colors.white, size: 24),
-                                Consumer<WishListProvider>(
-                                  builder: (context, wishlistProvider, _) {
-                                    final count =
-                                        wishlistProvider.wishList?.length ?? 0;
-                                    if (count > 0) {
-                                      return Positioned(
-                                        right: -2,
-                                        top: -2,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.orange,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          constraints: const BoxConstraints(
-                                              minWidth: 16, minHeight: 16),
-                                          child: Text(
-                                            '$count',
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return const SizedBox();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        // Cart
-                        InkWell(
-                          onTap: () => RouterHelper.getDashboardRoute('cart'),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Stack(
-                              children: [
-                                Icon(Icons.shopping_cart_outlined,
-                                    color: Colors.white, size: 24),
-                                Consumer<CartProvider>(
-                                  builder: (context, cartProvider, _) {
-                                    final count = cartProvider.cartList.length;
-                                    if (count > 0) {
-                                      return Positioned(
-                                        right: -2,
-                                        top: -2,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.orange,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          constraints: const BoxConstraints(
-                                              minWidth: 16, minHeight: 16),
-                                          child: Text(
-                                            '$count',
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return const SizedBox();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        // Profile
-                        InkWell(
-                          onTap: () => RouterHelper.getProfileRoute(),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child: Icon(Icons.person_outline,
-                                color: Colors.white, size: 24),
-                          ),
-                        ),
-
-                        // Menu
-                        InkWell(
-                          onTap: () => RouterHelper.getDashboardRoute('menu'),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            child:
-                                Icon(Icons.menu, color: Colors.white, size: 24),
-                          ),
-                        ),
-
-                        const SizedBox(width: 20),
-
-                        // Language selector
-                        if (AppConstants.languages.length > 1)
-                          MouseRegion(
-                            onHover: (details) {
-                              _showPopupMenu(
-                                  Offset(
-                                      details.position.dx, details.position.dy),
-                                  context,
-                                  false);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.white.withOpacity(0.3)),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    currentLanguage.languageCode
-                                            ?.toUpperCase() ??
-                                        'EN',
-                                    style: rubikMedium.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(Icons.keyboard_arrow_down,
-                                      color: Colors.white, size: 16),
-                                ],
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Navigation item widget
+class _NavItem extends StatefulWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  const _NavItem({
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  State<_NavItem> createState() => _NavItemState();
+}
+
+class _NavItemState extends State<_NavItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          child: Text(
+            widget.title,
+            style: rubikRegular.copyWith(
+              color: _isHovered
+                  ? const Color(0xFFFF8C42)
+                  : const Color(0xFF333333),
+              fontSize: 15,
             ),
-          ],
-        ), // Close Column child
-      ), // Close Container
-    ); // Close GestureDetector
-  } // Close build method
-} // Close class
+          ),
+        ),
+      ),
+    );
+  }
+}

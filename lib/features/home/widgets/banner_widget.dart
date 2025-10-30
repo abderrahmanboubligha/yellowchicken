@@ -47,192 +47,200 @@ class _BannerWidgetState extends State<BannerWidget> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Title
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: ResponsiveHelper.isDesktop(
-                                          context)
-                                      ? (MediaQuery.of(context).size.width >
-                                              1170
-                                          ? (MediaQuery.of(context).size.width -
-                                                      Dimensions
-                                                          .webScreenWidth) /
-                                                  2 +
-                                              Dimensions.paddingSizeLarge
-                                          : MediaQuery.of(context).size.width *
-                                                  0.025 +
-                                              Dimensions.paddingSizeLarge)
-                                      : Dimensions.paddingSizeLarge,
-                                  vertical: Dimensions.paddingSizeSmall),
-                              child: Text(
-                                  getTranslated('today_specials', context)!,
-                                  style: rubikBold.copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.color,
-                                    fontSize:
-                                        ResponsiveHelper.isDesktop(context)
-                                            ? Dimensions.fontSizeExtraLarge
-                                            : Dimensions.fontSizeDefault,
-                                  )),
-                            ),
+                            // Title - Modern styling
+                            if (!ResponsiveHelper.isDesktop(context))
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Dimensions.paddingSizeLarge,
+                                    vertical: Dimensions.paddingSizeSmall),
+                                child: Text(
+                                    getTranslated('today_specials', context)!,
+                                    style: rubikBold.copyWith(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color,
+                                      fontSize: Dimensions.fontSizeDefault,
+                                    )),
+                              ),
 
-                            // Full Width Banner Carousel
+                            // Full Width Banner Carousel - Modern Hero Style
                             Container(
                               height: ResponsiveHelper.isDesktop(context)
-                                  ? 350
+                                  ? 500
                                   : 170,
                               width: double.infinity,
                               padding: ResponsiveHelper.isDesktop(context)
                                   ? EdgeInsets.zero
                                   : const EdgeInsets.symmetric(
                                       horizontal: Dimensions.paddingSizeLarge),
-                              child: CarouselSlider.builder(
-                                disableGesture: false,
-                                itemCount: bannerProvider.bannerList!.length > 4
-                                    ? (bannerProvider.bannerList!.length - 4 <=
-                                            10
-                                        ? bannerProvider.bannerList!.length - 4
-                                        : 10)
-                                    : 0,
-                                carouselController: _mainBannerController,
-                                options: CarouselOptions(
-                                  height: ResponsiveHelper.isDesktop(context)
-                                      ? 330
-                                      : 150,
-                                  viewportFraction: 1.0,
-                                  initialPage: _currentIndex,
-                                  enableInfiniteScroll: true,
-                                  reverse: false,
-                                  autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 3),
-                                  autoPlayAnimationDuration:
-                                      const Duration(milliseconds: 800),
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  onPageChanged: (index, _) {
-                                    _currentIndex = index;
-                                    if (mounted) {
-                                      setState(() {});
-                                    }
-                                  },
-                                  scrollDirection: Axis.horizontal,
-                                ),
-                                itemBuilder: (context, index, realIndex) {
-                                  // Skip the first 4 banners - start from index 4
-                                  final bannerIndex = index + 4;
-                                  return Container(
-                                    width: double.infinity,
-                                    margin: ResponsiveHelper.isDesktop(context)
-                                        ? EdgeInsets.zero
-                                        : const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                    child: Material(
-                                      borderRadius:
+                              child: Stack(
+                                children: [
+                                  // Main banner slider
+                                  CarouselSlider.builder(
+                                    disableGesture: false,
+                                    itemCount:
+                                        bannerProvider.bannerList!.length > 4
+                                            ? (bannerProvider.bannerList!
+                                                            .length -
+                                                        4 <=
+                                                    10
+                                                ? bannerProvider
+                                                        .bannerList!.length -
+                                                    4
+                                                : 10)
+                                            : 0,
+                                    carouselController: _mainBannerController,
+                                    options: CarouselOptions(
+                                      height:
                                           ResponsiveHelper.isDesktop(context)
-                                              ? BorderRadius.zero
-                                              : BorderRadius.circular(
-                                                  Dimensions.radiusDefault),
-                                      clipBehavior: Clip.hardEdge,
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () {
-                                          if (bannerProvider
-                                                  .bannerList![bannerIndex]
-                                                  .productId !=
-                                              null) {
-                                            Product? product;
-                                            for (Product prod
-                                                in bannerProvider.productList) {
-                                              if (prod.id ==
-                                                  bannerProvider
-                                                      .bannerList![bannerIndex]
-                                                      .productId) {
-                                                product = prod;
-                                                break;
-                                              }
-                                            }
-                                            if (product != null &&
-                                                (product.branchProduct
-                                                        ?.isAvailable ??
-                                                    false)) {
-                                              ResponsiveHelper
-                                                  .showDialogOrBottomSheet(
-                                                      context,
-                                                      CartBottomSheetWidget(
-                                                        product: product,
-                                                        fromSetMenu: true,
-                                                        callback: (CartModel
-                                                            cartModel) {
-                                                          showCustomSnackBarHelper(
-                                                              getTranslated(
-                                                                  'added_to_cart',
-                                                                  context),
-                                                              isError: false);
-                                                        },
-                                                      ));
-                                            }
-                                          } else if (bannerProvider
-                                                  .bannerList![bannerIndex]
-                                                  .categoryId !=
-                                              null) {
-                                            CategoryModel? category;
-                                            for (CategoryModel categoryModel
-                                                in Provider.of<
-                                                            CategoryProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .categoryList!) {
-                                              if (categoryModel.id ==
-                                                  bannerProvider
-                                                      .bannerList![bannerIndex]
-                                                      .categoryId) {
-                                                category = categoryModel;
-                                                break;
-                                              }
-                                            }
-                                            if (category != null &&
-                                                category.status == 1) {
-                                              RouterHelper.getCategoryRoute(
-                                                  category);
-                                            }
-                                          }
-                                        },
-                                        borderRadius:
+                                              ? 480
+                                              : 150,
+                                      viewportFraction: 1.0,
+                                      initialPage: _currentIndex,
+                                      enableInfiniteScroll: true,
+                                      reverse: false,
+                                      autoPlay: true,
+                                      autoPlayInterval:
+                                          const Duration(seconds: 3),
+                                      autoPlayAnimationDuration:
+                                          const Duration(milliseconds: 800),
+                                      autoPlayCurve: Curves.fastOutSlowIn,
+                                      onPageChanged: (index, _) {
+                                        _currentIndex = index;
+                                        if (mounted) {
+                                          setState(() {});
+                                        }
+                                      },
+                                      scrollDirection: Axis.horizontal,
+                                    ),
+                                    itemBuilder: (context, index, realIndex) {
+                                      // Skip the first 4 banners - start from index 4
+                                      final bannerIndex = index + 4;
+                                      return Container(
+                                        width: double.infinity,
+                                        margin:
                                             ResponsiveHelper.isDesktop(context)
-                                                ? BorderRadius.zero
-                                                : BorderRadius.circular(
-                                                    Dimensions.radiusDefault),
-                                        child: ClipRRect(
+                                                ? EdgeInsets.zero
+                                                : const EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                        child: Material(
                                           borderRadius:
                                               ResponsiveHelper.isDesktop(
                                                       context)
                                                   ? BorderRadius.zero
                                                   : BorderRadius.circular(
                                                       Dimensions.radiusDefault),
-                                          child: CustomImageWidget(
-                                            placeholder:
-                                                Images.placeholderBanner,
-                                            width: double.infinity,
-                                            height: ResponsiveHelper.isDesktop(
-                                                    context)
-                                                ? 330
-                                                : 150,
-                                            fit: BoxFit.cover,
-                                            image:
-                                                '${splashProvider.baseUrls!.bannerImageUrl}/${bannerProvider.bannerList![bannerIndex].image}',
+                                          clipBehavior: Clip.hardEdge,
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (bannerProvider
+                                                      .bannerList![bannerIndex]
+                                                      .productId !=
+                                                  null) {
+                                                Product? product;
+                                                for (Product prod
+                                                    in bannerProvider
+                                                        .productList) {
+                                                  if (prod.id ==
+                                                      bannerProvider
+                                                          .bannerList![
+                                                              bannerIndex]
+                                                          .productId) {
+                                                    product = prod;
+                                                    break;
+                                                  }
+                                                }
+                                                if (product != null &&
+                                                    (product.branchProduct
+                                                            ?.isAvailable ??
+                                                        false)) {
+                                                  ResponsiveHelper
+                                                      .showDialogOrBottomSheet(
+                                                          context,
+                                                          CartBottomSheetWidget(
+                                                            product: product,
+                                                            fromSetMenu: true,
+                                                            callback: (CartModel
+                                                                cartModel) {
+                                                              showCustomSnackBarHelper(
+                                                                  getTranslated(
+                                                                      'added_to_cart',
+                                                                      context),
+                                                                  isError:
+                                                                      false);
+                                                            },
+                                                          ));
+                                                }
+                                              } else if (bannerProvider
+                                                      .bannerList![bannerIndex]
+                                                      .categoryId !=
+                                                  null) {
+                                                CategoryModel? category;
+                                                for (CategoryModel categoryModel
+                                                    in Provider.of<
+                                                                CategoryProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .categoryList!) {
+                                                  if (categoryModel.id ==
+                                                      bannerProvider
+                                                          .bannerList![
+                                                              bannerIndex]
+                                                          .categoryId) {
+                                                    category = categoryModel;
+                                                    break;
+                                                  }
+                                                }
+                                                if (category != null &&
+                                                    category.status == 1) {
+                                                  RouterHelper.getCategoryRoute(
+                                                      category);
+                                                }
+                                              }
+                                            },
+                                            borderRadius: ResponsiveHelper
+                                                    .isDesktop(context)
+                                                ? BorderRadius.zero
+                                                : BorderRadius.circular(
+                                                    Dimensions.radiusDefault),
+                                            child: ClipRRect(
+                                              borderRadius: ResponsiveHelper
+                                                      .isDesktop(context)
+                                                  ? BorderRadius.zero
+                                                  : BorderRadius.circular(
+                                                      Dimensions.radiusDefault),
+                                              child: CustomImageWidget(
+                                                placeholder:
+                                                    Images.placeholderBanner,
+                                                width: double.infinity,
+                                                height:
+                                                    ResponsiveHelper.isDesktop(
+                                                            context)
+                                                        ? 480
+                                                        : 150,
+                                                fit: BoxFit.cover,
+                                                image:
+                                                    '${splashProvider.baseUrls!.bannerImageUrl}/${bannerProvider.bannerList![bannerIndex].image}',
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  );
-                                },
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
 
-                            // Animated Indicator Dots
-                            const SizedBox(
-                                height: Dimensions.paddingSizeDefault),
+                            // Animated Indicator Dots - Modern positioning
+                            if (ResponsiveHelper.isDesktop(context))
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeLarge)
+                            else
+                              const SizedBox(
+                                  height: Dimensions.paddingSizeDefault),
                             Center(
                               child: SizedBox(
                                 height: 8,

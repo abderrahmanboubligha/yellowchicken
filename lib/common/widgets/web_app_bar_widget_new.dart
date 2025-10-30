@@ -115,7 +115,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                 // Left side - Restaurant status
                 Row(
                   children: [
-                    Icon(Icons.access_time, color: Colors.white, size: 16),
+                    const Icon(Icons.access_time, color: Colors.white, size: 16),
                     const SizedBox(width: 8),
                     Text(
                       getTranslated('restaurant_is_close_now', context) ??
@@ -168,7 +168,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              Icon(Icons.keyboard_arrow_down,
+                              const Icon(Icons.keyboard_arrow_down,
                                   color: Colors.white, size: 16),
                             ],
                           ),
@@ -258,7 +258,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Icon(Icons.keyboard_arrow_down,
+                          const Icon(Icons.keyboard_arrow_down,
                               color: Colors.white, size: 16),
                         ],
                       ),
@@ -340,7 +340,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.location_on,
+                            const Icon(Icons.location_on,
                                 color: Colors.white, size: 16),
                             const SizedBox(width: 8),
                             Text(
@@ -351,7 +351,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                               ),
                             ),
                             const SizedBox(width: 4),
-                            Icon(Icons.keyboard_arrow_down,
+                            const Icon(Icons.keyboard_arrow_down,
                                 color: Colors.white, size: 16),
                           ],
                         ),
@@ -372,7 +372,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                           padding: const EdgeInsets.all(8),
                           child: Stack(
                             children: [
-                              Icon(Icons.favorite_outline,
+                              const Icon(Icons.favorite_outline,
                                   color: Colors.white, size: 24),
                               Consumer<WishListProvider>(
                                 builder: (context, wishlistProvider, _) {
@@ -415,7 +415,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                           padding: const EdgeInsets.all(8),
                           child: Stack(
                             children: [
-                              Icon(Icons.shopping_cart_outlined,
+                              const Icon(Icons.shopping_cart_outlined,
                                   color: Colors.white, size: 24),
                               Consumer<CartProvider>(
                                 builder: (context, cartProvider, _) {
@@ -455,7 +455,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                         onTap: () => RouterHelper.getProfileRoute(),
                         child: Container(
                           padding: const EdgeInsets.all(8),
-                          child: Icon(Icons.person_outline,
+                          child: const Icon(Icons.person_outline,
                               color: Colors.white, size: 24),
                         ),
                       ),
@@ -466,7 +466,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           child:
-                              Icon(Icons.menu, color: Colors.white, size: 24),
+                              const Icon(Icons.menu, color: Colors.white, size: 24),
                         ),
                       ),
 
@@ -502,7 +502,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                Icon(Icons.keyboard_arrow_down,
+                                const Icon(Icons.keyboard_arrow_down,
                                     color: Colors.white, size: 16),
                               ],
                             ),
