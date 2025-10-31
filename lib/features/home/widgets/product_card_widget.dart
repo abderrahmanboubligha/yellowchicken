@@ -73,30 +73,24 @@ class ProductCardWidget extends StatelessWidget {
           decoration: productGroup == ProductGroup.frequentlyBought
               ? const BoxDecoration()
               : BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                        color: Theme.of(context)
-                            .shadowColor
-                            .withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        spreadRadius: 0.2,
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 8,
+                        spreadRadius: 0,
                         offset: const Offset(0, 2))
                   ],
                 ),
           margin:
               const EdgeInsets.only(bottom: Dimensions.paddingSizeExtraSmall),
           child: Material(
-            color: Theme.of(context).cardColor,
+            color: Colors.white,
             clipBehavior: Clip.hardEdge,
             shape: RoundedRectangleBorder(
-              side: BorderSide(
-                  color: Theme.of(context)
-                      .primaryColor
-                      .withValues(alpha: isShowBorder ? 0.2 : 0)),
-              borderRadius: BorderRadius.circular(
-                  productGroup == ProductGroup.frequentlyBought
-                      ? Dimensions.radiusSmall
-                      : Dimensions.radiusLarge),
+              side: BorderSide.none,
+              borderRadius: BorderRadius.circular(12),
             ),
             child: InkWell(
               onTap: () => ProductHelper.addToCart(
@@ -324,6 +318,22 @@ class ProductCardWidget extends StatelessWidget {
                                 StockTagWidget(
                                     product: product,
                                     productGroup: productGroup),
+
+                                /// Floating add button inside image for Local Eats (bottom-right)
+                                if (productGroup == ProductGroup.localEats &&
+                                    productProvider.checkStock(product) &&
+                                    isAvailable)
+                                  Positioned(
+                                    right: localizationProvider.isLtr
+                                        ? Dimensions.paddingSizeSmall
+                                        : null,
+                                    left: localizationProvider.isLtr
+                                        ? null
+                                        : Dimensions.paddingSizeSmall,
+                                    bottom: Dimensions.paddingSizeSmall,
+                                    child:
+                                        AddToCartButtonWidget(product: product),
+                                  ),
                               ]),
 
                               /// for product description
@@ -335,8 +345,10 @@ class ProductCardWidget extends StatelessWidget {
                               ),
                             ]),
 
-                        /// for Add to card and Quantity button
-                        if (productProvider.checkStock(product) && isAvailable)
+                        /// for Add to cart and Quantity button (common position except Local Eats)
+                        if (productGroup != ProductGroup.localEats &&
+                            productProvider.checkStock(product) &&
+                            isAvailable)
                           Positioned(
                               top: imageHeight - 15,
                               child: Align(
@@ -404,12 +416,7 @@ class _ProductImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(
-        productGroup == ProductGroup.frequentlyBought &&
-                !ResponsiveHelper.isDesktop(context)
-            ? Dimensions.radiusSmall
-            : Dimensions.radiusDefault,
-      ),
+      borderRadius: BorderRadius.circular(12),
       child: CustomImageWidget(
         placeholder: Images.placeholderRectangle,
         fit: BoxFit.cover,
@@ -466,9 +473,8 @@ class _ProductDescriptionWidget extends StatelessWidget {
                     child: Text(product.name!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: rubikSemiBold.copyWith(
-                            fontSize: ResponsiveDimensions
-                                .getProductTitleFontSize()))),
+                        style: rubikBold.copyWith(
+                            fontSize: 16, color: const Color(0xFF4B1E00)))),
                 const SizedBox(width: Dimensions.paddingSizeSmall),
                 ProductTagWidget(product: product),
                 if (isHalalTagAvailable)
@@ -501,10 +507,9 @@ class _ProductDescriptionWidget extends StatelessWidget {
                         child: Text(
                       PriceConverterHelper.convertPrice(startingPrice),
                       style: rubikRegular.copyWith(
-                        fontSize:
-                            ResponsiveDimensions.getFontSizeSmall(context),
+                        fontSize: 13,
                         decoration: TextDecoration.lineThrough,
-                        color: Theme.of(context).hintColor,
+                        color: const Color(0xFF4B1E00).withValues(alpha: 0.5),
                       ),
                     )))
                 : const SizedBox(),
@@ -514,7 +519,8 @@ class _ProductDescriptionWidget extends StatelessWidget {
                   discount: product.discount,
                   discountType: product.discountType),
               style: rubikBold.copyWith(
-                  fontSize: ResponsiveDimensions.getPriceFontSize()),
+                  fontSize: 14,
+                  color: const Color(0xFF4B1E00).withValues(alpha: 0.7)),
             )),
           ])),
           const SizedBox(height: Dimensions.paddingSizeExtraSmall),

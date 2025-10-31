@@ -26,8 +26,10 @@ import 'package:flutter_restaurant/features/home/widgets/banner_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/bottom_banner_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/category_web_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/chefs_recommendation_widget.dart';
+import 'package:flutter_restaurant/features/home/widgets/home_greeting_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/home_local_eats_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/home_set_menu_widget.dart';
+import 'package:flutter_restaurant/features/home/widgets/our_discoveries_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/product_view_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/sorting_button_widget.dart';
 import 'package:flutter_restaurant/features/menu/widgets/options_widget.dart';
@@ -492,6 +494,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           /// for Web banner and category
                           if (isDesktop) ...[
+                            // Greeting section
+                            const SliverToBoxAdapter(
+                              child: HomeGreetingWidget(),
+                            ),
+
                             // Full-width banner section
                             SliverToBoxAdapter(
                               child: Consumer<BannerProvider>(
@@ -505,30 +512,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               }),
                             ),
 
-                            // Categories section with normal width constraint
-                            SliverToBoxAdapter(
-                                child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimensions.paddingSizeSmall,
-                                    vertical: Dimensions.paddingSizeDefault),
-                                child: SizedBox(
-                                    width: MediaQuery.of(context).size.width >
-                                            1170
-                                        ? Dimensions.webScreenWidth
-                                        : MediaQuery.of(context).size.width *
-                                            0.95,
-                                    child: Consumer<CategoryProvider>(builder:
-                                        (context, categoryProvider, _) {
-                                      return (categoryProvider
-                                                  .categoryList?.isNotEmpty ??
-                                              true)
-                                          ? const Center(
-                                              child: CategoryWebWidget())
-                                          : const SizedBox();
-                                    })),
-                              ),
-                            )),
+                            // Our Discoveries section
+                            const SliverToBoxAdapter(
+                              child: OurDiscoveriesWidget(),
+                            ),
                           ],
 
                           /// for App banner and category

@@ -2,96 +2,99 @@ import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/product_model.dart';
 import 'package:flutter_restaurant/features/cart/providers/cart_provider.dart';
 import 'package:flutter_restaurant/helper/product_helper.dart';
-import 'package:flutter_restaurant/helper/responsive_helper.dart';
-import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class AddToCartButtonWidget extends StatelessWidget {
   const AddToCartButtonWidget({
-    super.key, required this.product,
-
+    super.key,
+    required this.product,
   });
 
   final Product product;
 
   @override
   Widget build(BuildContext context) {
-    final bool isDesktop = ResponsiveHelper.isDesktop(context);
+    return Consumer<CartProvider>(builder: (context, cartProvider, _) {
+      int quantity = cartProvider.getCartProductQuantityCount(product);
+      int cartIndex = cartProvider.getCartIndex(product);
 
-    return Consumer<CartProvider>(
-      builder: (context, cartProvider, _) {
-        int quantity = cartProvider.getCartProductQuantityCount(product);
-        int cartIndex =   cartProvider.getCartIndex(product);
-
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-            boxShadow: [BoxShadow(
-              color: Theme.of(context).primaryColor.withValues(alpha:0.2), offset: const Offset(0, 2),
-              blurRadius: Dimensions.radiusExtraLarge, spreadRadius: Dimensions.radiusSmall,
-            )],
-          ),
-          child: quantity == 0 ? Material(
-            borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-            color: Colors.white,
-            clipBehavior: Clip.hardEdge,
-            child: InkWell(
-              onTap:()=> ProductHelper.addToCart(cartIndex: cartIndex, product: product),
-              child: Padding(
-                padding:  const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.add_circle, color: Theme.of(context).primaryColor, size: Dimensions.paddingSizeLarge),
-                  const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                  Text(getTranslated('add', context)!, style: rubikBold.copyWith(
-                    color: Theme.of(context).primaryColor, fontSize: isDesktop ? Dimensions.fontSizeDefault : Dimensions.fontSizeSmall,
-                  )),
-                ]),
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(quantity == 0 ? 10 : 50),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFFF8C42).withValues(alpha: 0.25),
+              offset: const Offset(0, 2),
+              blurRadius: 6,
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        child: quantity == 0
+            ? Material(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color(0xFFFF8C42),
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                  onTap: () => ProductHelper.addToCart(
+                      cartIndex: cartIndex, product: product),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              )
+            : Material(
+                borderRadius: BorderRadius.circular(50),
+                color: const Color(0xFFFF8C42),
+                clipBehavior: Clip.hardEdge,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    InkWell(
+                      onTap: () => cartProvider.onUpdateCartQuantity(
+                          index: cartIndex, product: product, isRemove: true),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.remove,
+                            size: 16, color: Color(0xFFFF8C42)),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(quantity.toString(),
+                          style: rubikMedium.copyWith(
+                              color: Colors.white, fontSize: 14)),
+                    ),
+                    InkWell(
+                      onTap: () => cartProvider.onUpdateCartQuantity(
+                          index: cartIndex, product: product, isRemove: false),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.add,
+                            size: 16, color: Color(0xFFFF8C42)),
+                      ),
+                    ),
+                  ]),
+                ),
               ),
-            ),
-          ) : Material(
-            borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-            color: Theme.of(context).primaryColor,
-            clipBehavior: Clip.hardEdge,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall, vertical: Dimensions.paddingSizeExtraSmall),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                InkWell(
-                  onTap: ()=> cartProvider.onUpdateCartQuantity(index: cartIndex, product: product, isRemove: true),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.remove, size: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                  child: Text(quantity.toString(), style: rubikRegular.copyWith(color: Colors.white)),
-                ),
-
-                InkWell(
-                  onTap: ()=> cartProvider.onUpdateCartQuantity(index: cartIndex, product: product, isRemove: false),
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.add, size: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor),
-                  ),
-                ),
-              ]),
-            ),
-          ),
-        );
-      }
-    );
+      );
+    });
   }
 }
