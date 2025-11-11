@@ -53,26 +53,40 @@ class NotLoggedInWidget extends StatelessWidget {
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height*0.03),
 
-                          Text(
-                            getTranslated('guest_mode', context)!,
-                            style: rubikBold.copyWith(fontSize: MediaQuery.of(context).size.height*0.023),
-                            textAlign: TextAlign.center,
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: Text(
+                              getTranslated('guest_mode', context)!,
+                              style: rubikBold.copyWith(fontSize: 18),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                            ),
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height*0.02),
 
-                          Text(
-                            getTranslated('now_you_are_in_guest_mode', context)!,
-                            style: rubikRegular.copyWith(fontSize: MediaQuery.of(context).size.height*0.0175),
-                            textAlign: TextAlign.center,
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: Text(
+                              getTranslated('now_you_are_in_guest_mode', context)!,
+                              style: rubikRegular.copyWith(fontSize: 14),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                            ),
                           ),
                           SizedBox(height: MediaQuery.of(context).size.height*0.03),
 
                           SizedBox(
-                            width: 100,
-                            height: 40,
-                            child: CustomButtonWidget(btnTxt: getTranslated('login', context), onTap: () {
-                               RouterHelper.getLoginRoute();
-                            }),
+                            width: 120,
+                            height: 45,
+                            child: CustomButtonWidget(
+                              btnTxt: getTranslated('login', context),
+                              backgroundColor: const Color(0xFFFF8C00),
+                              borderRadius: 25,
+                              onTap: () {
+                                RouterHelper.getLoginRoute(action: RouteAction.pushReplacement);
+                              }),
                           ),
 
                         ]),

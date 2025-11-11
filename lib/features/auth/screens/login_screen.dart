@@ -206,39 +206,45 @@ class _LoginScreenState extends State<LoginScreen> {
      
                             InkWell(
                               onTap: ()=> authProvider.toggleRememberMe(),
-                              child: Row(children: [
-     
-                                Container(width: 18, height: 18,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(color: authProvider.isActiveRememberMe ? Theme.of(context).primaryColor : Theme.of(context).disabledColor),
-                                    borderRadius: BorderRadius.circular(3),
+                              child: Container(
+                                constraints: const BoxConstraints(maxWidth: 150),
+                                child: Row(children: [
+                                  Container(width: 18, height: 18,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(color: authProvider.isActiveRememberMe ? Theme.of(context).primaryColor : Theme.of(context).disabledColor),
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    child: authProvider.isActiveRememberMe
+                                        ? Icon(Icons.done, color: Theme.of(context).primaryColor, size: 14)
+                                        : const SizedBox.shrink(),
                                   ),
-                                  child: authProvider.isActiveRememberMe
-                                      ? Icon(Icons.done, color: Theme.of(context).primaryColor, size: 14)
-                                      : const SizedBox.shrink(),
-                                ),
-                                const SizedBox(width: Dimensions.paddingSizeSmall),
-     
-                                Text(getTranslated('remember_me', context)!,
-                                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                                    fontSize: Dimensions.fontSizeSmall,
-                                    color: ColorResources.getHintColor(context),
+                                  const SizedBox(width: Dimensions.paddingSizeSmall),
+                                  
+                                  Flexible(
+                                    child: Text(getTranslated('remember_me', context)!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                                        fontSize: Dimensions.fontSizeSmall,
+                                        color: ColorResources.getHintColor(context),
+                                      ),
+                                    ),
                                   ),
-                                ),
-     
-                              ]),
+                                ]),
+                              ),
                             ),
      
                             InkWell(
                               onTap: () {
                                 RouterHelper.getForgetPassRoute();
                               },
-                              child: Padding(
+                              child: Container(
+                                constraints: const BoxConstraints(maxWidth: 150),
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   localizationProvider.isLtr ? "${getTranslated('forgot_password', context)!}?"
                                       : "${getTranslated('forgot_password', context)!}؟",
+                                  overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.displayMedium!.copyWith(
                                     fontSize: Dimensions.fontSizeSmall,
                                     color: Theme.of(context).colorScheme.error,
@@ -272,6 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
      
                           !authProvider.isLoading && !authProvider.isPhoneNumberVerificationButtonLoading ? CustomButtonWidget(
                             btnTxt: getTranslated('sign_in', context),
+                            height: 50,
                             onTap: () async {
      
                               String password = _passwordController!.text.trim();
@@ -294,22 +301,33 @@ class _LoginScreenState extends State<LoginScreen> {
                                 String type = isNumber ? 'phone' : 'email';
      
      
-                                await authProvider.login(userInput, password, type).then((status) async {
-                                  if (status.isSuccess) {
-
-                                    if (authProvider.isActiveRememberMe) {
-                                      authProvider.saveUserNumberAndPassword(UserLogData(
-                                        countryCode:  countryCode,
-                                        phoneNumber: isNumber ? userInput : null,
-                                        email: isNumber ? null : userInput,
-                                        password: password,
-                                      ));
+                                try {
+                                  await authProvider.login(userInput, password, type).then((status) async {
+                                    if (status.isSuccess) {
+                                      if (authProvider.isActiveRememberMe) {
+                                        authProvider.saveUserNumberAndPassword(UserLogData(
+                                          countryCode:  countryCode,
+                                          phoneNumber: isNumber ? userInput : null,
+                                          email: isNumber ? null : userInput,
+                                          password: password,
+                                        ));
+                                      } else {
+                                        authProvider.clearUserLogData();
+                                      }
+                                      
+                                      // Add a short delay to ensure token is properly saved
+                                      await Future.delayed(const Duration(milliseconds: 500));
+                                      
+                                      // Navigate to dashboard with clear navigation stack
+                                      RouterHelper.getDashboardRoute('home', action: RouteAction.pushNamedAndRemoveUntil);
                                     } else {
-                                      authProvider.clearUserLogData();
+                                      // Show error message if login failed
+                                      showCustomSnackBarHelper(authProvider.loginErrorMessage ?? getTranslated('login_failed', context));
                                     }
-                                    RouterHelper.getDashboardRoute('home', action: RouteAction.pushNamedAndRemoveUntil);
-                                  }
-                                });
+                                  });
+                                } catch (e) {
+                                  showCustomSnackBarHelper(getTranslated('something_went_wrong', context));
+                                }
      
                               }
                             },
@@ -337,26 +355,31 @@ class _LoginScreenState extends State<LoginScreen> {
                               splashColor: Colors.transparent,
                               highlightColor: Colors.transparent,
                               onTap: ()=> RouterHelper.getOtpVerificationScreen(),
-                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-     
-                                Text(getTranslated('sign_in_with', context)!,
-                                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                                    fontSize: Dimensions.fontSizeSmall,
-                                    color: Theme.of(context).hintColor,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                width: 200, 
+                                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                  Flexible(
+                                    child: Text(getTranslated('sign_in_with', context)!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                                        fontSize: Dimensions.fontSizeSmall,
+                                        color: Theme.of(context).hintColor,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: Dimensions.paddingSizeSmall),
-     
-                                Text(getTranslated('otp', context)!,
-                                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                    fontSize: Dimensions.fontSizeDefault,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Theme.of(context).colorScheme.error,
-                                    color: Theme.of(context).colorScheme.error,
+                                  const SizedBox(width: Dimensions.paddingSizeSmall),
+                                  
+                                  Text(getTranslated('otp', context)!,
+                                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                      fontSize: Dimensions.fontSizeDefault,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Theme.of(context).colorScheme.error,
+                                      color: Theme.of(context).colorScheme.error,
+                                    ),
                                   ),
-                                ),
-     
-                              ]),
+                                ]),
+                              ),
                             ),
                             const SizedBox(height: Dimensions.paddingSizeLarge),
                           ],
@@ -367,26 +390,31 @@ class _LoginScreenState extends State<LoginScreen> {
      
                           InkWell(
                             onTap: ()=> RouterHelper.getCreateAccountRoute(),
-                            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-     
-                              Text(getTranslated('create_an_account', context)!,
-                                style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  fontSize: Dimensions.fontSizeSmall,
-                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              width: 250, 
+                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                Flexible(
+                                  child: Text(getTranslated('create_an_account', context)!,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                                      fontSize: Dimensions.fontSizeSmall,
+                                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: Dimensions.paddingSizeSmall),
-     
-                              Text(getTranslated('signup_here', context)!,
-                                style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Theme.of(context).colorScheme.error,
-                                  color: Theme.of(context).colorScheme.error,
+                                const SizedBox(width: Dimensions.paddingSizeSmall),
+                                
+                                Text(getTranslated('signup_here', context)!,
+                                  style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                    fontSize: Dimensions.fontSizeDefault,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Theme.of(context).colorScheme.error,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
                                 ),
-                              ),
-     
-                            ]),
+                              ]),
+                            ),
                           ),
                           const SizedBox(height: Dimensions.paddingSizeLarge),
      
@@ -396,23 +424,28 @@ class _LoginScreenState extends State<LoginScreen> {
                             Center(
                               child: InkWell(
                                 onTap: ()=> RouterHelper.getDashboardRoute('home', ),
-                                child: RichText(text: TextSpan(children: [
-     
-                                  TextSpan(text: '${getTranslated('continue_as_a', context)} ',
-                                    style: poppinsRegular.copyWith(
-                                      fontSize: Dimensions.fontSizeSmall,
-                                      color: Theme.of(context).hintColor,
-                                    ),
+                                child: Container(
+                                  width: 150, 
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  child: RichText(
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    text: TextSpan(children: [
+                                      TextSpan(text: '${getTranslated('continue_as_a', context)} ',
+                                        style: poppinsRegular.copyWith(
+                                          fontSize: Dimensions.fontSizeSmall,
+                                          color: Theme.of(context).hintColor,
+                                        ),
+                                      ),
+                                      TextSpan(text: getTranslated('guest', context),
+                                        style: poppinsRegular.copyWith(
+                                          color: Theme.of(context).colorScheme.onSurface,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],),
                                   ),
-     
-                                  TextSpan(text: getTranslated('guest', context),
-                                    style: poppinsRegular.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurface,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-     
-                                ],),),
+                                ),
                               ),
                             ),
                           ],

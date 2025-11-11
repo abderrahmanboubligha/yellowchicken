@@ -34,7 +34,7 @@ class DeliveryTimeEstimationWidget extends StatelessWidget {
 
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(mainAxisSize: MainAxisSize.min, children: [
-            const CustomAssetImageWidget(Images.locationPinSvg, width: 24, height: 24, color: Color(0xFFFF8C00)),
+            const CustomAssetImageWidget(Images.locationPin, width: 24, height: 24, color: Color(0xFFFF8C00)),
             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
             Text(branchProvider.getBranch()?.name ?? '', style: rubikSemiBold.copyWith(
@@ -71,7 +71,7 @@ class DeliveryTimeEstimationWidget extends StatelessWidget {
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
 
             const SizedBox(width: 45, height: 45, child: CustomAssetImageWidget(
-              Images.deliveryPersonSvg, width: 40, height: 40,
+              Images.deliveryPerson, width: 40, height: 40,
             )),
 
             Expanded(
@@ -90,7 +90,7 @@ class DeliveryTimeEstimationWidget extends StatelessWidget {
             ),
 
             const SizedBox(width: 45, height: 45, child: CustomAssetImageWidget(
-              Images.deliveryScooterSvg, width: 40, height: 40,
+              Images.deliveryScooter, width: 40, height: 40,
             )),
 
           ]),

@@ -249,9 +249,9 @@ class Images {
   static const String createNewPasswordBackgroundSvg =
       'assets/svg/create_new_password_background.svg';
 
-  static const String locationPinSvg = 'assets/svg/location_pin.svg';
-  static const String deliveryPersonSvg = 'assets/svg/delivery_person.svg';
-  static const String deliveryScooterSvg = 'assets/svg/delivery_scooter.svg';
+  static const String locationPin = 'assets/image/location_pin.png';
+  static const String deliveryPerson = 'assets/image/delivery_person.png';
+  static const String deliveryScooter = 'assets/image/delivery_scooter.png';
 
   static const String halalIconSvg = 'assets/svg/halal_icon.svg';
   static const String congratulationIconSvg =

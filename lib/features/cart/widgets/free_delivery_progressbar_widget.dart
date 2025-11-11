@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/helper/price_converter_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
@@ -26,18 +25,33 @@ class FreeDeliveryProgressBarWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
       ),
       child: Column(children: [
-        Row(children: [
-          Icon(Icons.local_shipping, color: const Color(0xFFFF8C00)),
-          const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-          (_subTotal / (deliveryIndo?.deliveryChargeSetup?.freeDeliveryOverAmount ?? 0))  < 1 ?
-          CustomDirectionalityWidget(child: Text(
-            '${PriceConverterHelper.convertPrice((deliveryIndo?.deliveryChargeSetup?.freeDeliveryOverAmount ?? 0) - _subTotal)} ${getTranslated('more_to_free_delivery', context)}',
-            style: TextStyle(color: const Color(0xFF8B4513), fontWeight: FontWeight.w500),
-          )) : Text(
-            getTranslated('enjoy_free_delivery', context) ?? "",
-            style: TextStyle(color: const Color(0xFF8B4513), fontWeight: FontWeight.w500),
-          ),
-        ]),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(Icons.local_shipping, color: const Color(0xFFFF8C00)),
+            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+            Expanded(
+              child: (_subTotal / (deliveryIndo?.deliveryChargeSetup?.freeDeliveryOverAmount ?? 0)) < 1 ?
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  PriceConverterHelper.convertPrice((deliveryIndo?.deliveryChargeSetup?.freeDeliveryOverAmount ?? 0) - _subTotal),
+                  style: const TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.w600, fontSize: 14),
+                ),
+                Text(
+                  getTranslated('more_to_free_delivery', context) ?? '',
+                  style: const TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.w500, fontSize: 12),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                ),
+              ]) : Text(
+                getTranslated('enjoy_free_delivery', context) ?? "",
+                style: const TextStyle(color: Color(0xFF8B4513), fontWeight: FontWeight.w500),
+                softWrap: true,
+                overflow: TextOverflow.visible,
+              ),
+            ),
+          ]),
+        ),
         const SizedBox(height: Dimensions.paddingSizeSmall),
         LinearProgressIndicator(
           value: (_subTotal / (deliveryIndo?.deliveryChargeSetup?.freeDeliveryOverAmount ?? 0)),
