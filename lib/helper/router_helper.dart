@@ -62,6 +62,7 @@ import 'package:flutter_restaurant/main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:flutter_restaurant/features/home/screens/profile_overview_screen.dart';
 
 
 enum RouteAction{push, pushReplacement, popAndPush, pushNamedAndRemoveUntil}
@@ -96,6 +97,7 @@ class RouterHelper {
   static const String orderTrackingScreen = '/order-tracking';
   static const String trackMapScreen = '/track-map';
   static const String profileScreen = '/profile';
+  static const String profileOverviewScreen = '/profile-overview';
   static const String addressScreen = '/address';
   static const String mapScreen = '/map';
   static const String addAddressScreen = '/add-address';
@@ -189,6 +191,7 @@ class RouterHelper {
     return _navigateRoute("$trackMapScreen?address=$address&deliveryman=$deliverymanId&order=$orderId");
   }
   static String getProfileRoute({RouteAction action = RouteAction.push}) => _navigateRoute(profileScreen, route: action);
+  static String getProfileOverviewRoute({RouteAction action = RouteAction.push}) => _navigateRoute(profileOverviewScreen, route: action);
   static String getAddressRoute() => _navigateRoute(addressScreen);
   static String getMapRoute(AddressModel addressModel, {DeliveryAddress? deliveryAddress}) {
     List<int> encoded = utf8.encode(jsonEncode(deliveryAddress != null ? deliveryAddress.toJson() : addressModel.toJson()));
@@ -409,6 +412,7 @@ class RouterHelper {
           orderId:  int.tryParse(state.uri.queryParameters['order'].toString()),
         ));
       }),
+      GoRoute(path: profileOverviewScreen, builder: (context, state) => _routeHandler(context, path: _getPath(state),  const ProfileOverviewScreen())),
       GoRoute(path: profileScreen, builder: (context, state) => _routeHandler(context, path: _getPath(state),  const ProfileScreen())),
       GoRoute(path: addressScreen, builder: (context, state) => _routeHandler(context, path: _getPath(state),  const AddressScreen())),
       GoRoute(path: mapScreen, builder: (context, state) {

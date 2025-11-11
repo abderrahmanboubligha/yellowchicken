@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/common/models/language_model.dart';
-import 'package:flutter_restaurant/common/providers/theme_provider.dart';
 import 'package:flutter_restaurant/common/widgets/custom_text_field_widget.dart';
 import 'package:flutter_restaurant/common/widgets/theme_switch_button_widget.dart';
 import 'package:flutter_restaurant/features/branch/providers/branch_provider.dart';
@@ -8,7 +7,6 @@ import 'package:flutter_restaurant/features/cart/providers/cart_provider.dart';
 import 'package:flutter_restaurant/features/category/domain/category_model.dart';
 import 'package:flutter_restaurant/features/category/providers/category_provider.dart';
 import 'package:flutter_restaurant/features/checkout/widgets/selected_address_list_widget.dart';
-import 'package:flutter_restaurant/features/home/widgets/cetegory_hover_widget.dart';
 import 'package:flutter_restaurant/features/home/widgets/language_hover_widget.dart';
 import 'package:flutter_restaurant/features/language/providers/language_provider.dart';
 import 'package:flutter_restaurant/features/language/providers/localization_provider.dart';

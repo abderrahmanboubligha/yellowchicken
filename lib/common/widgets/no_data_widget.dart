@@ -18,6 +18,7 @@ class NoDataWidget extends StatelessWidget {
   final bool isFooter;
   final bool isAddress;
   final bool isCoupon;
+  final bool isFavorite;
 
   const NoDataWidget({
     super.key,
@@ -27,6 +28,7 @@ class NoDataWidget extends StatelessWidget {
     this.isFooter = true,
     this.isAddress = false,
     this.isCoupon = false,
+    this.isFavorite = false,
   });
 
   @override
@@ -50,7 +52,7 @@ class NoDataWidget extends StatelessWidget {
                     height: 110, width: 110,
                     child: CustomAssetImageWidget(
                       isCoupon? Images.noCouponSvg : isOrder ? Images.emptyBoxSvg : isCart ? Images.emptyCartSvg
-                          : isAddress ? Images.noAddressSvg : Images.noFoodImage,
+                          : isAddress ? Images.noAddressSvg : isFavorite ? Images.nothingFound : Images.noFoodImage,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -59,7 +61,7 @@ class NoDataWidget extends StatelessWidget {
                   Text(
                     getTranslated(
                       isCoupon? 'no_promo_available' : isOrder ? 'no_order_history' : isCart ? 'your_cart_is_empty'
-                      : isAddress ? 'no_saved_address_found' : 'nothing_found', context,
+                      : isAddress ? 'no_saved_address_found' : isFavorite ? 'nothing_found' : 'nothing_found', context,
                     )!,
                     style: rubikSemiBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.fontSizeLarge),
                     textAlign: TextAlign.center,

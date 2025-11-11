@@ -5,7 +5,6 @@ import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart
 import 'package:flutter_restaurant/features/branch/providers/branch_provider.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
-import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -23,9 +22,9 @@ class DeliveryTimeEstimationWidget extends StatelessWidget {
     final bool isDesktop = ResponsiveHelper.isDesktop(context);
 
     return Container(
-      constraints: const BoxConstraints(maxHeight: 100),
+      constraints: const BoxConstraints(minHeight: 100),
       decoration: BoxDecoration(
-        color: ColorResources.getSecondaryColor(context).withValues(alpha:0.07),
+        color: const Color(0xFFFFF8E1), // Light yellow/cream background
         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
       ),
       padding: const EdgeInsets.only(
@@ -35,12 +34,13 @@ class DeliveryTimeEstimationWidget extends StatelessWidget {
 
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(mainAxisSize: MainAxisSize.min, children: [
-            const CustomAssetImageWidget(Images.restaurantLocationSvg, width: 16, height: 16),
+            const CustomAssetImageWidget(Images.locationPinSvg, width: 24, height: 24, color: Color(0xFFFF8C00)),
             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
             Text(branchProvider.getBranch()?.name ?? '', style: rubikSemiBold.copyWith(
               fontSize: Dimensions.fontSizeSmall,
               fontWeight: isDesktop ? FontWeight.w600 : FontWeight.w400,
+              color: const Color(0xFF8B4513), // Brown text color
             )),
           ]),
 
@@ -56,39 +56,45 @@ class DeliveryTimeEstimationWidget extends StatelessWidget {
               ));
             },
             child: Text(getTranslated('change', context)!, style: rubikSemiBold.copyWith(
-              fontSize: Dimensions.fontSizeSmall, color: ColorResources.getSecondaryColor(context),
+              fontSize: Dimensions.fontSizeSmall, color: const Color(0xFF8B4513), // Brown text color
             )),
           ),
         ]),
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-          child: Divider(color: Theme.of(context).primaryColor.withValues(alpha:0.2), height: Dimensions.paddingSizeLarge, thickness: 0.3),
+          child: Divider(color: const Color(0xFFFF8C00).withOpacity(0.3), height: Dimensions.paddingSizeLarge, thickness: 0.5),
         ),
 
-        Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
 
-          const Align(alignment: Alignment.bottomLeft, child: CustomAssetImageWidget(
-            Images.walkingSvg, width: 45, height: 45,
-          )),
+            const SizedBox(width: 45, height: 45, child: CustomAssetImageWidget(
+              Images.deliveryPersonSvg, width: 40, height: 40,
+            )),
 
-          Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(getTranslated('estimate_delivery_time', context)!, style: rubikRegular.copyWith(
-              fontSize: ResponsiveHelper.isDesktop(context) ? Dimensions.fontSizeSmall : Dimensions.fontSizeExtraSmall,
-              color: Theme.of(context).hintColor,
+            Expanded(
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Text(getTranslated('estimate_delivery_time', context)!, style: rubikRegular.copyWith(
+                  fontSize: Dimensions.fontSizeSmall,
+                  color: const Color(0xFF8B4513), // Brown text color
+                )),
+                const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                Text('30min - 40min', style: rubikSemiBold.copyWith(
+                  fontSize: Dimensions.fontSizeLarge,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF8B4513), // Brown text color
+                )),
+              ]),
+            ),
+
+            const SizedBox(width: 45, height: 45, child: CustomAssetImageWidget(
+              Images.deliveryScooterSvg, width: 40, height: 40,
             )),
-            const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-            Text('${branchProvider.getBranch()?.preparationTime ?? 0}${getTranslated('min', context)?.toLowerCase()} - ${(branchProvider.getBranch()?.preparationTime ?? 0) + 10}${getTranslated('min', context)?.toLowerCase()}', style: rubikSemiBold.copyWith(
-              fontSize: Dimensions.fontSizeLarge,
-              fontWeight: ResponsiveHelper.isDesktop(context) ? FontWeight.w700 : FontWeight.w600,
-            )),
+
           ]),
-
-          const Align(alignment: Alignment.bottomRight, child: CustomAssetImageWidget(
-            Images.drivingSvg, width: 45, height: 45,
-          )),
-
-        ])),
+        ),
 
       ]),
     );

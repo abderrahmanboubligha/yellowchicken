@@ -151,8 +151,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
+          // Use a warm brown as the primary color for this big profile screen
+          const Color profileMainColor = Color(0xFF9B4C2E);
+
           return profileProvider.userInfoModel != null ? Container(
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            decoration: const BoxDecoration(color: profileMainColor),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
 
               const SizedBox(width: double.infinity, height: Dimensions.paddingSizeExtraLarge),
@@ -175,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 50),
               Expanded(child: CustomPaint(
                 size: Size(width, height),
-                painter: ProfileCustomPainterWidget(context),
+                painter: ProfileCustomPainterWidget(context, color: profileMainColor),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
                   /// for profile image
                   Container(
@@ -207,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor,
+                              color: profileMainColor,
                             ),
                             child: const CustomAssetImageWidget(Images.editSvg, width: 13, color: Colors.white),
                           )),

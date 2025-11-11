@@ -83,7 +83,7 @@ class OptionsWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
               margin: const EdgeInsets.all(Dimensions.paddingSizeDefault),
               child: Column(children: [
-                PortionWidget(imageIcon: Images.profileSvg, title: getTranslated('profile', context)!, onRoute:()=> RouterHelper.getProfileRoute()),
+                PortionWidget(imageIcon: Images.profileSvg, title: getTranslated('profile', context)!, onRoute:()=> RouterHelper.getProfileOverviewRoute()),
                 PortionWidget(imageIcon: Images.ordersSvg , title: getTranslated('my_order', context)!, onRoute:()=> RouterHelper.getDashboardRoute('order')),
                 PortionWidget(imageIcon: Images.trackOrder, title: getTranslated('order_details', context)!, onRoute:()=> RouterHelper.getOrderSearchScreen()),
                 PortionWidget(imageIcon: Images.notification, title: getTranslated('notification', context)!, onRoute:()=> RouterHelper.getNotificationRoute()),

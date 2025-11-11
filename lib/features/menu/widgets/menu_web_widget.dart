@@ -32,7 +32,7 @@ class MenuWebWidget extends StatelessWidget {
 
 
     final List<MenuModel> menuList = [
-      MenuModel(icon: Images.profileSvg, title: getTranslated('profile', context), route:()=>  RouterHelper.getProfileRoute()),
+      MenuModel(icon: Images.profileSvg, title: getTranslated('profile', context), route:()=>  RouterHelper.getProfileOverviewRoute()),
       MenuModel(icon: Images.ordersSvg, title: getTranslated('my_order', context), route: ()=> RouterHelper.getDashboardRoute('order')),
       MenuModel(icon: Images.trackOrder, title: getTranslated('order_details', context), route:()=> RouterHelper.getOrderSearchScreen()),
 

@@ -24,6 +24,7 @@ class Images {
       'assets/image/placeholder_rectangle.png';
   static const String placeholderUser = 'assets/image/placeholder_user.png';
   static const String noFoodImage = 'assets/image/no_food.png';
+  static const String nothingFound = 'assets/image/nothingfound.png';
   static const String clock = 'assets/image/clock.png';
   static const String shoppingCart = 'assets/image/shopping_cart.png';
   static const String closed = 'assets/image/closed.png';
@@ -247,6 +248,10 @@ class Images {
       'assets/svg/forget_password_background.svg';
   static const String createNewPasswordBackgroundSvg =
       'assets/svg/create_new_password_background.svg';
+
+  static const String locationPinSvg = 'assets/svg/location_pin.svg';
+  static const String deliveryPersonSvg = 'assets/svg/delivery_person.svg';
+  static const String deliveryScooterSvg = 'assets/svg/delivery_scooter.svg';
 
   static const String halalIconSvg = 'assets/svg/halal_icon.svg';
   static const String congratulationIconSvg =

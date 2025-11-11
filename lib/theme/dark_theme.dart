@@ -58,7 +58,7 @@ TextTheme _createResponsiveTextTheme() {
 
 ThemeData dark = ThemeData(
   fontFamily: 'Rubik',
-  primaryColor: const Color(0xFFa1143f),
+  primaryColor: const Color(0xFFFF8C00),
   secondaryHeaderColor: const Color(0xff04B200),
   brightness: Brightness.dark,
   cardColor: const Color(0xFF252525),
@@ -77,13 +77,13 @@ ThemeData dark = ThemeData(
     CustomThemeColors.dark(),
   ],
   colorScheme: const ColorScheme.dark(
-    primary: Color(0xFFa1143f),
+    primary: Color(0xFFFF8C00),
     secondary: Color(0xff04B200),
     error: Colors.redAccent,
   ),
   textTheme: _createResponsiveTextTheme(),
   appBarTheme: AppBarTheme(
-    backgroundColor: const Color(0xFFa1143f),
+    backgroundColor: const Color(0xFFFF8C00),
     foregroundColor: Colors.white,
     elevation: 0,
     centerTitle: false,

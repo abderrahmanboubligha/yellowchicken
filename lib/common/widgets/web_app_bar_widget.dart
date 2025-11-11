@@ -91,11 +91,11 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
 
     return Container(
       height: 70,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFFE5E5E5),
+            color: Color(0xFFE5E5E5),
             width: 1,
           ),
         ),
@@ -155,7 +155,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                     const SizedBox(width: 32),
                     _NavItem(
                       title: getTranslated('profile', context) ?? 'Profile',
-                      onTap: () => RouterHelper.getProfileRoute(),
+                      onTap: () => RouterHelper.getProfileOverviewRoute(),
                     ),
                   ],
                 ),

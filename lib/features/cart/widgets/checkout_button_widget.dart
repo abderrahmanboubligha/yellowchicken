@@ -57,7 +57,11 @@ class CheckOutButtonWidget extends StatelessWidget {
           Container(
             width: Dimensions.webScreenWidth,
             padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: CustomButtonWidget(btnTxt: getTranslated('proceed_to_checkout', context), onTap: () {
+            child: CustomButtonWidget(
+              btnTxt: getTranslated('proceed_to_checkout', context),
+              backgroundColor: const Color(0xFFFF8C00),
+              borderRadius: 25, // Rounded corners like in the design
+              onTap: () {
               if(authProvider.isLoggedIn()){
                 if(orderAmount < (splashProvider.configModel?.minimumOrderValue ?? 0)) {
                   showCustomSnackBarHelper('${getTranslated('minimum_order_is', context)} ${PriceConverterHelper.convertPrice(splashProvider.configModel!

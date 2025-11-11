@@ -20,11 +20,16 @@ class ItemViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(title,
-          style: titleStyle ?? ResponsiveStyles.responsiveSemiBold(context)),
+          style: titleStyle ?? ResponsiveStyles.responsiveSemiBold(context).copyWith(
+            color: const Color(0xFF8B4513), // Brown text for title
+          )),
       CustomDirectionalityWidget(
           child: Text(subTitle,
               style: subTitleStyle ??
-                  ResponsiveStyles.responsiveRegular(context))),
+                  ResponsiveStyles.responsiveRegular(context).copyWith(
+                    color: const Color(0xFFFF8C00), // Orange text for price
+                    fontWeight: FontWeight.w600,
+                  ))),
     ]);
   }
 }

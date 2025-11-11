@@ -101,7 +101,7 @@ class _WishListScreenState extends State<WishListScreen> {
                       ]),
                       const SizedBox(height: Dimensions.paddingSizeLarge),
                     ],
-                  ) : const NoDataWidget(isFooter: false)
+                  ) : const NoDataWidget(isFooter: false, isFavorite: true)
                     : GridView.builder(
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
