@@ -262,6 +262,12 @@ class Images {
   static const String orderPlaceIcon = 'assets/svg/order_placed.svg';
   static const String orderConfirmedIcon = 'assets/svg/order_confirmed.svg';
   static const String orderDeliveredIcon = 'assets/svg/order_delivered.svg';
+  
+  // Help and support screen images
+  static const String helpus = 'assets/image/helpus.png';
+  static const String callus = 'assets/image/callus.png';
+  static const String emailus = 'assets/image/emailus.png';
+  static const String ourlocation = 'assets/image/ourlocation.png';
 
   static String getImageUrl(imageName) => 'assets/image/$imageName.png';
   static String getPaymentImage(String name) => 'assets/payment/$name.png';

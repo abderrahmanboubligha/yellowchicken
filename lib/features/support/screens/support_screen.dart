@@ -78,9 +78,9 @@ class SupportScreen extends StatelessWidget {
                       children: [
                         const Align(
                             alignment: Alignment.center,
-                            child: CustomAssetImageWidget(Images.support,
+                            child: CustomAssetImageWidget(Images.helpus,
                                 height: 120, width: 170)),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 30),
                         if (ResponsiveHelper.isDesktop(context))
                           Padding(
                             padding: const EdgeInsets.all(
@@ -92,6 +92,7 @@ class SupportScreen extends StatelessWidget {
                                   label: getTranslated('call_us', context),
                                   info: '${configModel?.restaurantPhone}',
                                   iconData: Icons.call_rounded,
+                                  imageAsset: Images.callus,
                                   onTap: () {
                                     launchUrl(
                                         Uri.parse(
@@ -109,6 +110,7 @@ class SupportScreen extends StatelessWidget {
                                   label: getTranslated('email_us', context),
                                   info: '${configModel?.restaurantEmail}',
                                   iconData: Icons.email,
+                                  imageAsset: Images.emailus,
                                   onTap: () async {
                                     final uri = Uri(
                                         scheme: 'mailto',
@@ -129,6 +131,7 @@ class SupportScreen extends StatelessWidget {
                                         getTranslated('our_location', context),
                                     info: '${configModel?.restaurantAddress}',
                                     iconData: Icons.location_on,
+                                    imageAsset: Images.ourlocation,
                                     onTap: () async {
                                       final uri = Uri.parse(
                                         'https://www.google.com/maps/search/?api=1&query=${configModel?.restaurantLocationCoverage?.latitude},${configModel?.restaurantLocationCoverage?.longitude}',
@@ -148,6 +151,7 @@ class SupportScreen extends StatelessWidget {
                             label: getTranslated('call_us', context),
                             info: '${configModel?.restaurantPhone}',
                             iconData: Icons.call_rounded,
+                            imageAsset: Images.callus,
                             onTap: () {
                               launchUrl(
                                   Uri.parse(
@@ -161,6 +165,7 @@ class SupportScreen extends StatelessWidget {
                             label: getTranslated('email_us', context),
                             info: '${configModel?.restaurantEmail}',
                             iconData: Icons.email,
+                            imageAsset: Images.emailus,
                             onTap: () async {
                               final uri = Uri(
                                   scheme: 'mailto',
@@ -176,6 +181,7 @@ class SupportScreen extends StatelessWidget {
                               label: getTranslated('our_location', context),
                               info: '${configModel?.restaurantAddress}',
                               iconData: Icons.location_on,
+                              imageAsset: Images.ourlocation,
                               onTap: () async {
                                 final uri = Uri.parse(
                                   'https://www.google.com/maps/search/?api=1&query=${configModel?.restaurantLocationCoverage?.latitude},${configModel?.restaurantLocationCoverage?.longitude}',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_restaurant/common/widgets/custom_asset_image_widget.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 
@@ -6,45 +7,98 @@ class SupportItemWidget extends StatelessWidget {
   final String? label;
   final String? info;
   final IconData? iconData;
+  final String? imageAsset;
   final Function()? onTap;
-  const SupportItemWidget({super.key, this.label, this.info, this.iconData, this.onTap});
+  const SupportItemWidget({
+    super.key, 
+    this.label, 
+    this.info, 
+    this.iconData, 
+    this.imageAsset,
+    this.onTap
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border.all(width: 1, color: Theme.of(context).hintColor.withValues(alpha: 0.15)),
-        borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-        boxShadow: [BoxShadow(
-          color: Theme.of(context).hintColor.withValues(alpha: 0.05),
-          offset: const Offset(2, 10),
-          blurRadius: 30
-        )]
-      ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
-        
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label ?? '', style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).hintColor)),
-          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-          Text(info ?? '', style: rubikBold),
-        ]),
-
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.1)
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title with orange background
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeDefault,
+                vertical: Dimensions.paddingSizeSmall,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF5E0), // Light orange background
+                borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
+              ),
+              child: Row(
+                children: [
+                  if (imageAsset != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
+                      child: CustomAssetImageWidget(
+                        imageAsset!,
+                        height: 20,
+                        width: 20,
+                      ),
+                    ),
+                  Text(
+                    label ?? '',
+                    style: rubikMedium.copyWith(
+                      fontSize: Dimensions.fontSizeDefault,
+                      color: const Color(0xFFB54708), // Brown text color
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Icon(iconData, color: Theme.of(context).primaryColor),
-          ),
-        )
-
-      ]),
+            
+            // Content with white background
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeDefault,
+                vertical: Dimensions.paddingSizeSmall,
+              ),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(Dimensions.paddingSizeExtraSmall),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    info ?? '',
+                    style: rubikRegular.copyWith(
+                      fontSize: Dimensions.fontSizeDefault,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
+                      color: Theme.of(context).primaryColor.withOpacity(0.1)
+                    ),
+                    child: Icon(
+                      iconData ?? (label?.toLowerCase().contains('call') == true ? Icons.call_rounded : 
+                      label?.toLowerCase().contains('email') == true ? Icons.email : 
+                      Icons.location_on),
+                      color: Theme.of(context).primaryColor,
+                      size: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
