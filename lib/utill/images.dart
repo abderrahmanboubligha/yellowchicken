@@ -268,6 +268,11 @@ class Images {
   static const String callus = 'assets/image/callus.png';
   static const String emailus = 'assets/image/emailus.png';
   static const String ourlocation = 'assets/image/ourlocation.png';
+  
+  // Loyalty points screen images
+  static const String loyaltyTopIcon = 'assets/image/loyaltyTopIcon.png';
+  static const String loyaltyNothingFound = 'assets/image/Loyaltynothingfound.png';
+  static const String convertedNothingFound = 'assets/image/convertedNothingFound.png';
 
   static String getImageUrl(imageName) => 'assets/image/$imageName.png';
   static String getPaymentImage(String name) => 'assets/payment/$name.png';

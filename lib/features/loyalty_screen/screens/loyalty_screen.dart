@@ -18,14 +18,14 @@ import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
 import 'package:flutter_restaurant/common/widgets/title_widget.dart';
 import 'package:flutter_restaurant/common/widgets/web_app_bar_widget.dart';
-import 'package:flutter_restaurant/features/loyalty_screen/widgets/tab_button_widget.dart';
+import 'package:flutter_restaurant/features/loyalty_screen/widgets/custom_no_data_widget.dart';
 import 'package:flutter_restaurant/features/wallet/screens/wallet_screen.dart';
 import 'package:flutter_restaurant/features/wallet/widgets/convert_money_widget.dart';
 import 'package:flutter_restaurant/features/wallet/widgets/history_item_widget.dart';
 import 'package:provider/provider.dart';
 
 class LoyaltyScreen extends StatefulWidget {
-  const LoyaltyScreen({super.key,});
+  const LoyaltyScreen({super.key});
 
   @override
   State<LoyaltyScreen> createState() => _LoyaltyScreenState();
@@ -33,217 +33,351 @@ class LoyaltyScreen extends StatefulWidget {
 
 class _LoyaltyScreenState extends State<LoyaltyScreen> {
   final ScrollController scrollController = ScrollController();
-  final bool _isLoggedIn = Provider.of<AuthProvider>(Get.context!, listen: false).isLoggedIn();
+  late final bool _isLoggedIn;
 
   @override
   void initState() {
     super.initState();
-    final walletProvide = Provider.of<WalletProvider>(context, listen: false);
 
-    walletProvide.setCurrentTabButton(
-      0,
-      isUpdate: false,
-    );
+    _isLoggedIn = Provider.of<AuthProvider>(Get.context!, listen: false).isLoggedIn();
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
-    if(_isLoggedIn){
-      Provider.of<ProfileProvider>(Get.context!, listen: false).getUserInfo(false, isUpdate: false);
-      walletProvide.getLoyaltyTransactionList('1', false, false, isEarning: walletProvide.selectedTabButtonIndex == 1);
+    walletProvider.setCurrentTabButton(0, isUpdate: false);
+
+    if (_isLoggedIn) {
+      Provider.of<ProfileProvider>(Get.context!, listen: false)
+          .getUserInfo(false, isUpdate: false);
+
+      walletProvider.getLoyaltyTransactionList('1', false, false,
+          isEarning: walletProvider.selectedTabButtonIndex == 1);
 
       scrollController.addListener(() {
-        if (scrollController.position.pixels == scrollController.position.maxScrollExtent
-            && walletProvide.transactionList != null
-            && !walletProvide.isLoading) {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent &&
+            walletProvider.transactionList != null &&
+            !walletProvider.isLoading) {
+          int pageSize = (walletProvider.popularPageSize! / 10).ceil();
+          if (walletProvider.offset < pageSize) {
+            walletProvider.setOffset = walletProvider.offset + 1;
+            walletProvider.updatePagination(true);
 
-          int pageSize = (walletProvide.popularPageSize! / 10).ceil();
-          if (walletProvide.offset < pageSize) {
-            walletProvide.setOffset = walletProvide.offset + 1;
-            walletProvide.updatePagination(true);
-
-
-            walletProvide.getLoyaltyTransactionList(
-              walletProvide.offset.toString(), false, false, isEarning: walletProvide.selectedTabButtonIndex == 1,
+            walletProvider.getLoyaltyTransactionList(
+              walletProvider.offset.toString(),
+              false,
+              false,
+              isEarning: walletProvider.selectedTabButtonIndex == 1,
             );
           }
         }
       });
     }
-
   }
+
   @override
   void dispose() {
-    super.dispose();
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.dark, // dark text for status bar
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.white,
-    ));
-
-
     scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ConfigModel configModel = Provider.of<SplashProvider>(context, listen: false).configModel!;
+    final ConfigModel configModel =
+        Provider.of<SplashProvider>(context, listen: false).configModel!;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).cardColor,
-      appBar: ResponsiveHelper.isDesktop(context) ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBarWidget()) :
-      CustomAppBarWidget(
-        title: getTranslated("loyalty_points", context)!,
-        centerTitle: true,
-      ) as PreferredSizeWidget?,
+      appBar: ResponsiveHelper.isDesktop(context)
+          ? const PreferredSize(
+              preferredSize: Size.fromHeight(100),
+              child: WebAppBarWidget(),
+            ) as PreferredSizeWidget
+          : CustomAppBarWidget(
+              title: getTranslated("loyalty_points", context)!,
+              centerTitle: true,
+            ),
+      body: !configModel.loyaltyPointStatus!
+          ? const NoDataWidget()
 
-      body: !configModel.loyaltyPointStatus! ? const NoDataWidget() : Consumer<ProfileProvider>(
-          builder: (context, profileProvider, _) {
-            return _isLoggedIn ? (!profileProvider.isLoading && profileProvider.userInfoModel != null) ? Consumer<WalletProvider>(builder: (context, walletProvider, _) {
-              return Stack(children: [
-                Column(children: [
-                  Center(child: Container(
-                    width: Dimensions.webScreenWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(bottomRight: Radius.circular(30), bottomLeft: Radius.circular(30)),
-                      color: Theme.of(context).primaryColor.withValues(alpha:0.2),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
-                    child: SafeArea(child: Column(children: [
-                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          Image.asset(Images.loyal, width: 40, height: 40),
-                          const SizedBox(width: Dimensions.paddingSizeDefault,),
+          // Profile provider
+          : Consumer<ProfileProvider>(
+              builder: (context, profileProvider, _) {
+                if (!_isLoggedIn) {
+                  return const NotLoggedInWidget();
+                }
 
-                          profileProvider.isLoading ? const SizedBox() : CustomDirectionalityWidget(child: Text(
-                            '${profileProvider.userInfoModel?.point ?? 0}', style: rubikBold.copyWith(
-                            fontSize: Dimensions.fontSizeOverLarge,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
-                          ),
-                          )),
-                        ],),
-                        const SizedBox(height: Dimensions.paddingSizeDefault,),
+                if (profileProvider.isLoading ||
+                    profileProvider.userInfoModel == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-                        Text(getTranslated('loyalty_point', context)!,
-                          style: rubikBold.copyWith(
-                            fontSize: Dimensions.fontSizeDefault,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
-                          ),
-                        ),
-                        const SizedBox(height: Dimensions.paddingSizeDefault,),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: tabButtonList.map((tabButtonModel) =>
-                                  TabButtonWidget(tabButtonModel: tabButtonModel,)).toList(),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: Dimensions.paddingSizeLarge,),
-                      ])),
-                  )),
-
-                  Expanded(child: RefreshIndicator(
-                    color: Theme.of(context).cardColor,
-                    backgroundColor: Theme.of(context).primaryColor,
-                    onRefresh: () async{
-                      walletProvider.getLoyaltyTransactionList('1', true,false, isEarning: walletProvider.selectedTabButtonIndex == 1);
-                      profileProvider.getUserInfo(true);
-                    },
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      controller: scrollController,
-                      child: Column(
-                        children: [
-
-                          SizedBox( width: Dimensions.webScreenWidth,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-
-                                if(walletProvider.selectedTabButtonIndex == 0)
-                                  const ConvertMoneyWidget(),
-
-                                if(walletProvider.selectedTabButtonIndex != 0)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-                                    child: Center(
-                                      child: SizedBox(
-                                        width: Dimensions.webScreenWidth,
-                                        child: Consumer<WalletProvider>(
-                                            builder: (context, walletProvider, _) {
-                                              return Column(children: [
-
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: Dimensions.paddingSizeExtraLarge),
-                                                  child: TitleWidget(title: getTranslated(
-                                                    walletProvider.selectedTabButtonIndex == 0
-                                                        ? 'enters_point_amount' : walletProvider.selectedTabButtonIndex == 1
-                                                        ? 'point_earning_history' : 'point_converted_history', context,
-
-                                                  )),
-                                                ),
-
-                                                walletProvider.transactionList != null ? walletProvider.transactionList!.isNotEmpty ? GridView.builder(
-                                                  key: UniqueKey(),
-                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisSpacing: 20,
-                                                    mainAxisExtent: 100,
-                                                    crossAxisCount: ResponsiveHelper.isMobile() ? 1 : 2,
-                                                  ),
-                                                  physics:  const NeverScrollableScrollPhysics(),
-                                                  shrinkWrap:  true,
-                                                  itemCount: walletProvider.transactionList!.length ,
-                                                  //padding: EdgeInsets.only(top: ResponsiveHelper.isDesktop(context) ? 28 : 25),
-                                                  itemBuilder: (context, index) {
-                                                    return Stack(
-                                                      children: [
-                                                        HistoryItemWidget(
-                                                          index: index,formEarning: walletProvider.selectedTabButtonIndex == 1,
-                                                          data: walletProvider.transactionList,
+                return Consumer<WalletProvider>(
+                  builder: (context, walletProvider, _) {
+                    return Stack(
+                      children: [
+                        Column(
+                          children: [
+                            Center(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: Dimensions.webScreenWidth,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(30),
+                                          bottomLeft: Radius.circular(30)),
+                                      color: Colors.orange,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: Dimensions.paddingSizeDefault),
+                                    child: SafeArea(
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 65,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(left: Dimensions.paddingSizeLarge),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      CustomDirectionalityWidget(
+                                                        child: Text(
+                                                          '${profileProvider.userInfoModel?.point ?? 0} '
+                                                          '${getTranslated('points', context)}',
+                                                          style: rubikBold.copyWith(
+                                                              fontSize: Dimensions.fontSizeOverLarge,
+                                                              color: Colors.white),
                                                         ),
-
-                                                        if(walletProvider.paginationLoader && walletProvider.transactionList!.length == index + 1)
-                                                          const Center(child: CircularProgressIndicator()),
-                                                      ],
-                                                    );
-                                                  },
-                                                ) : const NoDataWidget(isFooter: false) : WalletShimmer(walletProvider: walletProvider),
-
-                                                walletProvider.isLoading ? const Center(child: Padding(
-                                                  padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-                                                  child: CircularProgressIndicator(),
-                                                )) : const SizedBox(),
-                                              ]);
-                                            }
-                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: Dimensions.paddingSizeSmall),
+                                                      Text(
+                                                        getTranslated('earn_more_points',
+                                                            context)!,
+                                                        style: rubikRegular.copyWith(
+                                                            fontSize: Dimensions.fontSizeDefault,
+                                                            color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 35,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(right: Dimensions.paddingSizeLarge),
+                                                  child: Image.asset(
+                                                    Images.loyaltyTopIcon,
+                                                    height: 80,
+                                                    width: 80,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                              height: Dimensions.paddingSizeDefault),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: Dimensions.paddingSizeLarge),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: TextButton(
+                                                onPressed: () {
+                                                  walletProvider
+                                                      .setCurrentTabButton(0);
+                                                },
+                                                style: TextButton.styleFrom(
+                                                    minimumSize: const Size(
+                                                        double.infinity, 50),
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(10))),
+                                                child: Text(
+                                                  getTranslated('convert_point',
+                                                      context)!,
+                                                  style: rubikMedium.copyWith(
+                                                      fontSize:
+                                                          Dimensions.fontSizeDefault,
+                                                      color: Colors.orange),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-
-
-                              ],
+                                  const SizedBox(
+                                      height: Dimensions.paddingSizeDefault),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _tabButton(
+                                          title: 'earning',
+                                          index: 1,
+                                          walletProvider: walletProvider),
+                                      _tabButton(
+                                          title: 'converted',
+                                          index: 2,
+                                          walletProvider: walletProvider),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
 
-                          if(ResponsiveHelper.isDesktop(context)) Padding(
-                            padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
-                            child: const FooterWidget(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )),
-                ]),
+                            Expanded(
+                              child: RefreshIndicator(
+                                onRefresh: () async {
+                                  walletProvider.getLoyaltyTransactionList(
+                                      '1', true, false,
+                                      isEarning:
+                                          walletProvider.selectedTabButtonIndex ==
+                                              1);
+                                  profileProvider.getUserInfo(true);
+                                },
+                                child: SingleChildScrollView(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  controller: scrollController,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width: Dimensions.webScreenWidth,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            if (walletProvider
+                                                    .selectedTabButtonIndex ==
+                                                0)
+                                              const ConvertMoneyWidget(),
 
-              ]);
-            }) : const Center(child: CircularProgressIndicator()) : const NotLoggedInWidget();
-          }
+                                            if (walletProvider
+                                                    .selectedTabButtonIndex !=
+                                                0)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal:
+                                                            Dimensions.paddingSizeDefault),
+                                                child: Center(
+                                                  child: SizedBox(
+                                                    width: Dimensions
+                                                        .webScreenWidth,
+                                                    child: Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(
+                                                              top: Dimensions.paddingSizeExtraLarge),
+                                                          child: TitleWidget(
+                                                            title: getTranslated(
+                                                                walletProvider
+                                                                            .selectedTabButtonIndex ==
+                                                                        1
+                                                                    ? 'point_earning_history'
+                                                                    : 'point_converted_history',
+                                                                context),
+                                                          ),
+                                                        ),
+
+                                                        // List
+                                                        walletProvider.transactionList != null
+                                                            ? walletProvider.transactionList!.isNotEmpty
+                                                                ? GridView.builder(
+                                                                        key: UniqueKey(),
+                                                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                            crossAxisSpacing: 20,
+                                                                            mainAxisExtent: 100,
+                                                                            crossAxisCount: ResponsiveHelper.isMobile() ? 1 : 2),
+                                                                        physics: const NeverScrollableScrollPhysics(),
+                                                                        shrinkWrap: true,
+                                                                        itemCount: walletProvider.transactionList!.length,
+                                                                        itemBuilder: (context, index) {
+                                                                          return Stack(
+                                                                            children: [
+                                                                              HistoryItemWidget(
+                                                                                index: index,
+                                                                                formEarning: walletProvider.selectedTabButtonIndex == 1,
+                                                                                data: walletProvider.transactionList,
+                                                                              ),
+                                                                              if (walletProvider.paginationLoader &&
+                                                                                  walletProvider.transactionList!.length == index + 1)
+                                                                                const Center(child: CircularProgressIndicator()),
+                                                                            ],
+                                                                          );
+                                                                        })
+                                                                : CustomNoDataWidget(
+                                                                    isEarning: walletProvider.selectedTabButtonIndex == 1)
+                                                            : WalletShimmer(walletProvider: walletProvider),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (ResponsiveHelper.isDesktop(context))
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.15),
+                                          child: const FooterWidget(),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _tabButton(
+      {required String title,
+      required int index,
+      required WalletProvider walletProvider}) {
+    final isActive = walletProvider.selectedTabButtonIndex == index;
+    return InkWell(
+      onTap: () => walletProvider.setCurrentTabButton(index),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.paddingSizeLarge),
+            child: Text(
+              getTranslated(title, context)!,
+              style: rubikMedium.copyWith(
+                  fontSize: Dimensions.fontSizeDefault,
+                  color: isActive ? Colors.orange : Colors.black),
+            ),
+          ),
+          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+          Container(
+            height: 2,
+            width: 60,
+            color: isActive ? Colors.orange : Colors.transparent,
+          ),
+        ],
       ),
     );
   }
 }
-
-

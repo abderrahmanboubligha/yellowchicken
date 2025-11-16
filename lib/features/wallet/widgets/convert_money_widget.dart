@@ -50,14 +50,7 @@ class _ConvertMoneyWidgetState extends State<ConvertMoneyWidget> {
           horizontal: Dimensions.paddingSizeLarge,
           vertical: Dimensions.paddingSizeSmall,
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-          const SizedBox(height: Dimensions.paddingSizeDefault,),
-          Text(
-            getTranslated('enters_point_amount', context)!,
-            style: rubikSemiBold.copyWith(
-              fontSize: Dimensions.fontSizeDefault,
-            ),
-          ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           const SizedBox(height: Dimensions.paddingSizeDefault,),
 
           Container(
@@ -150,7 +143,7 @@ class _ConvertMoneyWidgetState extends State<ConvertMoneyWidget> {
           Consumer<WalletProvider>(
             builder: (context, walletProvider, _) {
               return walletProvider.isLoading ? const Center(child: CircularProgressIndicator()) : CustomButtonWidget(
-                borderRadius: 30,
+                borderRadius: 5,
                 btnTxt: getTranslated('convert_point', context), onTap: (){
                 if(_pointController.text.isEmpty) {
                   showCustomSnackBarHelper(getTranslated('please_enter_your_point', context));
