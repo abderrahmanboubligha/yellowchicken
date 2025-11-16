@@ -21,12 +21,12 @@ import 'package:flutter_restaurant/features/splash/providers/splash_provider.dar
 import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/helper/email_checker_helper.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
+import 'package:flutter_restaurant/helper/router_helper.dart' show RouterHelper, RouteAction;
 import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -151,11 +151,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          // Use a warm brown as the primary color for this big profile screen
-          const Color profileMainColor = Color(0xFF9B4C2E);
+          // Use white as the primary color for this profile screen
+          const Color profileMainColor = Colors.white;
 
           return profileProvider.userInfoModel != null ? Container(
-            decoration: const BoxDecoration(color: profileMainColor),
+            decoration: const BoxDecoration(color: Colors.white),
             child: Column(mainAxisSize: MainAxisSize.min, children: [
 
               const SizedBox(width: double.infinity, height: Dimensions.paddingSizeExtraLarge),
@@ -163,15 +163,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
                     child: IconButton(
-                      onPressed: () => context.pop(),
+                      onPressed: () => RouterHelper.getDashboardRoute('menu', action: RouteAction.pushNamedAndRemoveUntil),
                       icon: const Icon(Icons.arrow_back_ios),
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   const SizedBox(width: Dimensions.paddingSizeDefault),
 
                   Text(getTranslated('my_profile', context)!, style: rubikSemiBold.copyWith(
-                    fontSize: Dimensions.fontSizeLarge, color: Colors.white,
+                    fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor,
                   )),
               ])),
 
@@ -210,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: profileMainColor,
+                              color: Theme.of(context).primaryColor,
                             ),
                             child: const CustomAssetImageWidget(Images.editSvg, width: 13, color: Colors.white),
                           )),
