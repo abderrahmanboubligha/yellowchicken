@@ -1,4 +1,11 @@
 {
+  "invite_friends_earn_rewards": "دعوة الأصدقاء، كسب المكافآت!",
+  "your_referral_code": "رمز الإحالة الخاص بك",
+  "tap_to_copy": "انقر للنسخ",
+  "send_an_invite_to_a_friend": "أرسل دعوة إلى صديق",
+  "your_friend_signs_up": "يقوم صديقك بالتسجيل",
+  "you_made_your_earning_exclamation": "لقد حققت أرباحك!",
+  "share_link": "مشاركة الرابط",
   "home": "الرئيسية",
   "cart": "السلة",
   "menu": "قائمة الأصناف",
@@ -375,7 +382,7 @@
   "invite_your_friends": "قم بدعوة أصدقائك وشركاتك",
   "they_register": "يقومون بالتسجيل",
   "with_special_offer": "مع عرض خاص",
-  "you_made_your_earning": "لقد صنعت أذنك!",
+  "you_made_your_earning_old": "لقد صنعت أذنك!",
   "invite_friend_and_businesses": "دعوة الأصدقاء والشركات",
   "copy_your_code": "انسخ الرمز الخاص بك",
   "your_personal_code": "الرمز الشخصي الخاص بك",
@@ -826,6 +833,4 @@
   "added_to_your_favorites": "تمت الإضافة إلى المفضلات لديك!",
   "removed_from_your_favorites": "تم الإزالة من المفضلات لديك!",
   "featured_offers": "العروض المميزة"
-
-
 }
