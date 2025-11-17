@@ -744,6 +744,8 @@
   "current_balance": "Current Balance",
   "top_up": "Top up",
   "all_transactions": "All transactions",
+  "add_a_payment_method": "Add a Payment Method",
+  "add_payment_method": "Add payment method",
   "select_another_payment_method_to_pay_remaining_bill": "Select another payment method to pay remaining bill",
   "pay_the_rest_amount_hint": "* Please select an option to pay the rest of the amount",
   "paid_by_wallet": "Paid by Wallet",

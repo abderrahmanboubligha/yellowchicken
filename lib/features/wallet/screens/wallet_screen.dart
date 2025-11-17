@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/history_item_widget.dart';
+import 'package:flutter_restaurant/utill/images.dart';
 
 class WalletScreen extends StatefulWidget {
   final String? token;
@@ -465,37 +466,50 @@ class _WalletScreenState extends State<WalletScreen> {
                                   vertical: Dimensions.paddingSizeLarge,
                                   horizontal: Dimensions.paddingSizeDefault),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  const SizedBox(height: 40),
+                                  Image.asset(
+                                    Images.visaCartIcon,
+                                    height: 150,
+                                    width: 150,
+                                  ),
+                                  const SizedBox(height: 32),
                                   Text(
-                                    getTranslated('payment_method', context) ??
-                                        'Payment Method',
+                                    getTranslated(
+                                            'add_a_payment_method', context) ??
+                                        'Add a Payment Method',
                                     style: rubikSemiBold.copyWith(
-                                      fontSize: Dimensions.fontSizeLarge,
+                                      fontSize: 20,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.paddingSizeLarge),
-                                  Container(
-                                    padding: const EdgeInsets.all(
-                                        Dimensions.paddingSizeLarge),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                        color: Theme.of(context)
-                                            .disabledColor
-                                            .withValues(alpha: 0.2),
+                                  const SizedBox(height: 32),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFFF9500),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 40,
+                                        vertical: 14,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
                                       ),
                                     ),
+                                    onPressed: () {
+                                      // Add payment method action
+                                    },
                                     child: Text(
-                                      'Payment method integration coming soon',
-                                      style: rubikRegular.copyWith(
-                                        fontSize: Dimensions.fontSizeDefault,
-                                        color: Theme.of(context).hintColor,
+                                      getTranslated(
+                                              'add_payment_method', context) ??
+                                          'Add payment method',
+                                      style: rubikSemiBold.copyWith(
+                                        fontSize: 16,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
+                                  const SizedBox(height: 40),
                                 ],
                               ),
                             ),

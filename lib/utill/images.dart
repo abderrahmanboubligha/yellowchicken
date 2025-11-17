@@ -108,6 +108,7 @@ class Images {
   static const String cutlery = 'assets/image/cutlery.png';
   static const String emptyCategory = 'assets/image/empty-category.png';
   static const String checkCircle = 'assets/image/check_circle.png';
+  static const String visaCartIcon = 'assets/image/visaCartIcon.png';
 
   // for Icon
   static const String logo = 'assets/image/logo.png';

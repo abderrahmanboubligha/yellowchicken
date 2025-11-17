@@ -837,5 +837,7 @@
   "featured_offers": "العروض المميزة",
   "current_balance": "الرصيد الحالي",
   "top_up": "إضافة رصيد",
-  "all_transactions": "جميع المعاملات"
+  "all_transactions": "جميع المعاملات",
+  "add_a_payment_method": "إضافة طريقة دفع",
+  "add_payment_method": "إضافة طريقة دفع"
 }
