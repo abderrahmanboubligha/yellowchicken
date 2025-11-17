@@ -25,6 +25,8 @@ class Images {
   static const String placeholderUser = 'assets/image/placeholder_user.png';
   static const String noFoodImage = 'assets/image/no_food.png';
   static const String nothingFound = 'assets/image/nothingfound.png';
+  static const String notifIcon = 'assets/image/notifIcon.png';
+  static const String couponEmptyIcon = 'assets/image/couponIcon.png';
   static const String clock = 'assets/image/clock.png';
   static const String shoppingCart = 'assets/image/shopping_cart.png';
   static const String closed = 'assets/image/closed.png';
@@ -262,17 +264,19 @@ class Images {
   static const String orderPlaceIcon = 'assets/svg/order_placed.svg';
   static const String orderConfirmedIcon = 'assets/svg/order_confirmed.svg';
   static const String orderDeliveredIcon = 'assets/svg/order_delivered.svg';
-  
+
   // Help and support screen images
   static const String helpus = 'assets/image/helpus.png';
   static const String callus = 'assets/image/callus.png';
   static const String emailus = 'assets/image/emailus.png';
   static const String ourlocation = 'assets/image/ourlocation.png';
-  
+
   // Loyalty points screen images
   static const String loyaltyTopIcon = 'assets/image/loyaltyTopIcon.png';
-  static const String loyaltyNothingFound = 'assets/image/Loyaltynothingfound.png';
-  static const String convertedNothingFound = 'assets/image/convertedNothingFound.png';
+  static const String loyaltyNothingFound =
+      'assets/image/Loyaltynothingfound.png';
+  static const String convertedNothingFound =
+      'assets/image/convertedNothingFound.png';
 
   static String getImageUrl(imageName) => 'assets/image/$imageName.png';
   static String getPaymentImage(String name) => 'assets/payment/$name.png';

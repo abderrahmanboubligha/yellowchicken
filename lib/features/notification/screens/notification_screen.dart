@@ -240,7 +240,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           const FooterWidget(),
                       ])),
                     )
-                  : const NoDataWidget()
+                  : const NoDataWidget(isNotification: true)
               : Center(
                   child:
                       CustomLoaderWidget(color: Theme.of(context).primaryColor),

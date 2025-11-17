@@ -19,6 +19,7 @@ class NoDataWidget extends StatelessWidget {
   final bool isAddress;
   final bool isCoupon;
   final bool isFavorite;
+  final bool isNotification;
 
   const NoDataWidget({
     super.key,
@@ -29,6 +30,7 @@ class NoDataWidget extends StatelessWidget {
     this.isAddress = false,
     this.isCoupon = false,
     this.isFavorite = false,
+    this.isNotification = false,
   });
 
   @override
@@ -36,75 +38,131 @@ class NoDataWidget extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return Center(
-      child: SingleChildScrollView(physics: const BouncingScrollPhysics(), child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 450,
-          ),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-
-              Padding(
-                padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
-                child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-
-                  SizedBox(
-                    height: 110, width: 110,
-                    child: CustomAssetImageWidget(
-                      isCoupon? Images.noCouponSvg : isOrder ? Images.emptyBoxSvg : isCart ? Images.emptyCartSvg
-                          : isAddress ? Images.noAddressSvg : isFavorite ? Images.nothingFound : Images.noFoodImage,
-                      fit: BoxFit.contain,
-                    ),
+      child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight:
+                        !ResponsiveHelper.isDesktop(context) && height < 600
+                            ? height
+                            : height - 450,
                   ),
-                  const SizedBox(height: Dimensions.paddingSizeExtraLarge),
-
-                  Text(
-                    getTranslated(
-                      isCoupon? 'no_promo_available' : isOrder ? 'no_order_history' : isCart ? 'your_cart_is_empty'
-                      : isAddress ? 'no_saved_address_found' : isFavorite ? 'nothing_found' : 'nothing_found', context,
-                    )!,
-                    style: rubikSemiBold.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.fontSizeLarge),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                  Text(
-                     getTranslated(
-                       isOrder ? 'you_havent_made_any_purchase_yet' : isCart ? 'please_add_some_items_from_the_menu'
-                       : isAddress ? 'please_add_your_address_for_your_better_experience' : '', context,
-                     )!,
-                    style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).hintColor), textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: Dimensions.paddingSizeExtraLarge),
-
-                  if(isOrder || isCart) SizedBox(
-                    width: 220,
-                    height: 40,
-                    child: CustomButtonWidget(
-                        onTap: ()=> RouterHelper.getSearchResultRoute(''),
-                        btnTxt: getTranslated('explore_menu', context)!,
-                      ),
-                  ),
-
-                  if(isAddress) SizedBox(
-                    width: 220,
-                    height: 40,
-                    child: CustomButtonWidget(
-                        onTap: (){
-                          RouterHelper.getAddAddressRoute(page: 'address', action: 'add', addressModel: AddressModel(), routeType: RouteTypeEnum.address);
-                        },
-                        btnTxt: getTranslated('add_address', context),
-                      ),
-                  ),
-
-                ]),
-              ),
-          ]),
-        ),
-
-        if(ResponsiveHelper.isDesktop(context) && isFooter && !isOrder && !isCoupon) const FooterWidget()
-
-      ])),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.all(Dimensions.paddingSizeLarge),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 110,
+                                  width: 110,
+                                  child: CustomAssetImageWidget(
+                                    isCoupon
+                                        ? Images.couponEmptyIcon
+                                        : isOrder
+                                            ? Images.emptyBoxSvg
+                                            : isCart
+                                                ? Images.emptyCartSvg
+                                                : isAddress
+                                                    ? Images.noAddressSvg
+                                                    : isFavorite
+                                                        ? Images.nothingFound
+                                                        : isNotification
+                                                            ? Images.notifIcon
+                                                            : Images
+                                                                .noFoodImage,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                const SizedBox(
+                                    height: Dimensions.paddingSizeExtraLarge),
+                                Text(
+                                  getTranslated(
+                                    isCoupon
+                                        ? 'no_promo_available'
+                                        : isOrder
+                                            ? 'no_order_history'
+                                            : isCart
+                                                ? 'your_cart_is_empty'
+                                                : isAddress
+                                                    ? 'no_saved_address_found'
+                                                    : isFavorite
+                                                        ? 'nothing_found'
+                                                        : 'nothing_found',
+                                    context,
+                                  )!,
+                                  style: rubikSemiBold.copyWith(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color,
+                                      fontSize: Dimensions.fontSizeLarge),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(
+                                    height: Dimensions.paddingSizeSmall),
+                                Text(
+                                  getTranslated(
+                                    isOrder
+                                        ? 'you_havent_made_any_purchase_yet'
+                                        : isCart
+                                            ? 'please_add_some_items_from_the_menu'
+                                            : isAddress
+                                                ? 'please_add_your_address_for_your_better_experience'
+                                                : '',
+                                    context,
+                                  )!,
+                                  style: rubikRegular.copyWith(
+                                      fontSize: Dimensions.fontSizeSmall,
+                                      color: Theme.of(context).hintColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(
+                                    height: Dimensions.paddingSizeExtraLarge),
+                                if (isOrder || isCart)
+                                  SizedBox(
+                                    width: 220,
+                                    height: 40,
+                                    child: CustomButtonWidget(
+                                      onTap: () =>
+                                          RouterHelper.getSearchResultRoute(''),
+                                      btnTxt: getTranslated(
+                                          'explore_menu', context)!,
+                                    ),
+                                  ),
+                                if (isAddress)
+                                  SizedBox(
+                                    width: 220,
+                                    height: 40,
+                                    child: CustomButtonWidget(
+                                      onTap: () {
+                                        RouterHelper.getAddAddressRoute(
+                                            page: 'address',
+                                            action: 'add',
+                                            addressModel: AddressModel(),
+                                            routeType: RouteTypeEnum.address);
+                                      },
+                                      btnTxt:
+                                          getTranslated('add_address', context),
+                                    ),
+                                  ),
+                              ]),
+                        ),
+                      ]),
+                ),
+                if (ResponsiveHelper.isDesktop(context) &&
+                    isFooter &&
+                    !isOrder &&
+                    !isCoupon)
+                  const FooterWidget()
+              ])),
     );
   }
 }

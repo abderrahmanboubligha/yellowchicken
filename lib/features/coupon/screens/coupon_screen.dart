@@ -146,7 +146,7 @@ class _CouponScreenState extends State<CouponScreen> {
                                             child: _SearchTextFieldWidget(),
                                           ),
                                     couponList!.isEmpty
-                                        ? const Center(child: NoDataWidget())
+                                        ? const Center(child: NoDataWidget(isCoupon: true))
                                         : ResponsiveHelper.isDesktop(context)
                                             ? GridView.builder(
                                                 itemCount: couponList.length,
