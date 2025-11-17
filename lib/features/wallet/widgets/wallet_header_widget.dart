@@ -10,23 +10,28 @@ import 'package:flutter_restaurant/features/wallet/widgets/add_fund_dialogue_wid
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:provider/provider.dart';
 
-
 class WalletHeaderWidget extends StatelessWidget {
   final bool webHeader;
   final JustTheController? tooltipController;
 
-  const WalletHeaderWidget({super.key, this.webHeader = false, this.tooltipController});
+  const WalletHeaderWidget(
+      {super.key, this.webHeader = false, this.tooltipController});
 
   @override
   Widget build(BuildContext context) {
-    bool isAddFund = Provider.of<SplashProvider>(context, listen: false).configModel?.isAddFundToWallet ?? false;
+    bool isAddFund = Provider.of<SplashProvider>(context, listen: false)
+            .configModel
+            ?.isAddFundToWallet ??
+        false;
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: webHeader ? BorderRadius.circular(Dimensions.radiusDefault) : const BorderRadius.only(
-          bottomRight: Radius.circular(30),
-          bottomLeft: Radius.circular(30),
-        ),
+        borderRadius: webHeader
+            ? BorderRadius.circular(Dimensions.radiusDefault)
+            : const BorderRadius.only(
+                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+              ),
         color: Theme.of(context).primaryColor,
       ),
       padding: const EdgeInsets.symmetric(
@@ -34,77 +39,86 @@ class WalletHeaderWidget extends StatelessWidget {
         horizontal: Dimensions.paddingSizeLarge,
       ),
       child: SafeArea(
-        child: Consumer<ProfileProvider>(builder: (context, profileProvider, _) {
-          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraLarge),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const SizedBox(height: Dimensions.paddingSizeExtraLarge),
+        child:
+            Consumer<ProfileProvider>(builder: (context, profileProvider, _) {
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: Dimensions.paddingSizeExtraLarge),
 
-
-                  Text( getTranslated('wallet_amount', context)!,
-                    style: rubikBold.copyWith(
-                      fontSize: Dimensions.fontSizeDefault,
-                      color: Colors.white,
-                    ),
+                // Current Balance Section with Yellow Background
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF3E0),
+                    borderRadius: BorderRadius.circular(15),
                   ),
-
-                  profileProvider.isLoading ? const SizedBox() : Row(children: [
-                    CustomDirectionalityWidget(child: Text(
-                     PriceConverterHelper.convertPrice(profileProvider.userInfoModel?.walletBalance ?? 0),
-                        style: rubikBold.copyWith(
-                          fontSize: Dimensions.fontSizeOverLarge,
-                          color: Colors.white,
+                  padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          getTranslated('current_balance', context) ??
+                              'Current Balance',
+                          style: rubikRegular.copyWith(
+                            fontSize: Dimensions.fontSizeDefault,
+                            color: const Color(0xFF6B4423),
+                          ),
                         ),
-                    )),
+                        const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                    const SizedBox(width: Dimensions.paddingSizeDefault),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              profileProvider.isLoading
+                                  ? const SizedBox()
+                                  : CustomDirectionalityWidget(
+                                      child: Text(
+                                        PriceConverterHelper.convertPrice(
+                                            profileProvider.userInfoModel
+                                                    ?.walletBalance ??
+                                                0),
+                                        style: rubikBold.copyWith(
+                                          fontSize: 28,
+                                          color: const Color(0xFF6B4423),
+                                        ),
+                                      ),
+                                    ),
+                            ]),
+                        const SizedBox(height: Dimensions.paddingSizeLarge),
 
-                   if(tooltipController != null && isAddFund ) JustTheTooltip(
-                      backgroundColor: Colors.black87,
-                      controller: tooltipController,
-                      preferredDirection: AxisDirection.right,
-                      tailLength: 14,
-                      tailBaseWidth: 20,
-                      content: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          getTranslated('by_using_the_add_fund_option', context)!,
-                          style: robotoRegular.copyWith(color: Colors.white),
+                        // Top Up Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: isAddFund
+                                ? () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            const AddFundDialogueWidget());
+                                  }
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF9800),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              disabledBackgroundColor: Colors.grey,
+                            ),
+                            child: Text(
+                              getTranslated('top_up', context) ?? 'Top up',
+                              style: rubikSemiBold.copyWith(
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      child: InkWell(
-                        onTap: () => tooltipController?.showTooltip(),
-                        child: Icon(Icons.info_outline, color: Theme.of(context).cardColor),
-                      ),
-                    )
-
-                  ]),
-                  const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                ]),
-            ),
-
-           isAddFund ? webHeader ? FloatingActionButton.extended(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
-              backgroundColor: Colors.white,
-              onPressed: (){
-                showDialog(context: context, builder: (context)=> const AddFundDialogueWidget());
-              },
-              label: Text(
-                getTranslated('add_fund', context)!,
-                style: rubikRegular.copyWith(color: Theme.of(context).primaryColor),
-              ),
-              icon: Icon(Icons.add_circle, color: Theme.of(context).primaryColor),
-            ) : FloatingActionButton.small(
-              backgroundColor: Colors.white,
-              onPressed: (){
-                showDialog(context: context, builder: (context)=> const AddFundDialogueWidget());
-              },
-              child: Icon(Icons.add, color: Theme.of(context).primaryColor),
-            ) : const SizedBox(width: 100),
-
-          ]);
+                      ]),
+                ),
+              ]);
         }),
       ),
     );

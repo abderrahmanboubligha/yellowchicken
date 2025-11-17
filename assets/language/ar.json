@@ -834,5 +834,8 @@
   "was_placed_successfully": "تم تقديم الطلب بنجاح",
   "added_to_your_favorites": "تمت الإضافة إلى المفضلات لديك!",
   "removed_from_your_favorites": "تم الإزالة من المفضلات لديك!",
-  "featured_offers": "العروض المميزة"
+  "featured_offers": "العروض المميزة",
+  "current_balance": "الرصيد الحالي",
+  "top_up": "إضافة رصيد",
+  "all_transactions": "جميع المعاملات"
 }
