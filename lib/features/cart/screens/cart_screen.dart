@@ -479,7 +479,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                                     )
                                                                                   : Row(children: [
                                                                                       Text(getTranslated('add', context)!, style: rubikBold.copyWith(color: const Color(0xFFFF8C00), fontSize: Dimensions.fontSizeDefault)),
-                                                                                      if (couponProvider.coupon == null) Icon(Icons.add, color: const Color(0xFFFF8C00), size: Dimensions.fontSizeExtraLarge)
+                                                                                      if (couponProvider.coupon == null) const Icon(Icons.add, color: Color(0xFFFF8C00), size: Dimensions.fontSizeExtraLarge)
                                                                                     ])
                                                                             ]),
                                                                       ),

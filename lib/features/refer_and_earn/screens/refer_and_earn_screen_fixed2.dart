@@ -121,7 +121,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '${profileProvider.userInfoModel?.referCode ?? ''}',
+                                      profileProvider.userInfoModel?.referCode ?? '',
                                       style: rubikBold.copyWith(
                                         fontSize: 24,
                                         color: const Color(0xFF8B2801),
@@ -131,7 +131,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                     InkWell(
                                       onTap: () {
                                         if(profileProvider.userInfoModel!.referCode != null && profileProvider.userInfoModel!.referCode != '') {
-                                          Clipboard.setData(ClipboardData(text: '${profileProvider.userInfoModel?.referCode ?? ''}'));
+                                          Clipboard.setData(ClipboardData(text: profileProvider.userInfoModel?.referCode ?? ''));
                                           showCustomSnackBarHelper(getTranslated('referral_code_copied', context), isError: false);
                                         }
                                       },

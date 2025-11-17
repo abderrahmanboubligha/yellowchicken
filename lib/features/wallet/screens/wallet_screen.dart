@@ -14,7 +14,6 @@ import 'package:flutter_restaurant/helper/custom_snackbar_helper.dart';
 import 'package:flutter_restaurant/common/widgets/footer_widget.dart';
 import 'package:flutter_restaurant/common/widgets/no_data_widget.dart';
 import 'package:flutter_restaurant/common/widgets/not_logged_in_widget.dart';
-import 'package:flutter_restaurant/helper/price_converter_helper.dart';
 import 'package:flutter_restaurant/common/widgets/custom_directionality_widget.dart';
 import 'package:flutter_restaurant/features/wallet/widgets/add_fund_dialogue_widget.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';

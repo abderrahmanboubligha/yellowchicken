@@ -109,6 +109,13 @@ class Images {
   static const String emptyCategory = 'assets/image/empty-category.png';
   static const String checkCircle = 'assets/image/check_circle.png';
   static const String visaCartIcon = 'assets/image/visaCartIcon.png';
+  static const String orderDoneIcon = 'assets/image/orderDoneIcon.png';
+  static const String orderTracking1 = 'assets/image/orderTracking1.png';
+  static const String orderTracking2 = 'assets/image/orderTracking2.png';
+  static const String orderTracking3 = 'assets/image/orderTracking3.png';
+  static const String orderTracking4 = 'assets/image/orderTracking4.png';
+  static const String orderTracking5 = 'assets/image/orderTracking5.png';
+  static const String orderTracking6 = 'assets/image/orderTracking6.png';
 
   // for Icon
   static const String logo = 'assets/image/logo.png';

@@ -28,7 +28,7 @@ class FreeDeliveryProgressBarWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Icon(Icons.local_shipping, color: const Color(0xFFFF8C00)),
+            const Icon(Icons.local_shipping, color: Color(0xFFFF8C00)),
             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
             Expanded(
               child: (_subTotal / (deliveryIndo?.deliveryChargeSetup?.freeDeliveryOverAmount ?? 0)) < 1 ?
