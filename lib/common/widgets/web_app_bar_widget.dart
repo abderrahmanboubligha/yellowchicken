@@ -144,7 +144,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                     const SizedBox(width: 32),
                     _NavItem(
                       title:
-                          getTranslated('Favourites', context) ?? 'Favourites',
+                          getTranslated('favourite', context) ?? 'Favourites',
                       onTap: () => RouterHelper.getDashboardRoute('favourite'),
                     ),
                     const SizedBox(width: 32),
@@ -183,7 +183,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Branch',
+                              getTranslated('branch', context) ?? 'Branch',
                               style: rubikRegular.copyWith(
                                 color: const Color(0xFF333333),
                                 fontSize: 14,
@@ -220,7 +220,9 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              currentLanguage.languageCode?.toUpperCase() ??
+                              getTranslated('navbar_language', context) ??
+                                  currentLanguage.languageName ??
+                                  currentLanguage.languageCode?.toUpperCase() ??
                                   'EN',
                               style: rubikRegular.copyWith(
                                 color: const Color(0xFF333333),

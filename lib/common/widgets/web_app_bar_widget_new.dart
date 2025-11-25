@@ -158,7 +158,9 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                currentLanguage.languageCode?.toUpperCase() ??
+                                getTranslated('navbar_language', context) ??
+                                    currentLanguage.languageName ??
+                                    currentLanguage.languageCode?.toUpperCase() ??
                                     'EN',
                                 style: rubikRegular.copyWith(
                                   color: Colors.white,
@@ -342,7 +344,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                                 color: Colors.white, size: 16),
                             const SizedBox(width: 8),
                             Text(
-                              'Branch',
+                              getTranslated('branch', context) ?? 'Branch',
                               style: rubikMedium.copyWith(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -492,7 +494,9 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  currentLanguage.languageCode?.toUpperCase() ??
+                                  getTranslated('navbar_language', context) ??
+                                      currentLanguage.languageName ??
+                                      currentLanguage.languageCode?.toUpperCase() ??
                                       'EN',
                                   style: rubikMedium.copyWith(
                                     color: Colors.white,
