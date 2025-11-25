@@ -43,11 +43,15 @@ class StyledCardButtonWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: Dimensions.paddingSizeDefault),
                 Text(
-                  title, 
+                  title,
                   style: rubikMedium.copyWith(
                     fontSize: Dimensions.fontSizeSmall,
-                    color: Theme.of(context).primaryColor,
-                  )
+                    color: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.color ??
+                        Colors.black,
+                  ),
                 ),
               ]
             ),

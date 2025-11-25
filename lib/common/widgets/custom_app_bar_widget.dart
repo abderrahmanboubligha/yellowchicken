@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_restaurant/common/widgets/web_app_bar_widget.dart';
+import 'package:flutter_restaurant/common/widgets/web_app_bar_widget_new.dart';
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/main.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
@@ -36,7 +36,7 @@ class CustomAppBarWidget extends StatelessWidget implements PreferredSizeWidget 
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveHelper.isDesktop(context) ? const WebAppBarWidget() : AppBar(
+    return ResponsiveHelper.isDesktop(context) ? const WebAppBarWidgetNew() : AppBar(
       title: additionalTitle !=null ? Row(children: [
         Text(
           title!,

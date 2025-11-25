@@ -49,7 +49,11 @@ class StyledMenuItemWidget extends StatelessWidget {
                 child: Text(
                   title,
                   style: rubikMedium.copyWith(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.color ??
+                        Colors.black,
                     fontSize: Dimensions.fontSizeLarge,
                   ),
                 ),

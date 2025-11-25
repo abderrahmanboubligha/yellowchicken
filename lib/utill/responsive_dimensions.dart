@@ -171,9 +171,9 @@ class ResponsiveDimensions {
   // Product/Meal description font size
   static double getProductDescriptionFontSize() {
     if (kIsWeb) {
-      return 14.0;
+      return 16.0; // slightly larger for better readability on web
     } else {
-      return 22.0; // Much larger for mobile (+8px)
+      return 24.0; // increased further for mobile for clearer descriptions
     }
   }
 

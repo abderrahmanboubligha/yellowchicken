@@ -157,6 +157,12 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                       title: getTranslated('profile', context) ?? 'Profile',
                       onTap: () => RouterHelper.getProfileOverviewRoute(),
                     ),
+                    const SizedBox(width: 32),
+                    // Moved the CART icon next to navigation items
+                    _NavItem(
+                      title: getTranslated('cart', context) ?? 'Cart',
+                      onTap: () => RouterHelper.getDashboardRoute('cart'),
+                    ),
                   ],
                 ),
               ),

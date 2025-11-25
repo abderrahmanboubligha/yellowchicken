@@ -32,6 +32,7 @@ import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
 import '../../../helper/custom_snackbar_helper.dart';
+import 'package:flutter_restaurant/common/widgets/web_app_bar_widget.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -68,11 +69,13 @@ class _CartScreenState extends State<CartScreen> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: CustomAppBarWidget(
-        context: context,
-        title: getTranslated('cart', context),
-        isBackButtonExist: false,
-      ),
+      appBar: ResponsiveHelper.isDesktop(context)
+          ? const WebAppBarWidget()
+          : CustomAppBarWidget(
+              context: context,
+              title: getTranslated('cart', context),
+              isBackButtonExist: false,
+            ),
       body: Consumer<CheckoutProvider>(
         builder: (context, checkoutProvider, child) {
           return Consumer<CartProvider>(
