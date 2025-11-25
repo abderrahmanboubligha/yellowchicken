@@ -59,7 +59,7 @@ class CheckOutButtonWidget extends StatelessWidget {
             padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
             child: CustomButtonWidget(
               btnTxt: getTranslated('proceed_to_checkout', context),
-              backgroundColor: const Color(0xFFFF8C00),
+              backgroundColor: const Color(0xFFFFD700),
               borderRadius: 25, // Rounded corners like in the design
               onTap: () {
               if(authProvider.isLoggedIn()){

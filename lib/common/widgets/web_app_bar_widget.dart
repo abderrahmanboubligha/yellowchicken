@@ -237,20 +237,20 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
 
                   const SizedBox(width: 16),
 
-                  // Sign in button (orange)
+                  // Sign in button (yellow)
                   InkWell(
                     onTap: () => RouterHelper.getProfileRoute(),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF8C42),
+                        color: const Color(0xFFFFD700),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         getTranslated('sign_in', context) ?? 'Sign in',
                         style: rubikMedium.copyWith(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 14,
                         ),
                       ),

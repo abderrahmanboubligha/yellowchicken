@@ -82,7 +82,7 @@ class NotLoggedInWidget extends StatelessWidget {
                             height: 45,
                             child: CustomButtonWidget(
                               btnTxt: getTranslated('login', context),
-                              backgroundColor: const Color(0xFFFF8C00),
+                              backgroundColor: const Color(0xFFFFD700),
                               borderRadius: 25,
                               onTap: () {
                                 RouterHelper.getLoginRoute(action: RouteAction.pushReplacement);

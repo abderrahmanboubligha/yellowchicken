@@ -101,7 +101,8 @@ class WalletHeaderWidget extends StatelessWidget {
                                   }
                                 : null,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFFF9800),
+                              backgroundColor: const Color(0xFFFFD700),
+                              foregroundColor: Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25),
                               ),

@@ -24,7 +24,7 @@ class AddToCartButtonWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(quantity == 0 ? 10 : 50),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFF8C42).withValues(alpha: 0.25),
+              color: const Color(0xFFFFD700).withAlpha(100),
               offset: const Offset(0, 2),
               blurRadius: 6,
               spreadRadius: 0,
@@ -34,7 +34,7 @@ class AddToCartButtonWidget extends StatelessWidget {
         child: quantity == 0
             ? Material(
                 borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFFFF8C42),
+                color: const Color(0xFFFFD700),
                 clipBehavior: Clip.hardEdge,
                 child: InkWell(
                   onTap: () => ProductHelper.addToCart(
@@ -45,7 +45,7 @@ class AddToCartButtonWidget extends StatelessWidget {
                     alignment: Alignment.center,
                     child: const Icon(
                       Icons.add,
-                      color: Colors.white,
+                      color: Colors.black,
                       size: 18,
                     ),
                   ),
@@ -53,7 +53,7 @@ class AddToCartButtonWidget extends StatelessWidget {
               )
             : Material(
                 borderRadius: BorderRadius.circular(50),
-                color: const Color(0xFFFF8C42),
+                color: const Color(0xFFFFD700),
                 clipBehavior: Clip.hardEdge,
                 child: Padding(
                   padding:
@@ -69,14 +69,14 @@ class AddToCartButtonWidget extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.remove,
-                            size: 16, color: Color(0xFFFF8C42)),
+                            size: 16, color: Colors.black),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(quantity.toString(),
                           style: rubikMedium.copyWith(
-                              color: Colors.white, fontSize: 14)),
+                              color: Colors.black, fontSize: 14)),
                     ),
                     InkWell(
                       onTap: () => cartProvider.onUpdateCartQuantity(
@@ -88,7 +88,7 @@ class AddToCartButtonWidget extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.add,
-                            size: 16, color: Color(0xFFFF8C42)),
+                            size: 16, color: Colors.black),
                       ),
                     ),
                   ]),

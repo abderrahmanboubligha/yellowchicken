@@ -32,8 +32,8 @@ class ColorResources {
 
   static Color getSecondaryColor(BuildContext context) {
     return Provider.of<ThemeProvider>(context).darkTheme ?
-    const Color(0xFFFFBA08) :
-    const Color(0xFFFFBA08);
+    const Color(0xFFFFD700) :
+    const Color(0xFFFFD700);
   }
   static Color getTertiaryColor(BuildContext context) {
     return Provider.of<ThemeProvider>(context).darkTheme ?  const Color(0xFF2B2727) :const Color(0xFFF3F8FF);

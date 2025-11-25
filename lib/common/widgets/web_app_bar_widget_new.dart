@@ -383,7 +383,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                                       child: Container(
                                         padding: const EdgeInsets.all(2),
                                         decoration: const BoxDecoration(
-                                          color: Colors.orange,
+                                          color: Color(0xFFFFD700),
                                           shape: BoxShape.circle,
                                         ),
                                         constraints: const BoxConstraints(
@@ -425,7 +425,7 @@ class _WebAppBarWidgetState extends State<WebAppBarWidget> {
                                       child: Container(
                                         padding: const EdgeInsets.all(2),
                                         decoration: const BoxDecoration(
-                                          color: Colors.orange,
+                                          color: Color(0xFFFFD700),
                                           shape: BoxShape.circle,
                                         ),
                                         constraints: const BoxConstraints(

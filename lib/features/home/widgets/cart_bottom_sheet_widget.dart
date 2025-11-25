@@ -1058,7 +1058,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
             btnTxt: getTranslated(
                 widget.cart != null ? 'update_in_cart' : 'add_to_cart',
                 context),
-            textStyle: rubikSemiBold.copyWith(color: Colors.white),
+            textStyle: rubikSemiBold.copyWith(color: Colors.black),
             backgroundColor: Theme.of(context).primaryColor,
             onTap: widget.cart == null &&
                     !productProvider.checkStock(widget.product!,
@@ -1918,7 +1918,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                         padding: const EdgeInsets.all(
                             Dimensions.paddingSizeExtraSmall),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF8C00),
+                          color: const Color(0xFFFFD700),
                           borderRadius:
                               BorderRadius.circular(Dimensions.radiusSmall),
                         ),
@@ -1942,8 +1942,8 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                     btnTxt:
                         '${getTranslated(widget.cart != null ? 'update_in_cart' : 'add_to_cart', context)} | ${PriceConverterHelper.convertPrice(priceWithAddonsVariation)}',
                     textStyle: rubikSemiBold.copyWith(
-                        color: Colors.white, fontSize: 16),
-                    backgroundColor: const Color(0xFFFF8C00),
+                        color: Colors.black, fontSize: 16),
+                    backgroundColor: const Color(0xFFFFD700),
                     onTap: widget.cart == null &&
                             !productProvider.checkStock(widget.product!,
                                 quantity: quantity)

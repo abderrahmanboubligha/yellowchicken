@@ -51,27 +51,27 @@ class CustomButtonWidget extends StatelessWidget {
         const SizedBox(
           height: 15, width: 15,
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
             strokeWidth: 2,
           ),
         ),
         const SizedBox(width: Dimensions.paddingSizeSmall),
 
-        Text(getTranslated('loading', context)!, style: rubikBold.copyWith(color: Colors.white)),
+        Text(getTranslated('loading', context)!, style: rubikBold.copyWith(color: Colors.black)),
       ]),
       ) : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-        Icon(iconData, color: Colors.white, size: iconData != null ? 20 : 0),
+        Icon(iconData, color: Colors.black, size: iconData != null ? 20 : 0),
         SizedBox(width: iconData != null ?  Dimensions.paddingSizeSmall : 0),
 
         Text(
           btnTxt ?? "",
-          style: textStyle ?? rubikSemiBold.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeLarge),
+          style: textStyle ?? rubikSemiBold.copyWith(color: Colors.black, fontSize: Dimensions.fontSizeLarge),
         ),
 
         SizedBox(width: postImage != null ?  Dimensions.paddingSizeSmall : 0),
         if(postImage != null)
-        CustomAssetImageWidget(postImage ?? '', height: Dimensions.paddingSizeDefault, width: Dimensions.paddingSizeDefault, color: Colors.white),
+        CustomAssetImageWidget(postImage ?? '', height: Dimensions.paddingSizeDefault, width: Dimensions.paddingSizeDefault, color: Colors.black),
 
       ]),
     );

@@ -57,7 +57,7 @@ TextTheme _createResponsiveTextTheme() {
 
 ThemeData light = ThemeData(
   fontFamily: 'Rubik',
-  primaryColor: const Color(0xFFFF8C00),
+  primaryColor: const Color(0xFFFFD700),
   // primaryColor: const Color(0xFFFC6A57),
   //#a1143f - old burgundy color
   secondaryHeaderColor: const Color(0xff04B200),
@@ -82,8 +82,8 @@ ThemeData light = ThemeData(
 
   colorScheme: ColorScheme(
     brightness: Brightness.light,
-    primary: const Color(0xFFFF8C00),
-    onPrimary: const Color(0xFFFF8C00),
+    primary: const Color(0xFFFFD700),
+    onPrimary: Colors.black,
     secondary: const Color(0xff04B200),
     onSecondary: const Color(0xFFEFE6FE),
     error: Colors.redAccent,
@@ -95,7 +95,7 @@ ThemeData light = ThemeData(
 
   textTheme: _createResponsiveTextTheme(),
   appBarTheme: AppBarTheme(
-    backgroundColor: const Color(0xFFFF8C00),
+    backgroundColor: const Color(0xFFFFD700),
     foregroundColor: Colors.white,
     elevation: 0,
     centerTitle: false,

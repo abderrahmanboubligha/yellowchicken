@@ -26,7 +26,7 @@ class BottomNavItemWidget extends StatelessWidget {
 
          if(isSelected) Text(
             title,
-            style: rubikBold.copyWith(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color!, fontSize: 12),
+            style: rubikBold.copyWith(color: isSelected ? Colors.black : Theme.of(context).textTheme.bodyMedium!.color!, fontSize: 12),
           ),
 
         ]),

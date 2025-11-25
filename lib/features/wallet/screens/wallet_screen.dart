@@ -287,8 +287,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:
-                                            const Color(0xFFFF9500),
-                                        foregroundColor: Colors.white,
+                                            const Color(0xFFFFD700),
+                                        foregroundColor: Colors.black,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 12),
                                         shape: RoundedRectangleBorder(
@@ -486,7 +486,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   const SizedBox(height: 32),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFFF9500),
+                                      backgroundColor: const Color(0xFFFFD700),
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 40,
                                         vertical: 14,
