@@ -308,59 +308,27 @@ class _DiscoveryItemState extends State<_DiscoveryItem> {
                     ),
                   ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeDefault),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Category image
-                Container(
-                  height: widget.imageSize,
-                  width: widget.imageSize,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: widget.isMoreButton
+                ? Container(
+                    decoration: BoxDecoration(
+                      color:
+                          const Color(0xFFFF8C42).withValues(alpha: 0.1),
+                    ),
+                    child: Icon(
+                      Icons.more_horiz,
+                      size: widget.isDesktop ? 36 : 32,
+                      color: const Color(0xFFFF8C42),
+                    ),
+                  )
+                : CustomImageWidget(
+                    fit: BoxFit.cover,
+                    placeholder: Images.placeholderImage,
+                    image: widget.splashProvider.baseUrls != null
+                        ? '${widget.splashProvider.baseUrls!.categoryImageUrl}/${widget.category.image}'
+                        : '',
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: widget.isMoreButton
-                        ? Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF8C42)
-                                  .withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Icon(
-                              Icons.more_horiz,
-                              size: widget.isDesktop ? 36 : 32,
-                              color: const Color(0xFFFF8C42),
-                            ),
-                          )
-                        : CustomImageWidget(
-                            fit: BoxFit.contain,
-                            placeholder: Images.placeholderImage,
-                            image: widget.splashProvider.baseUrls != null
-                                ? '${widget.splashProvider.baseUrls!.categoryImageUrl}/${widget.category.image}'
-                                : '',
-                          ),
-                  ),
-                ),
-                const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                // Category name
-                Text(
-                  widget.isMoreButton
-                      ? getTranslated("More", context)!
-                      : widget.category.name ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: rubikBold.copyWith(
-                    fontSize: widget.isDesktop ? 15 : 14,
-                    color: const Color(0xFF4B1E00),
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
