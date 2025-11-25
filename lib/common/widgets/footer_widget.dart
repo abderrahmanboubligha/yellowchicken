@@ -5,6 +5,7 @@ import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/features/splash/providers/splash_provider.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
+import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,7 +61,7 @@ class _FooterWidgetState extends State<FooterWidget> {
     return Container(
       width: double.maxFinite,
       decoration: const BoxDecoration(
-        color: Color(0xFFF5E6D3), // Beige/cream color from the image
+        color: Colors.black,
       ),
       padding: EdgeInsets.symmetric(
         horizontal: paddingSizeWidth > 0 ? paddingSizeWidth : 40,
@@ -103,9 +104,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                             Text(
                               'Location ....',
                               style: TextStyle(
-                                color: Color(0xFF4A4A4A),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -116,8 +117,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                             child: Text(
                               configModel.footerDescription ?? '',
                               style: const TextStyle(
-                                color: Color(0xFF666666),
-                                fontSize: 13,
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
@@ -138,9 +140,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                         const Text(
                           'Home',
                           style: TextStyle(
-                            color: Color(0xFF2D2D2D),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -153,9 +155,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                                 getTranslated(link.title, context) ??
                                     link.title,
                                 style: const TextStyle(
-                                  color: Color(0xFF4A4A4A),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -176,9 +178,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                         const Text(
                           'Quick Links',
                           style: TextStyle(
-                            color: Color(0xFF2D2D2D),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -191,9 +193,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                                 getTranslated(link.title, context) ??
                                     link.title,
                                 style: const TextStyle(
-                                  color: Color(0xFF4A4A4A),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
@@ -236,7 +238,7 @@ class _FooterWidgetState extends State<FooterWidget> {
                                         height: 32,
                                         width: 32,
                                         fit: BoxFit.contain,
-                                        color: const Color(0xFF4A4A4A),
+                                        color: Colors.white,
                                       ),
                                     ),
                                   )
@@ -254,8 +256,9 @@ class _FooterWidgetState extends State<FooterWidget> {
                         '© ${DateTime.now().year} ${configModel.restaurantName}. All rights reserved.',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      color: Color(0xFF666666),
-                      fontSize: 13,
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
