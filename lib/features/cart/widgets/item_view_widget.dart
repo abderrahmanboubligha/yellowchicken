@@ -21,7 +21,7 @@ class ItemViewWidget extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(title,
           style: titleStyle ?? ResponsiveStyles.responsiveSemiBold(context).copyWith(
-            color: const Color(0xFF8B4513), // Brown text for title
+            color: Colors.black, // Changed title text color to black
           )),
       CustomDirectionalityWidget(
           child: Text(subTitle,

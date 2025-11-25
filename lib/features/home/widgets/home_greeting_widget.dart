@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_restaurant/features/profile/providers/profile_provider.dart';
+import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class HomeGreetingWidget extends StatelessWidget {
                 children: [
                   // Greeting text
                   Text(
-                    'Hello $userName',
+                    '${getTranslated("hello", context)} $userName',
                     style: rubikMedium.copyWith(
                       fontSize: 28,
                       color: const Color(0xFF4B1E00),
@@ -36,24 +37,7 @@ class HomeGreetingWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Location prompt
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 18,
-                        color: const Color(0xFF4B1E00).withValues(alpha: 0.6),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Please allow location access in Settings',
-                        style: rubikRegular.copyWith(
-                          fontSize: 14,
-                          color: const Color(0xFF4B1E00).withValues(alpha: 0.6),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Removed location prompt
                 ],
               );
             },

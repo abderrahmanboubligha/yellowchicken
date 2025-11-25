@@ -491,7 +491,7 @@
   "pay_via_online": "الدفع عن طريق الانترنت",
   "your_wallet_have_not_sufficient_balance": "محفظتك لا تحتوي على رصيد كافي",
   "select": "يختار",
-  "add_payment_method": "أضف طريقة الدفع",
+  "add_payment_method": "إضافة طريقة دفع",
   "applied": "مُطبَّق !",
   "do_you_want_to_use_now": "هل تريد أن تستخدم الآن؟",
   "remaining_wallet_balance": "الرصيد المتبقي في المحفظة",
@@ -516,7 +516,7 @@
   "yes_pay": "نعم ادفع",
   "add_fund_successful": "تمت إضافة الصندوق بنجاح",
   "add_fund_failed": "فشلت إضافة الصندوق",
-  "all_transactions": "كل الحركات المالية",
+  "all_transactions": "جميع المعاملات",
   "order_transactions": "معاملات الطلب",
   "converted_from_loyalty_point": "تم التحويل من نقطة الولاء",
   "added_via_payment_method": "تمت الإضافة عبر طريقة الدفع",
@@ -840,5 +840,6 @@
   "top_up": "إضافة رصيد",
   "all_transactions": "جميع المعاملات",
   "add_a_payment_method": "إضافة طريقة دفع",
-  "add_payment_method": "إضافة طريقة دفع"
+  "add_payment_method": "إضافة طريقة دفع",
+  "hello": "مرحبا"
 }

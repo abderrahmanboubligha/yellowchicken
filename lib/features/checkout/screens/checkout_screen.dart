@@ -581,7 +581,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         : checkoutProvider.deliveryCharge)),
                             titleStyle: rubikSemiBold.copyWith(
                                 fontSize: Dimensions.fontSizeExtraLarge,
-                                color: Theme.of(context).primaryColor),
+                                color: Colors.black), // Total amount in black
+                            subTitleStyle: rubikSemiBold.copyWith(
+                                fontSize: Dimensions.fontSizeExtraLarge,
+                                color: Colors.black), // Price in orange
                           ),
                           children: [
                             SizedBox(

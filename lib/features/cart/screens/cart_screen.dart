@@ -585,11 +585,11 @@ class _CartScreenState extends State<CartScreen> {
                                                                     : 'total_amount',
                                                                 context)!,
                                                             subTitle:
-                                                                PriceConverterHelper
-                                                                    .convertPrice(
-                                                                        total),
-                                                            subTitleStyle:
-                                                                rubikSemiBold,
+                                                                PriceConverterHelper.convertPrice(total),
+                                                            subTitleStyle: rubikSemiBold.copyWith(
+                                                              fontSize: 18, // Increased font size
+                                                              color: Colors.black, // Changed color to black
+                                                            ),
                                                           ),
                                                           const SizedBox(
                                                               height: Dimensions
