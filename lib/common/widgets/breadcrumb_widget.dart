@@ -62,9 +62,7 @@ class BreadcrumbWidget extends StatelessWidget {
               item.title,
               style: rubikMedium.copyWith(
                 fontSize: Dimensions.fontSizeDefault,
-                color: isLast
-                    ? Theme.of(context).textTheme.bodyLarge?.color
-                    : Theme.of(context).primaryColor,
+                color: Colors.black,
                 fontWeight: isLast ? FontWeight.w600 : FontWeight.w500,
               ),
             ),
@@ -83,7 +81,7 @@ class BreadcrumbWidget extends StatelessWidget {
               width: 5,
               height: 5,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.6),
+                color: Colors.black,
                 shape: BoxShape.circle,
               ),
             ),

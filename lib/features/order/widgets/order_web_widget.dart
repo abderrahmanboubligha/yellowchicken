@@ -105,7 +105,7 @@ class _OrderWebWidgetState extends State<OrderWebWidget> with TickerProviderStat
                     child: Center(child: Text(
                       getTranslated('ongoing', context)!,
                       style: rubikRegular.copyWith(
-                        color: _selectedIndex == 0 ? Colors.white : Theme.of(context).primaryColor,
+                        color: Colors.black,
                       ),
                     )),
                   ),
@@ -123,7 +123,7 @@ class _OrderWebWidgetState extends State<OrderWebWidget> with TickerProviderStat
                     child: Center(child: Text(
                       getTranslated('history', context)!,
                       style: rubikRegular.copyWith(
-                        color: _selectedIndex == 1 ? Colors.white : Theme.of(context).primaryColor,
+                        color: Colors.black,
                       ),
                     )),
                   ),

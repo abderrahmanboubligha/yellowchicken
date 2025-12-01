@@ -147,12 +147,7 @@ class _OrderScreenState extends State<OrderScreen>
                                                           'ongoing', context)!,
                                                       style:
                                                           rubikRegular.copyWith(
-                                                        color: _selectedIndex ==
-                                                                0
-                                                            ? Theme.of(context)
-                                                                .cardColor
-                                                            : Theme.of(context)
-                                                                .primaryColor,
+                                                        color: Colors.black,
                                                         fontWeight:
                                                             _selectedIndex == 0
                                                                 ? FontWeight
@@ -184,14 +179,9 @@ class _OrderScreenState extends State<OrderScreen>
                                                           'history', context)!,
                                                       style:
                                                           rubikRegular.copyWith(
-                                                        color: _selectedIndex ==
-                                                                1
-                                                            ? Theme.of(context)
-                                                                .cardColor
-                                                            : Theme.of(context)
-                                                                .primaryColor,
+                                                        color: Colors.black,
                                                         fontWeight:
-                                                            _selectedIndex == 0
+                                                            _selectedIndex == 1
                                                                 ? FontWeight
                                                                     .w700
                                                                 : FontWeight

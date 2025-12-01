@@ -393,11 +393,14 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                                                         index]
                                                     ? Theme.of(context)
                                                         .secondaryHeaderColor
-                                                        .withValues(alpha: 0.05)
+                                                        .withValues(alpha: 0.08)
                                                     : Theme.of(context)
-                                                        .primaryColor
-                                                        .withValues(
-                                                            alpha: 0.05),
+                                                        .cardColor,
+                                                border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .hintColor
+                                                      .withValues(alpha: 0.2),
+                                                ),
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         Dimensions.radiusSmall),
@@ -408,7 +411,16 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                                                   child: Text(
                                                 '${getTranslated(variationList[index].isRequired! ? productProvider.isRequiredSelected![index] ? 'completed' : 'required' : 'optional', context)}',
                                                 style: rubikRegular.copyWith(
-                                                  color: Colors.black,
+                                                  color: productProvider
+                                                          .isRequiredSelected![
+                                                      index]
+                                                  ? Theme.of(context)
+                                                      .secondaryHeaderColor
+                                                  : Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium
+                                                          ?.color ??
+                                                      Colors.black,
                                                   fontSize:
                                                       Dimensions.fontSizeSmall,
                                                 ),
@@ -505,25 +517,22 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                                                             'view', context)!,
                                                         style: rubikRegular
                                                             .copyWith(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .primaryColor)),
+                                                                color:
+                                                                    Colors.black)),
                                                     Text(
                                                       ' ${variationList[index].variationValues!.length - 3} ',
                                                       style:
                                                           rubikRegular.copyWith(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor),
+                                                              color:
+                                                                  Colors.black),
                                                     ),
                                                     Text(
                                                         getTranslated(
                                                             'more', context)!,
                                                         style: rubikRegular
                                                             .copyWith(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .primaryColor)),
+                                                                color:
+                                                                    Colors.black)),
                                                   ]),
                                                 )
                                               : OnHoverWidget(
@@ -836,7 +845,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
               child: Text(
                 PriceConverterHelper.convertPrice(priceWithAddonsVariation),
                 style: rubikSemiBold.copyWith(
-                    color: Theme.of(context).primaryColor),
+                    color: Colors.black),
               ),
             ),
           ]),
@@ -1575,8 +1584,12 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                   color: productProvider.isRequiredSelected![index]
                       ? Theme.of(context)
                           .secondaryHeaderColor
-                          .withValues(alpha: 0.05)
-                      : Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                          .withValues(alpha: 0.08)
+                      : Theme.of(context).cardColor,
+                  border: Border.all(
+                    color:
+                        Theme.of(context).hintColor.withValues(alpha: 0.2),
+                  ),
                   borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                 ),
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
@@ -1586,7 +1599,11 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                   style: rubikRegular.copyWith(
                     color: productProvider.isRequiredSelected![index]
                         ? Theme.of(context).secondaryHeaderColor
-                        : Theme.of(context).primaryColor,
+                        : Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.color ??
+                            Colors.black,
                     fontSize: Dimensions.fontSizeSmall,
                   ),
                 )),
@@ -1852,9 +1869,9 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
               ],
             ),
           ),
-        Row(
-          children: [
-            Container(
+        LayoutBuilder(builder: (context, constraints) {
+          Widget buildQuantitySelector() {
+            return Container(
               decoration: BoxDecoration(
                 border: Border.all(
                     color: Theme.of(context).hintColor.withValues(alpha: 0.3)),
@@ -1866,6 +1883,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                   vertical: Dimensions.paddingSizeExtraSmall),
               child: Consumer<ProductProvider>(
                 builder: (context, productProvider, _) => Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     InkWell(
                       onTap: () {
@@ -1922,74 +1940,94 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                   ],
                 ),
               ),
-            ),
-            const SizedBox(width: Dimensions.paddingSizeDefault),
-            Expanded(
-              child: Consumer<ProductProvider>(
-                builder: (context, productProvider, _) {
-                  final CartProvider cartProvider =
-                      Provider.of<CartProvider>(context, listen: false);
-                  int quantity = cartProvider
-                      .getCartProductQuantityCount(widget.product!);
-                  return CustomButtonWidget(
-                    btnTxt:
-                        '${getTranslated(widget.cart != null ? 'update_in_cart' : 'add_to_cart', context)} | ${PriceConverterHelper.convertPrice(priceWithAddonsVariation)}',
-                    textStyle: rubikSemiBold.copyWith(
-                        color: Colors.black, fontSize: 16),
-                    backgroundColor: const Color(0xFFFFD700),
-                    onTap: widget.cart == null &&
-                            !productProvider.checkStock(widget.product!,
-                                quantity: quantity)
-                        ? null
-                        : () {
-                            if (variationList != null) {
-                              for (int index = 0;
-                                  index < variationList.length;
-                                  index++) {
-                                if (!variationList[index].isMultiSelect! &&
-                                    variationList[index].isRequired! &&
-                                    !productProvider.selectedVariations[index]
-                                        .contains(true)) {
-                                  showCustomSnackBarHelper(
-                                      '${getTranslated('choose_a_variation_from', context)} ${variationList[index].name}',
-                                      isToast: true,
-                                      isError: true);
-                                  return;
-                                } else if (variationList[index]
-                                            .isMultiSelect! &&
-                                        (variationList[index].isRequired! ||
-                                            productProvider
-                                                .selectedVariations[index]
-                                                .contains(true)) &&
-                                        variationList[index].min! >
-                                            productProvider
-                                                .selectedVariationLength(
-                                                    productProvider
-                                                        .selectedVariations,
-                                                    index)) {
-                                  showCustomSnackBarHelper(
-                                      '${getTranslated('you_need_to_select_minimum', context)} ${variationList[index].min} '
-                                      '${getTranslated('to_maximum', context)} ${variationList[index].max} ${getTranslated('options_from', context)} ${variationList[index].name} ${getTranslated('variation', context)}',
-                                      isError: true,
-                                      isToast: true);
-                                  return;
-                                }
+            );
+          }
+
+          Widget buildCartButton() {
+            return Consumer<ProductProvider>(
+              builder: (context, productProvider, _) {
+                final CartProvider cartProvider =
+                    Provider.of<CartProvider>(context, listen: false);
+                int quantity =
+                    cartProvider.getCartProductQuantityCount(widget.product!);
+                return CustomButtonWidget(
+                  btnTxt:
+                      '${getTranslated(widget.cart != null ? 'update_in_cart' : 'add_to_cart', context)} | ${PriceConverterHelper.convertPrice(priceWithAddonsVariation)}',
+                  textStyle: rubikSemiBold.copyWith(
+                      color: Colors.black, fontSize: 16),
+                  backgroundColor: const Color(0xFFFFD700),
+                  onTap: widget.cart == null &&
+                          !productProvider.checkStock(widget.product!,
+                              quantity: quantity)
+                      ? null
+                      : () {
+                          if (variationList != null) {
+                            for (int index = 0;
+                                index < variationList.length;
+                                index++) {
+                              if (!variationList[index].isMultiSelect! &&
+                                  variationList[index].isRequired! &&
+                                  !productProvider.selectedVariations[index]
+                                      .contains(true)) {
+                                showCustomSnackBarHelper(
+                                    '${getTranslated('choose_a_variation_from', context)} ${variationList[index].name}',
+                                    isToast: true,
+                                    isError: true);
+                                return;
+                              } else if (variationList[index].isMultiSelect! &&
+                                  (variationList[index].isRequired! ||
+                                      productProvider.selectedVariations[index]
+                                          .contains(true)) &&
+                                  variationList[index].min! >
+                                      productProvider.selectedVariationLength(
+                                          productProvider.selectedVariations,
+                                          index)) {
+                                showCustomSnackBarHelper(
+                                    '${getTranslated('you_need_to_select_minimum', context)} ${variationList[index].min} '
+                                    '${getTranslated('to_maximum', context)} ${variationList[index].max} ${getTranslated('options_from', context)} ${variationList[index].name} ${getTranslated('variation', context)}',
+                                    isError: true,
+                                    isToast: true);
+                                return;
                               }
                             }
-                            context.pop();
-                            Provider.of<CartProvider>(context, listen: false)
-                                .addToCart(
-                                    cartModel,
-                                    widget.cart != null
-                                        ? widget.cartIndex
-                                        : productProvider.cartIndex);
-                          },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+                          }
+                          context.pop();
+                          Provider.of<CartProvider>(context, listen: false)
+                              .addToCart(
+                                  cartModel,
+                                  widget.cart != null
+                                      ? widget.cartIndex
+                                      : productProvider.cartIndex);
+                        },
+                );
+              },
+            );
+          }
+
+          final bool isNarrow = constraints.maxWidth < 520;
+          final quantitySelector = buildQuantitySelector();
+
+          if (isNarrow) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: quantitySelector),
+                const SizedBox(height: Dimensions.paddingSizeDefault),
+                buildCartButton(),
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              quantitySelector,
+              const SizedBox(width: Dimensions.paddingSizeDefault),
+              Expanded(child: buildCartButton()),
+            ],
+          );
+        }),
       ],
     );
   }

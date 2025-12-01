@@ -153,7 +153,7 @@ class StyledOptionsWidget extends StatelessWidget {
                         },
                         child: Text(
                           'More', 
-                          style: rubikMedium.copyWith(color: Colors.white)
+                          style: rubikMedium.copyWith(color: Colors.black)
                         ),
                       ),
                     ),

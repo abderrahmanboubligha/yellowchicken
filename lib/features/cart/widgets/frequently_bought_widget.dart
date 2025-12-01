@@ -40,7 +40,7 @@ class FrequentlyBoughtWidget extends StatelessWidget {
                 child: TitleWidget(
                   title: getTranslated('frequently_bought', context),
                   subTitle: getTranslated('discover_all', context),
-                  subTitleTextStyle: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
+                  subTitleTextStyle: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Colors.black),
                   /// todo - Setup routing according to your need
                   onTap: ()=> RouterHelper.getAllCategoryRoute(),
                 )),

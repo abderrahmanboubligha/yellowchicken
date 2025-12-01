@@ -10,6 +10,7 @@ import 'package:flutter_restaurant/features/splash/providers/splash_provider.dar
 import 'package:flutter_restaurant/helper/responsive_helper.dart';
 import 'package:flutter_restaurant/helper/router_helper.dart';
 import 'package:flutter_restaurant/localization/language_constrants.dart';
+import 'package:flutter_restaurant/utill/color_resources.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
@@ -49,7 +50,7 @@ class _MenuScreenState extends State<MenuScreen> {
               builder: (context, profileProvider, child) => Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: ColorResources.getProfileMenuHeaderColor(context),
                 ),
                 padding: const EdgeInsets.all(32),
                 child: Column(children: [
@@ -79,7 +80,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   const SizedBox(height: 16),
                   Text(
                     isLoggedIn ? '${profileProvider.userInfoModel?.fName} ${profileProvider.userInfoModel?.lName}' : getTranslated('guest', context)!,
-                    style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white)
+                    style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.black)
                   ),
                   
                   if(!isLoggedIn) TextButton(
@@ -88,17 +89,17 @@ class _MenuScreenState extends State<MenuScreen> {
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       padding: EdgeInsets.zero, 
-                      foregroundColor: Colors.white
+                      foregroundColor: Colors.black
                     ),
                     child: Text(
                       getTranslated('sign_up_or_login', context)!, 
-                      style: rubikRegular.copyWith(color: Colors.white)
+                      style: rubikRegular.copyWith(color: Colors.black)
                     )
                   ),
                   
                   if(isLoggedIn) Text(
                     profileProvider.userInfoModel?.email ?? '',
-                    style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Colors.white70),
+                    style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Colors.black54),
                   ),
                 ]),
               ),
