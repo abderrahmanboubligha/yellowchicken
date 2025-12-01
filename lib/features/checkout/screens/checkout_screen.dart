@@ -277,9 +277,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                                                   context)!,
                                                                           style:
                                                                               rubikRegular.copyWith(
-                                                                            color: index == checkoutProvider.selectDateSlot
-                                                                                ? Theme.of(context).primaryColor
-                                                                                : Theme.of(context).textTheme.bodyLarge?.color,
+                                                                            color: Colors.black,
                                                                           )),
                                                                       const SizedBox(
                                                                           width:

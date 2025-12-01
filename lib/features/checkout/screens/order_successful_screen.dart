@@ -214,7 +214,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
                               TextSpan(
                                   text: ' #${widget.orderID} ',
                                   style: rubikBold.copyWith(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.black,
                                       fontSize: Dimensions.fontSizeSmall)),
                               TextSpan(
                                   text:
@@ -225,7 +225,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
                             ]),
                             style: rubikRegular.copyWith(
                                 fontSize: Dimensions.fontSizeSmall,
-                                color: Theme.of(context).hintColor),
+                                color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
                         ),

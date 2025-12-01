@@ -35,14 +35,14 @@ class SlotWidget extends StatelessWidget {
             if(showIcon) ...[
               icon ?? CustomAssetImageWidget(
                 Images.schedule, width: Dimensions.paddingSizeDefault,
-                color: isSelected ? Colors.white : Theme.of(context).disabledColor,
+                color: isSelected ? Colors.black : Theme.of(context).disabledColor,
               ),
               const SizedBox(width: Dimensions.paddingSizeSmall),
             ],
 
 
             Text(title!, style: rubikSemiBold.copyWith(
-              color: isSelected ? Colors.white : Theme.of(context).disabledColor,
+              color: isSelected ? Colors.black : Theme.of(context).disabledColor,
               fontSize: Dimensions.fontSizeSmall,
             )),
           ]),
