@@ -94,7 +94,7 @@ class _WishListScreenState extends State<WishListScreen> {
                         InkWell(
                           onTap: ()=> RouterHelper.getSearchResultRoute(''),
                           child: Text(getTranslated('categories', context)!, style: rubikSemiBold.copyWith(
-                            color: Theme.of(context).primaryColor, fontSize: isDesktop ? Dimensions.fontSizeDefault : Dimensions.fontSizeSmall,
+                            color: Colors.black, fontSize: isDesktop ? Dimensions.fontSizeDefault : Dimensions.fontSizeSmall,
                             fontWeight: isDesktop ? FontWeight.w600 : FontWeight.w400,
                           )),
                         ),

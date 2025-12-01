@@ -40,7 +40,7 @@ class PaymentDetailsWidget extends StatelessWidget {
               child: TextButton(
                 onPressed: ()=> ResponsiveHelper.showDialogOrBottomSheet(context, PaymentMethodBottomSheetWidget(totalPrice: total)),
                 child: Text(getTranslated(showPayment ? 'change' : 'add', context)!, style: rubikBold.copyWith(
-                  color: ColorResources.getSecondaryColor(context),
+                  color: Colors.black,
                   fontSize:  Dimensions.fontSizeDefault ,
                 )),
               ),

@@ -71,7 +71,7 @@ class _ConvertMoneyWidgetState extends State<ConvertMoneyWidget> {
               children: [
 
                 Text(getTranslated('convert_point_to_wallet_money', context)!,style: rubikBold.copyWith(
-                  fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).primaryColor,
+                  fontSize: Dimensions.fontSizeDefault, color: Colors.black,
                 )),
 
                 Container( width: MediaQuery.of(context).size.width * 0.6,

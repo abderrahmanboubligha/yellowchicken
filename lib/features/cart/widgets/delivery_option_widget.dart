@@ -20,6 +20,12 @@ class DeliveryOptionWidget extends StatelessWidget {
     return Consumer<CheckoutProvider>(
       builder: (context, checkoutProvider, child) {
         bool isActive = value == checkoutProvider.orderType;
+        final String chargeText = value == OrderType.delivery
+            ? (isActive
+                ? PriceConverterHelper.convertPrice(deliveryCharge)
+                : PriceConverterHelper.convertPrice(0.00))
+            : '';
+
         return Container(
           decoration: BoxDecoration(
             color: isActive ?  Theme.of(context).primaryColor.withValues(alpha:0.1) : Theme.of(context).cardColor,
@@ -46,13 +52,15 @@ class DeliveryOptionWidget extends StatelessWidget {
                 )),
                 const Spacer(),
 
-                CustomDirectionalityWidget(child: Text(
-                  '${value == OrderType.delivery ? isActive ? PriceConverterHelper.convertPrice(deliveryCharge) : PriceConverterHelper.convertPrice(0.00) : getTranslated('free', context)}',
-                  style: rubikBold.copyWith(
-                    fontSize: Dimensions.fontSizeSmall,
-                    color: isActive ? null : Theme.of(context).hintColor,
-                  ),
-                )),
+                if (chargeText.isNotEmpty)
+                  CustomDirectionalityWidget(
+                      child: Text(
+                    chargeText,
+                    style: rubikBold.copyWith(
+                      fontSize: Dimensions.fontSizeSmall,
+                      color: isActive ? null : Theme.of(context).hintColor,
+                    ),
+                  )),
 
               ],
             ),

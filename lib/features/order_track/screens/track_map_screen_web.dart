@@ -59,7 +59,7 @@ class _TrackMapScreenWebState extends State<TrackMapScreenWeb> {
                       const TextSpan(text: "  "),
                       TextSpan(
                         text: getTranslated("on_the_way", context),
-                        style: rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor),
+                        style: rubikSemiBold.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.black),
                       )
                     ],
                   )),

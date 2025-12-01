@@ -52,7 +52,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
           : CustomAppBarWidget(
                 context: context,
                 title: getTranslated('refer_and_earn', context),
-                titleColor: Theme.of(context).primaryColor,
+                titleColor: Colors.black,
                 centerTitle: true,
               )) as PreferredSizeWidget?,
 

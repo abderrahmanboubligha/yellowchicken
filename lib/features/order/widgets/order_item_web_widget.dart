@@ -42,7 +42,7 @@ class OrderItemWebWidget extends StatelessWidget {
 
               Text(
                 '#${orderItem.id.toString()}',
-                style: rubikBold.copyWith(color: Theme.of(context).primaryColor),
+                style: rubikBold.copyWith(color: Colors.black),
               ),
             ])),
 
@@ -54,12 +54,12 @@ class OrderItemWebWidget extends StatelessWidget {
             ])),
 
             Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(DateConverterHelper.getEstimateTime(timerProvider.getEstimateDuration(orderItem, context) ?? const Duration(), context) , style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
+              Text(DateConverterHelper.getEstimateTime(timerProvider.getEstimateDuration(orderItem, context) ?? const Duration(), context) , style: rubikBold.copyWith(color: Colors.black)),
 
             ])),
 
             Expanded(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text( PriceConverterHelper.convertPrice((orderItem.orderAmount ?? 0) + (orderItem.deliveryCharge ?? 0)), style: rubikBold),
+              Text( PriceConverterHelper.convertPrice((orderItem.orderAmount ?? 0) + (orderItem.deliveryCharge ?? 0)), style: rubikBold.copyWith(color: Colors.black)),
 
             ])),
 

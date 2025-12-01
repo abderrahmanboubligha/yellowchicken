@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         .copyWith(
                                                                   color:
                                                                       ColorResources
-                                                                          .white,
+                                                                          .black,
                                                                   fontSize: ResponsiveHelper
                                                                           .isMobile()
                                                                       ? Dimensions
@@ -313,8 +313,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                       Icon(
                                                                         Icons
                                                                             .expand_more,
-                                                                        color: Colors
-                                                                            .white,
+                                                                        color: ColorResources
+                                                                            .black,
                                                                         size: ResponsiveHelper.isMobile()
                                                                             ? 16
                                                                             : 20,
@@ -347,8 +347,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 child: const BranchButtonWidget(
                                                                     isRow:
                                                                         false,
-                                                                    color: Colors
-                                                                        .white),
+                                                                    color: ColorResources
+                                                                        .black),
                                                               ),
                                                             ),
                                                             if (ResponsiveHelper
@@ -389,18 +389,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             icon:
                                                                                 Icons.shopping_cart_outlined,
                                                                             color:
-                                                                                ColorResources.white,
+                                                                                ColorResources.black,
                                                                           ),
                                                                           const SizedBox(
                                                                               height: 2),
                                                                           Flexible(
                                                                             child:
                                                                                 Text(
-                                                                              getTranslated('cart', context)!,
-                                                                              style: rubikRegular.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeExtraSmall),
-                                                                              maxLines: 1,
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                            ),
+                                                                                  getTranslated('cart', context)!,
+                                                                                  style: rubikRegular.copyWith(color: ColorResources.black, fontSize: Dimensions.fontSizeExtraSmall),
+                                                                                  maxLines: 1,
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                ),
                                                                           ),
                                                                         ]),
                                                                   ),
@@ -667,7 +667,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Text(
         getTranslated('no_location_selected', context)!,
         style: rubikRegular.copyWith(
-          color: Colors.white,
+          color: ColorResources.black,
           fontSize: ResponsiveHelper.isMobile()
               ? Dimensions.fontSizeExtraSmall
               : Dimensions.fontSizeSmall,
@@ -694,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               parts[0].trim(),
               style: rubikRegular.copyWith(
-                color: Colors.white,
+                color: ColorResources.black,
                 fontSize: ResponsiveHelper.isMobile()
                     ? Dimensions.fontSizeExtraSmall
                     : Dimensions.fontSizeSmall,
@@ -707,7 +707,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 parts[1].trim(),
                 style: rubikRegular.copyWith(
-                  color: Colors.white.withValues(alpha: 0.8),
+                  color: ColorResources.black.withValues(alpha: 0.7),
                   fontSize: ResponsiveHelper.isMobile()
                       ? Dimensions.fontSizeExtraSmall
                       : Dimensions.fontSizeSmall,
@@ -725,7 +725,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Text(
       _getDisplayLocationText(displayAddress, context),
       style: rubikRegular.copyWith(
-        color: Colors.white,
+        color: ColorResources.black,
         fontSize: ResponsiveHelper.isMobile()
             ? Dimensions.fontSizeExtraSmall
             : Dimensions.fontSizeSmall,

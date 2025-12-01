@@ -165,13 +165,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: IconButton(
                       onPressed: () => RouterHelper.getDashboardRoute('menu', action: RouteAction.pushNamedAndRemoveUntil),
                       icon: const Icon(Icons.arrow_back_ios),
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(width: Dimensions.paddingSizeDefault),
 
                   Text(getTranslated('my_profile', context)!, style: rubikSemiBold.copyWith(
-                    fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).primaryColor,
+                    fontSize: Dimensions.fontSizeLarge, color: Colors.black,
                   )),
               ])),
 

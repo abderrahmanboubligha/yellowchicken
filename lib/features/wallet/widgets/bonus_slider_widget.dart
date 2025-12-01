@@ -110,7 +110,7 @@ class BonusItemView extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
         Text(walletBonusModel.title ?? '', style: rubikSemiBold.copyWith(
-          color: Theme.of(context).primaryColor,
+          color: Colors.black,
           fontSize: Dimensions.fontSizeLarge,
         ), maxLines: 2, overflow: TextOverflow.ellipsis),
         const SizedBox(height: Dimensions.paddingSizeExtraSmall),
@@ -131,7 +131,7 @@ class BonusItemView extends StatelessWidget {
             walletBonusModel.bonusType == 'percentage'
                 ? '${walletBonusModel.bonusAmount} %'
                 : PriceConverterHelper.convertPrice(walletBonusModel.bonusAmount)} ${getTranslated('more', context)}', style: rubikRegular.copyWith(
-          color: Theme.of(context).primaryColor,
+          color: Colors.black,
           fontSize: Dimensions.fontSizeSmall,
         )),
       ]),

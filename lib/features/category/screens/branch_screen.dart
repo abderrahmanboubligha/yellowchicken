@@ -143,7 +143,7 @@ class _BranchScreenState extends State<BranchScreen> {
                               )),
                             ),
                             child: Text('popular', style: rubikRegular.copyWith(
-                              color: index == branch.branchTabIndex ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color,
+                              color: index == branch.branchTabIndex ? Colors.black : Theme.of(context).textTheme.bodyMedium!.color,
                             )),
                           ),
                         ),
@@ -171,7 +171,7 @@ class _BranchScreenState extends State<BranchScreen> {
                                   )),
                                 ),
                                 child: Text('popular', style: rubikRegular.copyWith(
-                                  color: index == branch.branchTabIndex ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color,
+                                  color: index == branch.branchTabIndex ? Colors.black : Theme.of(context).textTheme.bodyMedium!.color,
                                 )),
                               ),
                             ),

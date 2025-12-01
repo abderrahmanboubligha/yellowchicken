@@ -31,9 +31,9 @@ class AddMoreItemButtonWidget extends StatelessWidget {
 
 
               Text(getTranslated('add_more_item', context)!, style: ResponsiveHelper.isDesktop(context) ? rubikSemiBold.copyWith(
-                fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor,
+                fontSize: Dimensions.fontSizeSmall, color: Colors.black,
               ) : rubikRegular.copyWith(
-                fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor,
+                fontSize: Dimensions.fontSizeExtraSmall, color: Colors.black,
               )),
 
 

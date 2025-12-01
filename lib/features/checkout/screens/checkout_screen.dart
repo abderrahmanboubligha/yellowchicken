@@ -41,7 +41,6 @@ import 'package:flutter_restaurant/localization/language_constrants.dart';
 import 'package:flutter_restaurant/utill/dimensions.dart';
 import 'package:flutter_restaurant/utill/images.dart';
 import 'package:flutter_restaurant/utill/styles.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -105,7 +104,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               title: getTranslated('checkout', context),
               centerTitle: false,
               leading: InkWell(
-                onTap: () => context.pop(),
+                onTap: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context); // Ensures navigation works if possible
+                  }
+                },
                 child: Icon(Icons.arrow_back_ios_rounded,
                     color: Theme.of(context).primaryColor),
               ),

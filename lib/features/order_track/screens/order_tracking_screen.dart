@@ -141,7 +141,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                   Text(' #${orderProvider.trackModel?.id}',
                                       style: rubikSemiBold.copyWith(
                                         fontSize: Dimensions.fontSizeLarge,
-                                        color: Theme.of(context).primaryColor,
+                                        color: Colors.black,
                                       )),
                                 ]),
                             const SizedBox(height: Dimensions.paddingSizeLarge),

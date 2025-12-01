@@ -27,7 +27,7 @@ class ItemViewWidget extends StatelessWidget {
           child: Text(subTitle,
               style: subTitleStyle ??
                   ResponsiveStyles.responsiveRegular(context).copyWith(
-                    color: const Color(0xFFFF8C00), // Orange text for price
+                    color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ))),
     ]);

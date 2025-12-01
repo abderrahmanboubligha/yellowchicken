@@ -201,7 +201,7 @@ class _DashboardScreenState extends State<DashboardScreen> with TickerProviderSt
                                         shape: BoxShape.circle, color: Colors.white,
                                       ),
                                       child: Text('${cartProvider.cartList.length}', style: rubikSemiBold.copyWith(
-                                        color: Theme.of(context).primaryColor,
+                                        color: Colors.black,
                                         fontSize: Dimensions.paddingSizeSmall,
                                       )),
                                     )),

@@ -110,7 +110,7 @@ class DeliveryDetailsWidget extends StatelessWidget {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Reduce tap target size
                   ),
                   child: Text(getTranslated( deliveryAddress == null ? 'add' : 'update_info', context)!, style: rubikBold.copyWith(
-                    color: ColorResources.getSecondaryColor(context),
+                    color: Colors.black,
                   )),
                 ),
               ]),

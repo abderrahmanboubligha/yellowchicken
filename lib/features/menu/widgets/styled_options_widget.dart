@@ -135,6 +135,11 @@ class StyledOptionsWidget extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusDefault)),
+                        ),
                         onPressed: () {
                           // Show more options
                           showModalBottomSheet(
@@ -148,7 +153,7 @@ class StyledOptionsWidget extends StatelessWidget {
                         },
                         child: Text(
                           'More', 
-                          style: rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                          style: rubikMedium.copyWith(color: Colors.white)
                         ),
                       ),
                     ),

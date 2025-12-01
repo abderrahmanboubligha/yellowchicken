@@ -181,7 +181,7 @@ class OrderSuccessfulWidget extends StatelessWidget {
                                         text: ' #${widget.orderID} ',
                                         style: rubikSemiBold.copyWith(
                                             color:
-                                                Theme.of(context).primaryColor,
+                                                Colors.black,
                                             fontSize:
                                                 Dimensions.fontSizeLarge)),
                                     TextSpan(

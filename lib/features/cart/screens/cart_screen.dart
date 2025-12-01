@@ -418,7 +418,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                               onTap: () {
                                                                                 ResponsiveHelper.showDialogOrBottomSheet(context, CouponAddWidget(couponController: _couponController, amountWithoutTax: amountAfterDiscount));
                                                                               },
-                                                                              child: Text(getTranslated('change', context)!, style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
+                                                                              child: Text(getTranslated('change', context)!, style: rubikBold.copyWith(color: Colors.black)),
                                                                             ),
                                                                           ]),
                                                                       const SizedBox(
@@ -466,10 +466,10 @@ class _CartScreenState extends State<CartScreen> {
                                                                                       const SizedBox(width: Dimensions.paddingSizeSmall),
                                                                                       Text(
                                                                                         '( -${PriceConverterHelper.getDiscountType(discount: couponProvider.coupon?.discount, discountType: couponProvider.coupon?.discountType)} )',
-                                                                                        style: rubikRegular.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeSmall),
+                                                                                        style: rubikRegular.copyWith(color: Colors.black, fontSize: Dimensions.fontSizeSmall),
                                                                                       ),
                                                                                     ])
-                                                                                  : Text(getTranslated('apply_promo', context)!, style: rubikSemiBold.copyWith(color: const Color(0xFF8B4513))),
+                                                                                  : Text(getTranslated('apply_promo', context)!, style: rubikSemiBold.copyWith(color: Colors.black)),
                                                                               const Spacer(),
                                                                               couponProvider.coupon != null
                                                                                   ? InkWell(
@@ -481,7 +481,7 @@ class _CartScreenState extends State<CartScreen> {
                                                                                       child: Icon(Icons.close, color: Theme.of(context).colorScheme.error.withValues(alpha: 0.7)),
                                                                                     )
                                                                                   : Row(children: [
-                                                                                      Text(getTranslated('add', context)!, style: rubikBold.copyWith(color: const Color(0xFFFF8C00), fontSize: Dimensions.fontSizeDefault)),
+                                                                                      Text(getTranslated('add', context)!, style: rubikBold.copyWith(color: Colors.black, fontSize: Dimensions.fontSizeDefault)),
                                                                                       if (couponProvider.coupon == null) const Icon(Icons.add, color: Color(0xFFFF8C00), size: Dimensions.fontSizeExtraLarge)
                                                                                     ])
                                                                             ]),

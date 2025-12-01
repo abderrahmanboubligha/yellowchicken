@@ -408,13 +408,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                                                   child: Text(
                                                 '${getTranslated(variationList[index].isRequired! ? productProvider.isRequiredSelected![index] ? 'completed' : 'required' : 'optional', context)}',
                                                 style: rubikRegular.copyWith(
-                                                  color: productProvider
-                                                              .isRequiredSelected![
-                                                          index]
-                                                      ? Theme.of(context)
-                                                          .secondaryHeaderColor
-                                                      : Theme.of(context)
-                                                          .primaryColor,
+                                                  color: Colors.black,
                                                   fontSize:
                                                       Dimensions.fontSizeSmall,
                                                 ),
@@ -441,8 +435,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                                                     style: rubikRegular.copyWith(
                                                         fontSize: Dimensions
                                                             .fontSizeExtraSmall,
-                                                        color: Theme.of(context)
-                                                            .primaryColor),
+                                                        color: Colors.black),
                                                   )
                                                 : const SizedBox(),
                                       ]),
@@ -824,7 +817,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
             Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
               Text('${getTranslated('total', context)} ',
                   style: rubikSemiBold.copyWith(
-                      color: Theme.of(context).primaryColor)),
+                      color: Colors.black)),
             ]),
             const Spacer(),
             (priceWithAddonsVariationWithoutDiscount > priceWithAddonsVariation)
@@ -1725,7 +1718,7 @@ class _CartBottomSheetWidgetState extends State<CartBottomSheetWidget> {
                         : getTranslated('free', context)!,
                     style: robotoRegular.copyWith(
                       fontSize: Dimensions.fontSizeSmall,
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.black,
                       fontWeight: FontWeight.w600,
                     ),
                   )),

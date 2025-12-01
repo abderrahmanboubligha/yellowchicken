@@ -99,7 +99,7 @@ class OrderItemWidget extends StatelessWidget {
                         Text( PriceConverterHelper.convertPrice((orderItem.orderAmount ?? 0) + (orderItem.deliveryCharge ?? 0)), style: rubikBold),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                        Text(DateConverterHelper.getEstimateTime(timerProvider.getEstimateDuration(orderItem, context) ?? const Duration(), context) , style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
+                        Text(DateConverterHelper.getEstimateTime(timerProvider.getEstimateDuration(orderItem, context) ?? const Duration(), context) , style: rubikBold.copyWith(color: Colors.black)),
                       ]),
 
                     ]),
@@ -114,7 +114,7 @@ class OrderItemWidget extends StatelessWidget {
 
                       Text(
                         '${getTranslated('order', context)} #${orderItem.id.toString()}',
-                        style: rubikBold.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.fontSizeLarge),
+                        style: rubikBold.copyWith(color: Colors.black, fontSize: Dimensions.fontSizeLarge),
                       ),
                       const SizedBox(height: Dimensions.paddingSizeSmall),
 

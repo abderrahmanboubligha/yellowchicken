@@ -49,7 +49,7 @@ class _MenuScreenState extends State<MenuScreen> {
               builder: (context, profileProvider, child) => Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.08),
+                  color: Theme.of(context).primaryColor,
                 ),
                 padding: const EdgeInsets.all(32),
                 child: Column(children: [
@@ -79,7 +79,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   const SizedBox(height: 16),
                   Text(
                     isLoggedIn ? '${profileProvider.userInfoModel?.fName} ${profileProvider.userInfoModel?.lName}' : getTranslated('guest', context)!,
-                    style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge)
+                    style: rubikMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Colors.white)
                   ),
                   
                   if(!isLoggedIn) TextButton(
@@ -88,17 +88,17 @@ class _MenuScreenState extends State<MenuScreen> {
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       padding: EdgeInsets.zero, 
-                      foregroundColor: Theme.of(context).primaryColor
+                      foregroundColor: Colors.white
                     ),
                     child: Text(
                       getTranslated('sign_up_or_login', context)!, 
-                      style: rubikRegular.copyWith(color: Theme.of(context).primaryColor)
+                      style: rubikRegular.copyWith(color: Colors.white)
                     )
                   ),
                   
                   if(isLoggedIn) Text(
                     profileProvider.userInfoModel?.email ?? '',
-                    style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
+                    style: rubikRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Colors.white70),
                   ),
                 ]),
               ),

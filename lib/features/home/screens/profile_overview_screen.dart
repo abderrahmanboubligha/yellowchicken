@@ -118,7 +118,7 @@ class _ProfileOverviewScreenState extends State<ProfileOverviewScreen> {
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () => setState(() => currentView = 'more'),
-                    child: Text('More', style: rubikMedium.copyWith(color: Theme.of(context).primaryColor)),
+                    child: Text('More', style: rubikMedium.copyWith(color: Colors.black)),
                   ),
                 ),
               ],
@@ -168,7 +168,7 @@ class _ProfileOverviewScreenState extends State<ProfileOverviewScreen> {
                 child: Text(
                   label,
                   style: rubikMedium.copyWith(
-                    color: Theme.of(context).primaryColor,
+                    color: Colors.black,
                     fontSize: Dimensions.fontSizeLarge,
                   ),
                 ),
